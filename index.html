@@ -156,6 +156,20 @@ tr.tot td{font-weight:800;border-top:2px solid var(--ink)}
 .ticket .pick{font:400 20px/1.08 var(--display);text-transform:uppercase;overflow-wrap:anywhere}
 .ticket .game{color:var(--ink2);font-size:13px}
 .ticket .price{display:flex;flex-wrap:wrap;gap:4px 10px;font-family:var(--mono);font-size:12.5px;align-items:center}
+.ticket .why{border-top:1px dashed var(--line);padding-top:6px;margin-top:2px;font-size:12.5px;line-height:1.35;min-width:0}
+.ticket .why>summary{cursor:pointer;list-style:none;display:flex;gap:6px;align-items:baseline}
+.ticket .why>summary::-webkit-details-marker{display:none}
+.ticket .why>summary::before{content:"+";flex:none;display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;background:var(--cobalt);color:var(--cobalt-ink);font:800 12px/1 var(--body);transform:translateY(2px)}
+.ticket .why[open]>summary::before{content:"−"}
+.ticket .why>summary b{font:800 9.5px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--cobalt);margin-right:2px}
+.ticket .why .more{display:grid;gap:6px;padding:6px 0 2px;color:var(--ink2)}
+.ticket .why p{margin:0;padding-left:22px}
+.wbars{display:grid;grid-template-columns:minmax(0,1fr) minmax(40px,64px) 36px;gap:4px 6px;align-items:center;font-size:11.5px;line-height:1.2}
+.wbar{position:relative;height:8px;border-radius:4px;background:var(--panel2)}
+.wbar::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:var(--ink);opacity:.45}
+.wbar i{position:absolute;top:0;bottom:0;border-radius:4px}
+.wbars em{font:500 11px/1 var(--mono);font-style:normal;text-align:right;color:var(--ink)}
+.ticket .sim{font-size:12px;color:var(--ink2);overflow-wrap:anywhere}
 .ticket .notch{position:absolute;right:57px;width:16px;height:16px;border-radius:50%;background:var(--sky);border:2px solid var(--ink)}
 .ticket .notch.t{top:-9px;clip-path:inset(50% 0 0 0)} .ticket .notch.b{bottom:-9px;clip-path:inset(0 0 50% 0)}
 
@@ -245,7 +259,7 @@ svg text{font-family:var(--body)}
       <h1>Today's <em>card</em></h1>
       <p class="lede" id="today-lede">The 2026-27 season opens Nov 1. Picks start once both teams have played 5 games, around Nov 21. Until then the model is tracked on paper.</p>
     </div>
-    <div class="lab-controls"><div class="viewtog" role="group" aria-label="Group picks"><button id="g-book" aria-pressed="true">By book</button><button id="g-tier" aria-pressed="false">By tier</button></div></div>
+    <div class="lab-controls"><div class="viewtog" role="group" aria-label="Group picks"><button id="g-book" aria-pressed="true">By book</button><button id="g-tier" aria-pressed="false">By tier</button></div><button class="ghost" id="copy-card" hidden>Copy card</button><span class="note" id="copy-msg" role="status" aria-live="polite"></span></div>
     <div id="today-picks"></div>
   </section>
 
@@ -262,30 +276,30 @@ svg text{font-family:var(--body)}
   </section>
 
   <section class="view" id="v-how" hidden>
-    <div><div class="kicker">The theory</div><h1>Fade the <em>luck</em>. Respect the <em>air</em>.</h1>
-      <p class="lede">Shooting in small samples is mostly noise, but lines are built partly from results. When a team's shot-making runs far ahead of what its shots should produce, it gets overrated, and the model bets against it. Totals add one quirk the market barely prices: altitude.</p></div>
+    <div><div class="kicker">The theory</div><h1>Fade the <em>luck</em>. Trust the <em>model</em>.</h1>
+      <p class="lede">Shooting in small samples is mostly noise, but lines are built partly from results. When a team's shot-making runs far ahead of what its shots should produce, it gets overrated, and the model bets against it. Totals are bet only as model plays, when a venue rule and the five-model totals ensemble agree.</p></div>
     <div class="ridemap">
       <div class="panel stop"><h3>Zone luck</h3><p>Actual minus expected points at the rim, from midrange and from three, on offense and defense, season to date. Expected rates shrink toward last season's league average, so a few hot nights barely move it.</p></div>
       <div class="panel stop"><h3>KenPom drift</h3><p>A team's KenPom rating this morning minus its preseason rating. Teams that have jumped furthest since preseason tend to be overrated, so the model fades them too.</p></div>
-      <div class="panel stop"><h3>Ensembles</h3><p>Five machine-learning models for spreads (31 variables, each game fed both ways to remove home bias) and five for totals (68 variables: pace, efficiency, luck, KenPom drift, preseason projections, altitude and more). Each votes on a side and a strength.</p></div>
-      <div class="panel stop"><h3>Altitude</h3><p>Teams at 5,000 ft and up post inflated scoring at home, and totals get set off those averages. The model bets overs at high venues and unders when those teams come down to sea level, when the totals ensemble agrees. The edge grows with elevation.</p></div>
-      <div class="panel stop"><h3>The card</h3><p>Ranked: totals altitude, spread tri-agree, then spread luck + ensemble. Every pick is 1 unit: the tiers have similar measured edges, so flat staking keeps it simple. Totals tri-agree is tracked on paper, not bet. At most 6 picks a weekday and 12 on Saturday, one bet per game, and only picks with a line at DK, Caesars or FanDuel. When a spread and an altitude total collide, the altitude total wins.</p></div>
+      <div class="panel stop"><h3>Ensembles</h3><p>Five machine-learning models for spreads (31 variables, each game fed both ways to remove home bias) and five for totals (68 variables: pace, efficiency, luck, KenPom drift, preseason projections, venue and more). Each votes on a side and a strength.</p></div>
+      <div class="panel stop"><h3>Model plays</h3><p>Some totals are bet when a venue-based rule and the five-model totals ensemble agree on the over. It has held up out of sample, but we don't claim to know why it works, so we list these as model plays rather than dress them up with a story.</p></div>
+      <div class="panel stop"><h3>The card</h3><p>Ranked: totals model plays, spread tri-agree, then spread luck + ensemble. Every pick is 1 unit: the tiers have similar measured edges, so flat staking keeps it simple. Totals tri-agree is tracked on paper, not bet. At most 6 picks a weekday and 12 on Saturday, one bet per game, and only picks with a line at DK, Caesars or FanDuel. When a spread and a totals model play land on the same game, the model play wins.</p></div>
     </div>
     <div class="grid2">
       <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
         <li>Any game where either team has played fewer than 5 games. Every early-season model and rule tested lost money at real prices.</li>
-        <li>Neutral-site games, for the luck tiers (altitude totals can play at neutral venues).</li>
-        <li>Ensemble-only spreads and totals with no luck or altitude signal. They don't beat these books.</li>
+        <li>Neutral-site games, for the luck tiers (totals model plays can be at neutral venues).</li>
+        <li>Ensemble-only spreads and totals with no luck or model-play signal. They don't beat these books.</li>
         <li>Two bets on one game.</li></ul></div>
       <div class="panel flat prose"><h3>How the backtest stayed honest</h3><ul>
         <li>Walk-forward: every season predicted only from earlier seasons.</li>
         <li>Every stat from games before tip-off; KenPom and Barttorvik snapshots dated before each game.</li>
         <li>Graded at the real 5am price and juice, not -110.</li>
-        <li>Random sides win about 51% at these prices. With the models retrained on shuffled results the card still hits about 54%, so the luck and altitude rules carry most of the edge and the ensemble adds roughly 3 points on top.</li>
+        <li>Random sides win about 51% at these prices. With the models retrained on shuffled results the card still hits about 54%, so the luck and model-play rules carry most of the edge and the ensemble adds roughly 3 points on top.</li>
         <li>Picks beat the closing number in every season. Graded at the near-close consensus line the card still wins 55.7%; at the plain 5am consensus and -110, 56.9%.</li>
         <li>Two full audits regraded every pick from the raw odds feed and checked every score against ESPN: zero mismatches. The second one found that 20% of games had never been matched to a line (team-name and home/away quirks in the odds feed); they are now in.</li></ul></div>
     </div>
-    <div class="panel flat prose"><h3>What to expect live</h3><p>At 1 unit a pick the backtest went 57.1% over 2,453 bets, +216 units, +8.8% ROI, with a worst drawdown of about 19 units. Tiers, cutoffs and caps were chosen on the same seasons they were tested on, so expect less live: roughly 55% and +4 to +5% ROI, about +25 to +30 units over a 600-bet season, with about a 1-in-6 chance of a losing season. Variance is real: even with a true 57% edge, 100-bet stretches at 50% happen. The live tab is the record that counts.</p></div>
+    <div class="panel flat prose"><h3>What to expect live</h3><p>At 1 unit a pick the backtest went 57.5% over 2,440 bets, +231 units, +9.5% ROI, with a worst drawdown of about 22 units. Tiers, cutoffs and caps were chosen on the same seasons they were tested on, so expect less live: roughly 55% and +4 to +5% ROI, about +25 to +30 units over a 600-bet season, with about a 1-in-6 chance of a losing season. Variance is real: even with a true 57% edge, 100-bet stretches at 50% happen. The live tab is the record that counts.</p></div>
   </section>
   <section class="view" id="v-hood" hidden>
     <div><div class="kicker">Under the hood · model specification</div><h1>The <em>engine</em> room</h1>
@@ -333,20 +347,20 @@ svg text{font-family:var(--body)}
         <div class="tbl"><table><thead><tr><th>Market</th><th class="l">Members (loss · feature set)</th></tr></thead><tbody>
           <tr><td>Spreads</td><td class="l">LightGBM Huber · 31 vars; ridge · 10; ridge · 19; LightGBM classifier · 5 luck vars; LightGBM median · 31</td></tr>
           <tr><td>Totals (luck tiers)</td><td class="l">LightGBM Huber · 43; ridge · 12; ridge · 43; LightGBM classifier · 5; LightGBM median · 43</td></tr>
-          <tr><td>Totals (altitude)</td><td class="l">LightGBM Huber · 66; ridge · 12; ridge · 66; LightGBM classifier · 9 (luck + altitude); LightGBM median · 66. The 66 add altitude, FT luck, matchup and volatility features</td></tr></tbody></table></div>
+          <tr><td>Totals (model plays)</td><td class="l">LightGBM Huber · 66; ridge · 12; ridge · 66; LightGBM classifier · 9 (luck + venue); LightGBM median · 66. The 66 add venue, FT luck, matchup and volatility features</td></tr></tbody></table></div>
         <p class="note">Nested forward feature selection was tested and lost to the full regularized set (mean out-of-sample correlation 0.056 vs 0.072), so nothing is pruned.</p></div>
 
       <div class="panel eq"><h3>08 · Decision rule and card</h3>
         <div class="mbox"><math display="block"><mtext>bet</mtext><mo>⇔</mo><mi>sgn</mi><mo>(</mo><mi>E</mi><mo>)</mo><mo>=</mo><mi>sgn</mi><mo>(</mo><mo>−</mo><mi>Λ</mi><mo>)</mo><mo>∧</mo><mo>|</mo><mi>E</mi><mo>|</mo><mo>≥</mo><msub><mi>τ</mi><mtext>tier</mtext></msub><mspace width="1.2em"/><mtext>stake</mtext><mo>∈</mo><mo>{</mo><mn>1</mn><mi>u</mi><mo>}</mo></math></div>
-        <p class="note">The signal is the faded luck sign −Λ (plus drift or preseason-total agreement for tri-agree tiers, τ = 1 SD for totals) or the altitude sign A ∈ {+1 over at 5,000 ft+, −1 under for 5,000 ft+ teams below 2,000 ft}, where only the sign of E must agree.</p>
-        <p>Tiers rank as totals altitude › spread tri-agree › spread luck + ensemble; totals tri-agree is tracked on paper only. Picks with no line at DK, Caesars or FanDuel are dropped before the cap. Per day the top <i>K</i> are kept, <i>K</i> = 6 (weekdays) or 12 (Saturday), subject to one bet per game.</p></div>
+        <p class="note">The signal is the faded luck sign −Λ (plus drift or preseason-total agreement for tri-agree tiers, τ = 1 SD for totals) or, for totals model plays, an over signal A = +1 from a venue rule, where only the sign of the totals ensemble E must agree. The trigger is a venue-elevation rule; we don't claim to understand why it works.</p>
+        <p>Tiers rank as totals model play › spread tri-agree › spread luck + ensemble; totals tri-agree is tracked on paper only. Picks with no line at DK, Caesars or FanDuel are dropped before the cap. Per day the top <i>K</i> are kept, <i>K</i> = 6 (weekdays) or 12 (Saturday), subject to one bet per game.</p></div>
 
       <div class="panel eq"><h3>09 · Grading, CLV and nulls</h3>
         <p>Payout per unit from American odds <i>o</i>, and closing-line value in points for a spread bet at line ℓ<sub>b</sub> against close ℓ<sub>c</sub>:</p>
         <div class="mbox"><math display="block"><mi>π</mi><mo>(</mo><mi>o</mi><mo>)</mo><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mi>o</mi><mo>/</mo><mn>100</mn></mtd><mtd><mi>o</mi><mo>&gt;</mo><mn>0</mn></mtd></mtr><mtr><mtd><mn>100</mn><mo>/</mo><mo>|</mo><mi>o</mi><mo>|</mo></mtd><mtd><mi>o</mi><mo>&lt;</mo><mn>0</mn></mtd></mtr></mtable></mrow><mspace width="1.4em"/><mtext>CLV</mtext><mo>=</mo><mi>s</mi><mo>·</mo><mo>(</mo><msub><mi>ℓ</mi><mi>b</mi></msub><mo>−</mo><msub><mi>ℓ</mi><mi>c</mi></msub><mo>)</mo></math></div>
         <p>A slice's edge is scored against the 51% no-skill baseline at best price; with many slices tested, the bar is the 95th percentile of the simulated maximum:</p>
         <div class="mbox"><math display="block"><mi>Z</mi><mo>=</mo><mfrac><mrow><mover><mi>p</mi><mo>^</mo></mover><mo>−</mo><mn>0.51</mn></mrow><msqrt><mrow><mn>0.25</mn><mo>/</mo><mi>n</mi></mrow></msqrt></mfrac><mspace width="1.2em"/><msup><mi>Z</mi><mo>*</mo></msup><mo>=</mo><msub><mi>Q</mi><mn>0.95</mn></msub><mrow><mo>(</mo><munder><mo>max</mo><mi>k</mi></munder><msubsup><mi>Z</mi><mi>k</mi><mtext>null</mtext></msubsup><mo>)</mo></mrow><mo>≈</mo><mn>3.0</mn></math></div>
-        <p class="note">Random sides at best price win about 51%. Retraining every model on shuffled results still leaves the card at 53.9-54.2%, which is the edge of the luck and altitude rules alone; the trained ensemble adds about 3 points.</p></div>
+        <p class="note">Random sides at best price win about 51%. Retraining every model on shuffled results still leaves the card at 53.9-54.2%, which is the edge of the luck and model-play rules alone; the trained ensemble adds about 3 points.</p></div>
     </div>
   </section>
 </div>
@@ -369,10 +383,23 @@ const BOOK={DK:"DraftKings",CZR:"Caesars",FD:"FanDuel"};
 const LEVEL={P:"P4 / Big East",M:"Mid-major",L:"Low-major"};
 const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const isT=r=>r.mk==="Total";
+const fixT=rows=>{(rows||[]).forEach(r=>{if(r&&r.t==="Totals altitude")r.t="Totals model play"});return rows};
+const WHYG={luck:"Shooting luck",rating:"Rating slide since preseason",match:"Matchup & efficiency",mkt:"Line vs. ratings & sharp books",spot:"Schedule spot"};
+const topG=w=>{if(!w||!w.g)return null;let k=null;for(const g in w.g)if(k==null||w.g[g]>w.g[k])k=g;return k};
+const pickTxt=r=>isT(r)?`${r.side} ${r.ln}`:`${r.tm} ${lnTxt(r.ln)}`;
+/* "similar past picks": same tier, market, side type (fav/dog or over/under) and, when both have a why, same top driver */
+let BT=null;const simKey=r=>[r.t,r.mk,isT(r)?r.side:(r.ln<0?"F":r.ln>0?"D":"P")].join("|");
+function simTxt(r){if(!BT)return"";const k=simKey(r),tg=r.why?topG(r.why):null;let w=0,l=0;
+  for(const b of BT){if(b.d===r.d||simKey(b)!==k)continue;if(tg&&b.why&&topG(b.why)!==tg)continue;b.r==="W"?w++:l++}
+  const n=w+l;if(!n)return"";return `Similar past picks: ${w}-${l} (${pct(w/n)}) · n=${n.toLocaleString()}${n<75?" · small sample":""}`}
+function whyHTML(w){if(!w||!w.txt||!w.txt.length)return"";const g=w.g||{},mx=Math.max(1,...Object.values(g).map(Math.abs));
+  const bars=Object.keys(WHYG).filter(k=>g[k]!=null).map(k=>{const v=g[k],wd=Math.min(50,Math.abs(v)/mx*50);return `<span>${WHYG[k]}</span><span class="wbar" aria-hidden="true"><i style="left:${v>=0?50:50-wd}%;width:${wd}%;background:var(${v>=0?"--win":"--loss"})"></i></span><em>${v>0?"+":""}${v.toFixed(2)}</em>`}).join("");
+  return `<details class="why"><summary><span><b>Why</b> ${esc(w.txt[0])}</span></summary><div class="more">${w.txt.slice(1).map(t=>`<p>${esc(t)}</p>`).join("")}
+   ${bars?`<div class="wbars">${bars}</div>`:""}${w.con?`<p>Working against: ${esc(w.con)}</p>`:""}</div></details>`}
 
 const DIMS={
  mkt:{n:"Market",f:r=>isT(r)?"Totals":"Spreads",order:["Spreads","Totals"]},
- tier:{n:"Tier",f:r=>r.t,order:["Totals altitude","Totals tri-agree","Spread tri-agree","Spread luck + ensemble"]},
+ tier:{n:"Tier",f:r=>r.t,order:["Totals model play","Spread tri-agree","Spread luck + ensemble","Totals tri-agree"]},
  season:{n:"Season",f:r=>r.s},
  fav:{n:"Spread side",f:r=>isT(r)?"Total":(r.ln<0?"Favorite":r.ln>0?"Underdog":"Pick'em"),order:["Favorite","Pick'em","Underdog","Total"]},
  ou:{n:"Over / under",f:r=>isT(r)?r.side:"Spread",order:["Over","Under","Spread"]},
@@ -382,7 +409,6 @@ const DIMS={
  match:{n:"Matchup level",f:r=>r.ct===r.co?"Both "+LEVEL[r.ct]:LEVEL[r.ct]+" vs "+LEVEL[r.co]},
  conf:{n:"Conference game",f:r=>r.cg?"Conference":"Non-conference",order:["Conference","Non-conference"]},
  total:{n:"Game total",f:r=>r.tot==null?"No total":r.tot<=130?"130 or less":r.tot<=140?"130.5-140":r.tot<=150?"140.5-150":"150.5+",order:["130 or less","130.5-140","140.5-150","150.5+","No total"]},
- elev:{n:"Venue elevation",f:r=>!isT(r)?"Spread pick":r.el>=6000?"6,000 ft+":r.el>=5000?"5,000-5,999 ft":r.el>=2000?"2,000-4,999 ft":"Under 2,000 ft",order:["6,000 ft+","5,000-5,999 ft","2,000-4,999 ft","Under 2,000 ft","Spread pick"]},
  month:{n:"Month",f:r=>MON[+r.d.slice(5,7)-1],order:["Nov","Dec","Jan","Feb","Mar","Apr"]},
  dow:{n:"Day",f:r=>DOW[new Date(r.d+"T12:00:00").getDay()],order:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]},
  tip:{n:"Tip time (ET)",f:r=>!r.sl?"Unknown":r.sl.startsWith("after")?"Before 5pm":r.sl.startsWith("even")?"5-8:30pm":"8:30pm+",order:["Before 5pm","5-8:30pm","8:30pm+","Unknown"]},
@@ -392,7 +418,7 @@ const DIMS={
  clv:{n:"Vs closing line",f:r=>r.clv==null?"No close near tip":r.clv>0?"Beat the close":r.clv<0?"Worse than close":"Tied",order:["Beat the close","Tied","Worse than close","No close near tip"]},
  move:{n:"Line move after post",f:r=>r.mv==null?"No close near tip":r.mv>=1?"Toward us 1+":r.mv>0?"Toward us 0.5":r.mv===0?"No move":r.mv>-1?"Against 0.5":"Against 1+",order:["Toward us 1+","Toward us 0.5","No move","Against 0.5","Against 1+","No close near tip"]},
 };
-const FILTER_DIMS=["mkt","tier","season","fav","ou","venue","lvl","conf","elev","month","book","tip"];
+const FILTER_DIMS=["mkt","tier","season","fav","ou","venue","lvl","conf","month","book","tip"];
 
 function stats(rows){let w=0,l=0,u=0,risk=0,c=0,cn=0;for(const r of rows){r.r==="W"?w++:l++;u+=r.p;risk+=r.u;if(r.clv!=null){c+=r.clv;cn++}}const n=w+l;return{n,w,l,wp:n?w/n:0,u,roi:risk?u/risk:0,clv:cn?c/cn:null}}
 function groupBy(rows,dim){const m=new Map();for(const r of rows){const k=DIMS[dim].f(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r)}const o=DIMS[dim].order;
@@ -426,15 +452,16 @@ function kpis(el,s,label){el.innerHTML=`<div><small>Bets</small><b>${s.n.toLocal
  <div><small>Units</small><b class="${s.u>=0?"pos":"neg"}">${fmtU(s.u)}</b><span>${s.u>=0?"+":"−"}$${Math.abs(Math.round(s.u*100)).toLocaleString()} at $100/unit</span></div>
  <div><small>ROI</small><b class="${s.roi>=0?"pos":"neg"}">${s.roi>=0?"+":""}${(s.roi*100).toFixed(1)}%</b><span>per unit risked</span></div><div><small>Vs close</small><b>${clvTxt(s.clv)}</b><span>avg points</span></div>`}
 
-function ticket(r,showRes){const pick=isT(r)?`${r.side} ${r.ln}`:`${r.tm} ${lnTxt(r.ln)}`;
-  const game=(isT(r)?`${r.op} at ${r.tm}${r.el>=5000?` · ${r.el.toLocaleString()} ft`:""}`:`${r.ha==="A"?"at":"vs"} ${r.op}`)+(r.tip?` · ${r.tip} ET`:"");
+function ticket(r,showRes){const pick=pickTxt(r),sim=simTxt(r);
+  const game=(isT(r)?`${r.op} at ${r.tm}`:`${r.ha==="A"?"at":"vs"} ${r.op}`)+(r.tip?` · ${r.tip} ET`:"");
   const hasMin=r.min!=null,limLbl=isT(r)?(r.side==="Over"?"Max line":"Min line"):"Worst line",limVal=hasMin?(isT(r)?String(r.min):lnTxt(r.min)):oddsTxt(r.o);
   return `<article class="ticket"><span class="notch t"></span><span class="notch b"></span><div class="main"><div class="tier">${esc(r.t)}</div><div class="pick">${esc(pick)}</div><div class="game">${esc(game)}</div>
-  <div class="price"><span>${esc(BOOK[r.bk]||r.bk)} ${oddsTxt(r.o)}</span>${showRes&&r.r?`<span class="tag ${r.r==="W"?"w":"l"}">${r.r==="W"?"Won":"Lost"} ${esc(r.sc||"")}</span>`:""}</div></div>
+  <div class="price"><span>${esc(BOOK[r.bk]||r.bk)} ${oddsTxt(r.o)}</span>${showRes&&r.r?`<span class="tag ${r.r==="W"?"w":"l"}">${r.r==="W"?"Won":"Lost"} ${esc(r.sc||"")}</span>`:""}</div>${whyHTML(r.why)}${sim?`<div class="sim">${esc(sim)}</div>`:""}</div>
   <div class="stub"><div><b class="lim">${esc(limVal)}</b><small>${hasMin?limLbl:"Price"}</small></div></div></article>`}
-function cardHTML(picks,by,showRes){const key=by==="book"?(r=>BOOK[r.bk]||r.bk):(r=>r.t);const order=by==="book"?["FanDuel","DraftKings","Caesars"]:DIMS.tier.order;
-  const g=new Map();picks.forEach(p=>{const k=key(p);if(!g.has(k))g.set(k,[]);g.get(k).push(p)});const ab={FanDuel:"FD",DraftKings:"DK",Caesars:"CZR"};
-  return `<div class="books">${[...g.keys()].sort((a,b)=>order.indexOf(a)-order.indexOf(b)).map(k=>`<div><div class="bookhead"><span class="logo">${esc(by==="book"?ab[k]||k:"★")}</span><h2>${esc(k)}</h2><span class="note">${g.get(k).length} pick${g.get(k).length>1?"s":""}</span></div><div class="tickets">${g.get(k).map(p=>ticket(p,showRes)).join("")}</div></div>`).join("")}</div>`}
+function groupPicks(picks,by){const key=by==="book"?(r=>BOOK[r.bk]||r.bk):(r=>r.t);const order=by==="book"?["FanDuel","DraftKings","Caesars"]:DIMS.tier.order;
+  const g=new Map();picks.forEach(p=>{const k=key(p);if(!g.has(k))g.set(k,[]);g.get(k).push(p)});const oi=k=>{const i=order.indexOf(k);return i<0?99:i};return{g,keys:[...g.keys()].sort((a,b)=>oi(a)-oi(b))}}
+function cardHTML(picks,by,showRes){const{g,keys}=groupPicks(picks,by);const ab={FanDuel:"FD",DraftKings:"DK",Caesars:"CZR"};
+  return `<div class="books">${keys.map(k=>`<div><div class="bookhead"><span class="logo">${esc(by==="book"?ab[k]||k:"★")}</span><h2>${esc(k)}</h2><span class="note">${g.get(k).length} pick${g.get(k).length>1?"s":""}</span></div><div class="tickets">${g.get(k).map(p=>ticket(p,showRes)).join("")}</div></div>`).join("")}</div>${picks.some(p=>p.why&&p.why.txt&&p.why.txt.length)?'<p class="note" style="margin-top:14px">"Why" lines describe what drove each pick, not how confident the model is.</p>':""}`}
 
 /* Slice Lab: one filter set drives the KPIs, the ride chart, the breakdown and the bet log */
 function lab(root,all,idp,label){
@@ -498,24 +525,33 @@ addEventListener("hashchange",route);route();
 
 const getJSON=u=>fetch(u,{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null);
 const bydate=(a,b)=>a.d<b.d?-1:a.d>b.d?1:0;
-let btP=null;const getBT=()=>btP||(btP=getJSON("ncaab_backtest.json").then(bt=>(bt||[]).sort(bydate)));
+let btP=null;const getBT=()=>btP||(btP=getJSON("ncaab_backtest.json").then(bt=>{BT=fixT(bt||[]).sort(bydate);return BT}));
 // backtest data is the heavy file: load it only when needed (Backtest tab, or the example card), or once the page is idle
-let btDone=false;onShow.backtest=()=>{if(btDone)return;btDone=true;$("#bt-lab").innerHTML='<p class="note">Loading 2,453 graded picks…</p>';getBT().then(bt=>lab($("#bt-lab"),bt,"bt","4 seasons"))};
-let liveDone=false;onShow.live=()=>{if(liveDone)return;liveDone=true;getJSON("ncaab_live.json").then(live=>{live=(live||[]).filter(r=>r.r==="W"||r.r==="L").sort(bydate);
+let btDone=false;onShow.backtest=()=>{if(btDone)return;btDone=true;$("#bt-lab").innerHTML='<p class="note">Loading 2,440 graded picks…</p>';getBT().then(bt=>lab($("#bt-lab"),bt,"bt","4 seasons"))};
+let liveDone=false;onShow.live=()=>{if(liveDone)return;liveDone=true;getJSON("ncaab_live.json").then(live=>{live=fixT(live||[]).filter(r=>r.r==="W"||r.r==="L").sort(bydate);
   if(live.length)lab($("#live-body"),live,"lv","2026-27");
   else $("#live-body").innerHTML='<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first real pick, expected around Nov 21 once teams reach 5 games. Paper-tracked early-season games are logged separately and never counted here.</span></div>'})};
 if(onShow[cur])onShow[cur]();
-getJSON("ncaab_today.json").then(today=>{today=today||{picks:[]};let by="book",ex=null;const real=today.picks&&today.picks.length;
+getJSON("ncaab_today.json").then(today=>{today=today||{picks:[]};fixT(today.picks);let by="book",ex=null;const real=today.picks&&today.picks.length;
   const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
   function drawToday(){if(real){$("#today-kicker").textContent=fmtDate(today.date)+" · college basketball · spreads and totals";
       const nT=today.picks.filter(isT).length;
       $("#today-lede").innerHTML=`<span class="summary"><b>${today.picks.length} pick${today.picks.length>1?"s":""}</b><span>${today.picks.length-nT} spread${today.picks.length-nT===1?"":"s"} · ${nT} total${nT===1?"":"s"} · 1 unit each</span>${today.posted?`<span>Posted ${esc(today.posted)} ET</span>`:""}</span>Take the listed number or better. Skip a pick if the line has moved past its worst line.`;
-      $("#today-picks").innerHTML=cardHTML(today.picks,by,false)}
+      $("#today-picks").innerHTML=cardHTML(today.picks,by,false);$("#copy-card").hidden=false}
     else if(ex){const st=stats(ex);$("#today-picks").innerHTML=`<div class="banner"><b>Example</b><span>No picks posted today. Here's how a card looks: the ${ex.length} backtest picks from Saturday, Feb 21, 2026. That day went ${st.w}-${st.l}, ${fmtU(st.u)}.</span></div><div style="margin-top:18px">${cardHTML(ex,by,true)}</div>`}
     else $("#today-picks").innerHTML='<p class="note">Loading an example card…</p>'}
   const gb=$("#g-book"),gt=$("#g-tier");gb.onclick=()=>{by="book";gb.setAttribute("aria-pressed","true");gt.setAttribute("aria-pressed","false");drawToday()};
   gt.onclick=()=>{by="tier";gt.setAttribute("aria-pressed","true");gb.setAttribute("aria-pressed","false");drawToday()};drawToday();
   if(!real)getBT().then(bt=>{ex=bt.filter(r=>r.d==="2026-02-21");drawToday()});
+  else(window.requestIdleCallback||(f=>setTimeout(f,800)))(()=>getBT().then(drawToday));   // similar-past-picks lines fill in once the backtest arrives
+  function cardText(){const{g,keys}=groupPicks(today.picks,by),L=[`Nothing Can Stop Us Now Betting · ${fmtDate(today.date)} card · 1 unit each`];let i=0;
+    keys.forEach(k=>{L.push("",k);g.get(k).forEach(r=>{const lim=r.min!=null?(isT(r)?(r.side==="Over"?"max ":"min ")+r.min:"worst "+lnTxt(r.min)):null;
+      L.push(`${++i}. ${pickTxt(r)} (${isT(r)?r.op+" at "+r.tm:(r.ha==="A"?"at ":"vs ")+r.op}) · ${BOOK[r.bk]||r.bk} ${oddsTxt(r.o)}${lim?" · "+lim:""}${r.tip?" · "+r.tip+" ET":""}`);
+      if(r.why&&r.why.txt&&r.why.txt.length)L.push("   Why: "+r.why.txt[0])})});
+    return L.join("\n")}
+  function fallbackCopy(t){const a=document.createElement("textarea");a.value=t;a.setAttribute("readonly","");a.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}a.remove();return ok}
+  let cmT=0;$("#copy-card").onclick=()=>{const t=cardText(),msg=ok=>{const b=$("#copy-card");b.textContent=ok?"Copied":"Copy failed";$("#copy-msg").textContent=ok?"Card copied to clipboard":"Couldn't copy. Select the text and copy it manually.";clearTimeout(cmT);cmT=setTimeout(()=>{b.textContent="Copy card";$("#copy-msg").textContent=""},2000)};
+    if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(()=>msg(true),()=>msg(fallbackCopy(t)));else msg(fallbackCopy(t))};
 });
 })();
 </script>
