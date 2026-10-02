@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Nothing Can Stop Us Now Betting: model picks for college basketball and UFC, with a fully graded backtest.">
-<title>Nothing Can Stop Us Now</title>
+<title>Nothing Can Stop Us Now Betting</title>
+<meta name="description" content="Model picks for college basketball spreads and totals, plus UFC. Every pick graded at the real price, with a full out-of-sample backtest.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nothing Can Stop Us Now Betting">
+<meta property="og:title" content="Nothing Can Stop Us Now Betting">
+<meta property="og:description" content="Today's college basketball card, the live record and a fully graded backtest. Flat 1-unit picks, real prices, no hype.">
+<meta property="og:url" content="https://mkboggs92-cloud.github.io/ncsun/">
+<meta property="og:image" content="https://mkboggs92-cloud.github.io/ncsun/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0F1736">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FF8A2B' stroke='%230F1736' stroke-width='2.5'/%3E%3Cpath d='M2 16h28M16 2v28M7 5c5 6 5 16 0 22M25 5c-5 6-5 16 0 22' fill='none' stroke='%230F1736' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Figtree:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
@@ -14,7 +24,7 @@
 :root{
   --sky:#E9EEFF; --panel:#FFFFFF; --panel2:#F3F6FF; --ink:#0F1736; --ink2:#4A5478; --line:#D3DBF5;
   --cobalt:#2443E6; --cobalt-ink:#FFFFFF; --coral:#FF5B3D; --sun:#FFC93A; --sun-ink:#3A2A00;
-  --win:#179B5A; --loss:#DE3550; --track:#0F1736; --ball:#FF8A2B;
+  --win:#0F7A45; --loss:#C8283F; --track:#0F1736; --ball:#FF8A2B; --coral-ink:#C2361A;
   --display:"Bungee","Arial Black",Impact,sans-serif;
   --body:"Figtree",-apple-system,"Segoe UI",Roboto,sans-serif;
   --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -23,11 +33,11 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --sky:#0A0F2C; --panel:#131A45; --panel2:#1A2356; --ink:#EEF2FF; --ink2:#A7B1DA; --line:#2A3572;
   --cobalt:#7F96FF; --cobalt-ink:#0A0F2C; --coral:#FF7A5F; --sun:#FFD15C; --sun-ink:#2A1E00;
-  --win:#3FD38A; --loss:#FF6B81; --track:#C9D3FF; --ball:#FF9A45; color-scheme:dark}}
+  --win:#3FD38A; --loss:#FF6B81; --track:#C9D3FF; --ball:#FF9A45; --coral-ink:#FF8A70; color-scheme:dark}}
 :root[data-theme="dark"]{
   --sky:#0A0F2C; --panel:#131A45; --panel2:#1A2356; --ink:#EEF2FF; --ink2:#A7B1DA; --line:#2A3572;
   --cobalt:#7F96FF; --cobalt-ink:#0A0F2C; --coral:#FF7A5F; --sun:#FFD15C; --sun-ink:#2A1E00;
-  --win:#3FD38A; --loss:#FF6B81; --track:#C9D3FF; --ball:#FF9A45; color-scheme:dark}
+  --win:#3FD38A; --loss:#FF6B81; --track:#C9D3FF; --ball:#FF9A45; --coral-ink:#FF8A70; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{background:var(--sky);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
@@ -35,7 +45,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
   background:radial-gradient(circle at 1px 1px,var(--line) 1px,transparent 1.5px) 0 0/22px 22px;opacity:.55}
 .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
 button{font-family:inherit}
-button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px;box-shadow:0 0 0 7px color-mix(in srgb,var(--sun) 60%,transparent)}
 
 /* ---------- header ---------- */
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--sky);border-bottom:2px solid var(--ink)}
@@ -63,6 +73,8 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;text-transform:uppe
 h3{font:800 14px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase}
 .kicker{display:inline-flex;align-items:center;gap:8px;font:800 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--cobalt);margin-bottom:10px}
 .kicker::before{content:"";width:18px;height:3px;background:var(--coral);border-radius:2px}
+.summary{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:700 14px/1.3 var(--body);margin-top:12px}
+.summary b{font-family:var(--display);font-weight:400;font-size:18px}
 .lede{max-width:66ch;color:var(--ink2);margin:10px 0 0;font-size:16px}
 .note{color:var(--ink2);font-size:12.5px;margin:4px 0 0}
 section.view{display:grid;gap:22px;padding-top:14px}
@@ -72,17 +84,17 @@ section.view{display:grid;gap:22px;padding-top:14px}
 .panel.flat{box-shadow:none;border-color:var(--line)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:18px}
 .banner{display:flex;gap:12px;align-items:flex-start;border:2px dashed var(--ink);background:var(--panel);padding:14px 16px;border-radius:var(--r);max-width:84ch}
-.banner b{font-family:var(--display);font-weight:400;color:var(--coral)}
+.banner b{font-family:var(--display);font-weight:400;color:var(--coral-ink)}
 #bt-lab,#live-body{display:grid;gap:22px}
 
 /* KPI marquee */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:var(--ink);color:var(--sky);border-radius:var(--r);overflow:hidden;border:2px solid var(--ink)}
-.kpis div{padding:14px 16px;border-right:1px dashed var(--ink2)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:#0F1736;color:#EEF2FF;border-radius:var(--r);overflow:hidden;border:2px solid var(--ink)}
+.kpis div{padding:14px 16px;border-right:1px dashed #4A5478}
 .kpis div:last-child{border-right:0}
 .kpis small{display:block;font:700 11px/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:.75}
 .kpis b{display:block;font:400 30px/1.05 var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
 .kpis span{font-size:12px;opacity:.8}
-.kpis b.pos{color:var(--sun)} .kpis b.neg{color:var(--coral)}
+.kpis b.pos{color:#FFD15C} .kpis b.neg{color:#FF8A70}
 .pos{color:var(--win)} .neg{color:var(--loss)}
 
 /* ---------- Slice Lab ---------- */
@@ -112,7 +124,7 @@ details.filters>summary::before{content:"+";display:inline-grid;place-items:cent
 details.filters[open]>summary::before{content:"−"}
 
 /* tables */
-.tbl{overflow-x:auto}
+.tbl{overflow-x:auto;background:linear-gradient(90deg,var(--panel) 30%,transparent) left/40px 100% no-repeat local,linear-gradient(270deg,var(--panel) 30%,transparent) right/40px 100% no-repeat local,radial-gradient(farthest-side at 100% 50%,rgba(15,23,54,.22),transparent) right/14px 100% no-repeat scroll,radial-gradient(farthest-side at 0 50%,rgba(15,23,54,.22),transparent) left/14px 100% no-repeat scroll}
 table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
 th{font:800 11px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);text-align:right;padding:9px 10px;border-bottom:2px solid var(--ink);white-space:nowrap}
 td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
@@ -139,7 +151,7 @@ tr.tot td{font-weight:800;border-top:2px solid var(--ink)}
 .ticket .stub{border-left:2px dashed var(--ink);display:grid;place-items:center;text-align:center;padding:8px 4px;background:var(--panel2);border-radius:0 10px 10px 0}
 .ticket .stub b{display:block;font:400 22px/1 var(--display)}
 .ticket .stub small{font:800 9.5px/1.1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
-.ticket.big .stub{background:var(--sun);color:var(--sun-ink)} .ticket.big .stub small{color:var(--sun-ink)}
+.ticket .stub b.lim{font-size:19px}
 .ticket .tier{font:800 10.5px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--cobalt)}
 .ticket .pick{font:400 20px/1.08 var(--display);text-transform:uppercase;overflow-wrap:anywhere}
 .ticket .game{color:var(--ink2);font-size:13px}
@@ -163,7 +175,29 @@ svg text{font-family:var(--body)}
 .mbox{overflow-x:auto;padding:14px 12px;background:var(--panel2);border-radius:10px;font-size:1.15em;color:var(--ink);text-align:center}
 .mbox math{color:var(--ink)}
 .eq h3{font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:.02em}
-@media (max-width:640px){.wordmark{font-size:15px}.brand svg{width:52px;height:43px}.kpis b{font-size:24px}.panel{padding:14px;box-shadow:3px 3px 0 var(--ink)}.ubar{width:70px}}
+@media (max-width:640px){
+  .top .wrap{flex-wrap:nowrap;gap:8px;padding-block:7px}
+  .wordmark{font-size:13px}.wordmark small{display:none}.brand{gap:8px}.brand svg{width:40px;height:33px}
+  .seg button{font-size:10.5px;padding:8px 9px;letter-spacing:.05em}
+  nav.stops{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-block:12px 8px;margin-inline:-16px;padding-inline:16px}
+  nav.stops::-webkit-scrollbar{display:none}
+  nav.stops button{flex:none;min-height:44px}
+  .kpis b{font-size:24px}.panel{padding:14px;box-shadow:3px 3px 0 var(--ink)}
+  .chip{min-height:40px;padding:8px 12px}.ghost{min-height:44px;padding:10px 14px}.pill{min-height:36px}
+  .viewtog button{min-height:44px}select,input[type=search]{min-height:44px;font-size:16px}
+  .lab .tbl table:not(.heat):not(.log) th:first-child,.lab .tbl table:not(.heat):not(.log) td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);max-width:132px;white-space:normal}
+  .lab .tbl table:not(.heat):not(.log) th:nth-child(3),.lab .tbl table:not(.heat):not(.log) td:nth-child(3),
+  .lab .tbl table:not(.heat):not(.log) th:nth-child(7),.lab .tbl table:not(.heat):not(.log) td:nth-child(7),
+  .lab .tbl table:not(.heat):not(.log) th:nth-child(8),.lab .tbl table:not(.heat):not(.log) td:nth-child(8){display:none}
+  table.log thead{display:none}
+  table.log tr{display:flex;flex-wrap:wrap;align-items:center;gap:3px 10px;padding:11px 0;border-bottom:1px solid var(--line)}
+  table.log td{border:0;padding:0;white-space:normal;text-align:left;font-size:13px;color:var(--ink2)}
+  table.log td:nth-child(2){flex-basis:100%;order:-1;font-size:15px;color:var(--ink)}
+  table.log td:nth-child(5),table.log td:nth-child(6){display:none}
+  table.log td:nth-child(8){margin-left:auto}table.log td:nth-child(9){font-weight:800}
+  .heat td.c{min-width:78px}
+  .lab .tbl th,.lab .tbl td{padding-inline:6px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -251,7 +285,7 @@ svg text{font-family:var(--body)}
         <li>Picks beat the closing number in every season. Graded at the near-close consensus line the card still wins 55.7%; at the plain 5am consensus and -110, 56.9%.</li>
         <li>Two full audits regraded every pick from the raw odds feed and checked every score against ESPN: zero mismatches. The second one found that 20% of games had never been matched to a line (team-name and home/away quirks in the odds feed); they are now in.</li></ul></div>
     </div>
-    <div class="panel flat prose"><h3>What to expect live</h3><p>At 1 unit a pick the backtest went 57.1% over 2,453 bets, +216 units, +8.8% ROI, with a worst drawdown of 19 units. Tiers, cutoffs and caps were chosen on the same seasons they were tested on, so expect less live: roughly 55% and +4 to +5% ROI, about +25 to +30 units over a 600-bet season, with about a 1-in-6 chance of a losing season. Variance is real: even with a true 57% edge, 100-bet stretches at 50% happen. The live tab is the record that counts.</p></div>
+    <div class="panel flat prose"><h3>What to expect live</h3><p>At 1 unit a pick the backtest went 57.1% over 2,453 bets, +216 units, +8.8% ROI, with a worst drawdown of about 19 units. Tiers, cutoffs and caps were chosen on the same seasons they were tested on, so expect less live: roughly 55% and +4 to +5% ROI, about +25 to +30 units over a 600-bet season, with about a 1-in-6 chance of a losing season. Variance is real: even with a true 57% edge, 100-bet stretches at 50% happen. The live tab is the record that counts.</p></div>
   </section>
   <section class="view" id="v-hood" hidden>
     <div><div class="kicker">Under the hood · model specification</div><h1>The <em>engine</em> room</h1>
@@ -368,30 +402,36 @@ const clvTxt=c=>c==null?"–":(c>0?"+":"")+c.toFixed(2);
 /* coaster chart: the equity curve drawn as track, with the car at the current total */
 function coaster(el,rows){
   if(rows.length<2){el.innerHTML='<p class="note">Not enough graded picks to draw the ride yet.</p>';return}
-  const W=760,H=270,L=50,R=18,T=40,B=34,n=rows.length;let c=0;const ys=rows.map(r=>(c+=r.p));
-  const ymin=Math.min(0,...ys),ymax=Math.max(1,...ys),span=ymax-ymin||1,step=span>300?100:span>120?50:span>40?20:span>15?5:2;
+  const nar=innerWidth<600,W=nar?360:760,H=nar?250:270,L=nar?40:50,R=nar?12:18,T=nar?44:40,B=nar?30:34,fs=nar?12:11,n=rows.length;let c=0;const ys=rows.map(r=>(c+=r.p));
+  const ymin=Math.min(0,...ys),ymax=Math.max(1,...ys),span=ymax-ymin||1,lines=nar?4:7,step=[2,5,10,20,25,50,100,200].find(x=>span/x<=lines)||500;
   const x=i=>L+i/(n-1)*(W-L-R),y=v=>T+(ymax-v)/span*(H-T-B);
-  let g="";for(let v=Math.ceil(ymin/step)*step;v<=ymax;v+=step)g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" ${v===0?'stroke-width="2"':'stroke-dasharray="2 5"'}/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--ink2)">${v>0?"+":""}${v}u</text>`;
-  let s="",prev=null;rows.forEach((r,i)=>{if(r.s!==prev){s+=`<line x1="${x(i)}" x2="${x(i)}" y1="${T-10}" y2="${H-B}" stroke="var(--line)"/><text x="${x(i)+5}" y="${H-B+20}" font-size="11.5" font-weight="700" fill="var(--ink2)">${r.s}</text>`;prev=r.s}});
-  const k=Math.max(1,Math.floor(n/140)),pts=[];for(let i=0;i<n;i+=k)pts.push([x(i),y(ys[i])]);if(pts[pts.length-1][0]!==x(n-1))pts.push([x(n-1),y(ys[n-1])]);
+  let g="";for(let v=Math.ceil(ymin/step)*step;v<=ymax;v+=step)g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" ${v===0?'stroke-width="2"':'stroke-dasharray="2 5"'}/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="${fs}" fill="var(--ink2)">${v>0?"+":""}${v}u</text>`;
+  let s="",prev=null;rows.forEach((r,i)=>{if(r.s!==prev){s+=`<line x1="${x(i)}" x2="${x(i)}" y1="${T-10}" y2="${H-B}" stroke="var(--line)"/><text x="${x(i)+4}" y="${H-B+19}" font-size="${fs}" font-weight="700" fill="var(--ink2)">${nar?String(r.s).slice(2):r.s}</text>`;prev=r.s}});
+  // worst drawdown: largest peak-to-trough drop
+  let pk=0,pi=0,dd=0,di0=0,di1=0;ys.forEach((v,i)=>{if(v>pk){pk=v;pi=i}if(pk-v>dd){dd=pk-v;di0=pi;di1=i}});
+  const k=Math.max(1,Math.floor(n/(nar?90:140))),pts=[];for(let i=0;i<n;i+=k)pts.push([x(i),y(ys[i])]);if(pts[pts.length-1][0]!==x(n-1))pts.push([x(n-1),y(ys[n-1])]);
   const path=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join("");
-  let ties="";for(let i=1;i<pts.length;i+=2){const a=pts[i-1],b=pts[i];const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1,nx=-dy/len*6,ny=dx/len*6;ties+=`<line x1="${(b[0]+nx).toFixed(1)}" y1="${(b[1]+ny).toFixed(1)}" x2="${(b[0]-nx).toFixed(1)}" y2="${(b[1]-ny).toFixed(1)}" stroke="var(--track)" stroke-width="1.6" opacity=".5"/>`}
+  let ties="";if(!nar)for(let i=1;i<pts.length;i+=2){const a=pts[i-1],b=pts[i];const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1,nx=-dy/len*6,ny=dx/len*6;ties+=`<line x1="${(b[0]+nx).toFixed(1)}" y1="${(b[1]+ny).toFixed(1)}" x2="${(b[0]-nx).toFixed(1)}" y2="${(b[1]-ny).toFixed(1)}" stroke="var(--track)" stroke-width="1.6" opacity=".5"/>`}
+  let ddm="";if(dd>=3){const x0=x(di0),x1=x(di1),y0=y(ys[di0]),y1=y(ys[di1]),lx=Math.min(Math.max((x0+x1)/2,L+60),W-R-60);
+    ddm=`<g aria-hidden="true"><line x1="${x0}" x2="${x1}" y1="${y0}" y2="${y0}" stroke="var(--loss)" stroke-dasharray="3 3"/><line x1="${x1}" x2="${x1}" y1="${y0}" y2="${y1}" stroke="var(--loss)" stroke-width="2"/><circle cx="${x1}" cy="${y1}" r="3.5" fill="var(--loss)"/>
+     <text x="${lx}" y="${Math.min(H-B-6,y1+18)}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="var(--loss)">Worst drawdown −${dd.toFixed(1)}u</text></g>`}
   const end=pts[pts.length-1],pre=pts[Math.max(0,pts.length-3)],ang=Math.atan2(end[1]-pre[1],end[0]-pre[0])*180/Math.PI,last=ys[n-1],base=y(Math.max(ymin,0));
-  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}">${g}${s}
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}; worst drawdown ${dd.toFixed(1)} units">${g}${s}
    <path d="${path} L${end[0]} ${base} L${pts[0][0]} ${base} Z" fill="var(--cobalt)" opacity=".10"/>
-   ${ties}<path d="${path}" fill="none" stroke="var(--track)" stroke-width="3.2" stroke-linejoin="round"/>
+   ${ties}<path d="${path}" fill="none" stroke="var(--track)" stroke-width="${nar?2.6:3.2}" stroke-linejoin="round"/>${ddm}
    <g transform="translate(${end[0].toFixed(1)} ${end[1].toFixed(1)}) rotate(${ang.toFixed(1)})"><rect x="-24" y="-14" width="24" height="10" rx="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/><circle cx="-19" cy="-2" r="2.6" fill="var(--ink)"/><circle cx="-5" cy="-2" r="2.6" fill="var(--ink)"/><circle cx="-12" cy="-19" r="5.5" fill="var(--ball)" stroke="var(--ink)" stroke-width="1.6"/></g>
-   <text x="${(end[0]-8).toFixed(1)}" y="${Math.max(16,end[1]-30).toFixed(1)}" text-anchor="end" font-size="15" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>`}
+   <text x="${(end[0]-8).toFixed(1)}" y="${Math.max(16,end[1]-30).toFixed(1)}" text-anchor="end" font-size="${nar?14:15}" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>`}
 
 function kpis(el,s,label){el.innerHTML=`<div><small>Bets</small><b>${s.n.toLocaleString()}</b><span>${label}</span></div><div><small>Record</small><b>${s.w}-${s.l}</b><span>${pct(s.wp)} win rate</span></div>
  <div><small>Units</small><b class="${s.u>=0?"pos":"neg"}">${fmtU(s.u)}</b><span>${s.u>=0?"+":"−"}$${Math.abs(Math.round(s.u*100)).toLocaleString()} at $100/unit</span></div>
- <div><small>ROI</small><b>${(s.roi*100).toFixed(1)}%</b><span>per unit risked</span></div><div><small>Vs close</small><b>${clvTxt(s.clv)}</b><span>avg points</span></div>`}
+ <div><small>ROI</small><b class="${s.roi>=0?"pos":"neg"}">${s.roi>=0?"+":""}${(s.roi*100).toFixed(1)}%</b><span>per unit risked</span></div><div><small>Vs close</small><b>${clvTxt(s.clv)}</b><span>avg points</span></div>`}
 
-function ticket(r,showRes){const big=false;const pick=isT(r)?`${r.side} ${r.ln}`:`${r.tm} ${lnTxt(r.ln)}`;
-  const game=isT(r)?`${r.op} at ${r.tm}${r.el>=5000?` · ${r.el.toLocaleString()} ft`:""}`:`${r.ha==="A"?"at":"vs"} ${r.op}`;
-  return `<article class="ticket ${big?"big":""}"><span class="notch t"></span><span class="notch b"></span><div class="main"><div class="tier">${esc(r.t)}</div><div class="pick">${esc(pick)}</div><div class="game">${esc(game)}</div>
-  <div class="price"><span>${esc(BOOK[r.bk]||r.bk)} ${oddsTxt(r.o)}</span>${r.min!=null?`<span>${isT(r)?(r.side==="Over"?"max":"min"):"min"} ${r.min}</span>`:""}${showRes&&r.r?`<span class="tag ${r.r==="W"?"w":"l"}">${r.r==="W"?"Won":"Lost"} ${esc(r.sc||"")}</span>`:""}</div></div>
-  <div class="stub"><div><b>${r.u}U</b><small>Stake</small></div></div></article>`}
+function ticket(r,showRes){const pick=isT(r)?`${r.side} ${r.ln}`:`${r.tm} ${lnTxt(r.ln)}`;
+  const game=(isT(r)?`${r.op} at ${r.tm}${r.el>=5000?` · ${r.el.toLocaleString()} ft`:""}`:`${r.ha==="A"?"at":"vs"} ${r.op}`)+(r.tip?` · ${r.tip} ET`:"");
+  const hasMin=r.min!=null,limLbl=isT(r)?(r.side==="Over"?"Max line":"Min line"):"Worst line",limVal=hasMin?(isT(r)?String(r.min):lnTxt(r.min)):oddsTxt(r.o);
+  return `<article class="ticket"><span class="notch t"></span><span class="notch b"></span><div class="main"><div class="tier">${esc(r.t)}</div><div class="pick">${esc(pick)}</div><div class="game">${esc(game)}</div>
+  <div class="price"><span>${esc(BOOK[r.bk]||r.bk)} ${oddsTxt(r.o)}</span>${showRes&&r.r?`<span class="tag ${r.r==="W"?"w":"l"}">${r.r==="W"?"Won":"Lost"} ${esc(r.sc||"")}</span>`:""}</div></div>
+  <div class="stub"><div><b class="lim">${esc(limVal)}</b><small>${hasMin?limLbl:"Price"}</small></div></div></article>`}
 function cardHTML(picks,by,showRes){const key=by==="book"?(r=>BOOK[r.bk]||r.bk):(r=>r.t);const order=by==="book"?["FanDuel","DraftKings","Caesars"]:DIMS.tier.order;
   const g=new Map();picks.forEach(p=>{const k=key(p);if(!g.has(k))g.set(k,[]);g.get(k).push(p)});const ab={FanDuel:"FD",DraftKings:"DK",Caesars:"CZR"};
   return `<div class="books">${[...g.keys()].sort((a,b)=>order.indexOf(a)-order.indexOf(b)).map(k=>`<div><div class="bookhead"><span class="logo">${esc(by==="book"?ab[k]||k:"★")}</span><h2>${esc(k)}</h2><span class="note">${g.get(k).length} pick${g.get(k).length>1?"s":""}</span></div><div class="tickets">${g.get(k).map(p=>ticket(p,showRes)).join("")}</div></div>`).join("")}</div>`}
@@ -403,7 +443,7 @@ function lab(root,all,idp,label){
   root.innerHTML=`<div class="kpis" id="${idp}-k"></div>
   <div class="panel"><div class="lab-head"><h2>The ride</h2><span class="note" id="${idp}-sub"></span></div><div id="${idp}-chart"></div></div>
   <div class="panel lab"><div class="lab-head"><h2>Slice lab</h2><div class="active" id="${idp}-active"></div></div>
-   <details class="filters" open><summary><h3>Filters</h3><span class="note">Tap chips to narrow every number on this page. Chips in the same group add together.</span></summary>
+   <details class="filters" ${matchMedia("(max-width:640px)").matches?"":"open"}><summary><h3>Filters</h3><span class="note">Tap chips to narrow every number on this page. Chips in the same group add together.</span></summary>
     <div class="fgrid">${FILTER_DIMS.map(d=>`<div class="fgroup"><h4>${DIMS[d].n}</h4><div class="chips">${groupBy(all,d).map(([k,v])=>`<button class="chip" data-d="${d}" data-v="${esc(k)}" aria-pressed="false">${esc(k)}<small>${v.length}</small></button>`).join("")}</div></div>`).join("")}</div></details>
    <div class="lab-controls">
      <label class="f" for="${idp}-a">Break down by<select id="${idp}-a">${opts}</select></label>
@@ -427,7 +467,7 @@ function lab(root,all,idp,label){
     return `<table><thead><tr><th>${esc(DIMS[A].n)}</th><th>Bets</th><th>W-L</th><th>Win%</th><th>Units</th><th>ROI</th><th title="Average points vs the closing line">CLV</th><th></th></tr></thead><tbody>${blocks.map(([k,s,subs])=>row(k,s,max)+subs.map(([k2,s2])=>row(k2,s2,max,"sub")).join("")).join("")}${row("All filtered bets",stats(rows),max,"tot")}</tbody></table>`}
   function log(rows){const qq=q.value.trim().toLowerCase();const f=rows.filter(r=>!qq||r.tm.toLowerCase().includes(qq)||r.op.toLowerCase().includes(qq)).slice().reverse();
     const PER=30,pages=Math.max(1,Math.ceil(f.length/PER));page=Math.min(page,pages-1);const v=f.slice(page*PER,page*PER+PER);
-    $(`#${idp}-log`).innerHTML=`<table><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Game</th><th>Price</th><th class="l">Book</th><th class="l">Tier</th><th>Score</th><th>Result</th><th>Units</th></tr></thead><tbody>${v.map(r=>`<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(isT(r)?r.side+" "+r.ln:r.tm+" "+lnTxt(r.ln))}</b></td><td class="l">${esc(isT(r)?r.op+" at "+r.tm:(r.ha==="A"?"at ":"vs ")+r.op)}</td><td class="mono">${oddsTxt(r.o)}</td><td class="l">${esc(r.bk)}</td><td class="l">${esc(r.t)} · ${r.u}u</td><td class="mono">${esc(r.sc)}</td><td><span class="tag ${r.r==="W"?"w":"l"}">${r.r}</span></td><td class="${sgn(r.p)}">${fmtU(r.p)}</td></tr>`).join("")}</tbody></table>
+    $(`#${idp}-log`).innerHTML=`<table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Game</th><th>Price</th><th class="l">Book</th><th class="l">Tier</th><th>Score</th><th>Result</th><th>Units</th></tr></thead><tbody>${v.map(r=>`<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(isT(r)?r.side+" "+r.ln:r.tm+" "+lnTxt(r.ln))}</b></td><td class="l">${esc(isT(r)?r.op+" at "+r.tm:(r.ha==="A"?"at ":"vs ")+r.op)}</td><td class="mono">${oddsTxt(r.o)}</td><td class="l">${esc(r.bk)}</td><td class="l">${esc(r.t)} · ${r.u}u</td><td class="mono">${esc(r.sc)}</td><td><span class="tag ${r.r==="W"?"w":"l"}">${r.r}</span></td><td class="${sgn(r.p)}">${fmtU(r.p)}</td></tr>`).join("")}</tbody></table>
     <div class="pager"><button class="ghost" id="${idp}-pp" ${page<=0?"disabled":""}>Newer</button><span class="note">Page ${page+1} of ${pages} · ${f.length.toLocaleString()} bets</span><button class="ghost" id="${idp}-pn" ${page>=pages-1?"disabled":""}>Older</button></div>`;
     $(`#${idp}-pp`).onclick=()=>{page--;log(rows)};$(`#${idp}-pn`).onclick=()=>{page++;log(rows)}}
   function draw(){const rows=filtered();kpis($(`#${idp}-k`),stats(rows),label);coaster($(`#${idp}-chart`),rows);
@@ -441,32 +481,46 @@ function lab(root,all,idp,label){
   [a,b].forEach(x=>x.addEventListener("change",draw));q.addEventListener("input",()=>{page=0;log(filtered())});
   vt.onclick=()=>{heat=false;vt.setAttribute("aria-pressed","true");vh.setAttribute("aria-pressed","false");draw()};
   vh.onclick=()=>{heat=true;vh.setAttribute("aria-pressed","true");vt.setAttribute("aria-pressed","false");if(!b.value)b.value=a.value==="season"?"mkt":"season";draw()};
+  let nar=innerWidth<600;addEventListener("resize",()=>{const n2=innerWidth<600;if(n2!==nar){nar=n2;coaster($(`#${idp}-chart`),filtered())}});
   draw()}
 
-const VIEWS=["today","live","backtest","how","hood"];
-function show(v){document.querySelectorAll("nav.stops button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));VIEWS.forEach(x=>$("#v-"+x).hidden=x!==v);try{localStorage.setItem("ncsun-view",v)}catch(e){}}
-function model(m){document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-selected",b.dataset.model===m));$("#ncaab").hidden=m!=="ncaab";$("#ufc").hidden=m!=="ufc"}
-document.querySelectorAll("nav.stops button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
-document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>model(b.dataset.model)));
-const h=(location.hash||"").slice(1);if(h==="ufc")model("ufc");else if(VIEWS.includes(h))show(h);else{try{const v=localStorage.getItem("ncsun-view");if(VIEWS.includes(v))show(v)}catch(e){}}
+const VIEWS=["today","live","backtest","how","hood"];let cur="today";const onShow={};
+function show(v,push){cur=v;document.querySelectorAll("nav.stops button").forEach(b=>{const on=b.dataset.view===v;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1;if(on&&push)b.scrollIntoView({block:"nearest",inline:"nearest"})});VIEWS.forEach(x=>$("#v-"+x).hidden=x!==v);
+  if(push)history.replaceState(null,"",v==="today"?location.pathname+location.search:"#"+v);if(onShow[v])onShow[v]()}
+function model(m,push){document.querySelectorAll(".seg button").forEach(b=>{const on=b.dataset.model===m;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1});$("#ncaab").hidden=m!=="ncaab";$("#ufc").hidden=m!=="ufc";
+  if(push)history.replaceState(null,"",m==="ufc"?"#ufc":(cur==="today"?location.pathname+location.search:"#"+cur))}
+document.querySelectorAll("nav.stops button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view,true)));
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>model(b.dataset.model,true)));
+document.querySelectorAll('[role="tablist"]').forEach(tl=>tl.addEventListener("keydown",e=>{const t=[...tl.querySelectorAll('[role="tab"]')],i=t.indexOf(document.activeElement);if(i<0)return;
+  const j=e.key==="ArrowRight"?(i+1)%t.length:e.key==="ArrowLeft"?(i-1+t.length)%t.length:e.key==="Home"?0:e.key==="End"?t.length-1:-1;if(j<0)return;e.preventDefault();t[j].focus();t[j].click()}));
+function route(){const h=(location.hash||"").slice(1);if(h==="ufc")model("ufc");else{model("ncaab");show(VIEWS.includes(h)?h:"today")}}
+addEventListener("hashchange",route);route();
 
-const getJSON=u=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
+const getJSON=u=>fetch(u,{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null);
 const bydate=(a,b)=>a.d<b.d?-1:a.d>b.d?1:0;
-Promise.all([getJSON("ncaab_backtest.json"),getJSON("ncaab_live.json"),getJSON("ncaab_today.json")]).then(([bt,live,today])=>{
-  bt=(bt||[]).sort(bydate);live=(live||[]).filter(r=>r.r==="W"||r.r==="L").sort(bydate);today=today||{picks:[]};
-  lab($("#bt-lab"),bt,"bt","4 seasons");
+let btP=null;const getBT=()=>btP||(btP=getJSON("ncaab_backtest.json").then(bt=>(bt||[]).sort(bydate)));
+// backtest data is the heavy file: load it only when needed (Backtest tab, or the example card), or once the page is idle
+let btDone=false;onShow.backtest=()=>{if(btDone)return;btDone=true;$("#bt-lab").innerHTML='<p class="note">Loading 2,453 graded picks…</p>';getBT().then(bt=>lab($("#bt-lab"),bt,"bt","4 seasons"))};
+let liveDone=false;onShow.live=()=>{if(liveDone)return;liveDone=true;getJSON("ncaab_live.json").then(live=>{live=(live||[]).filter(r=>r.r==="W"||r.r==="L").sort(bydate);
   if(live.length)lab($("#live-body"),live,"lv","2026-27");
-  else $("#live-body").innerHTML='<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first real pick, expected around Nov 21 once teams reach 5 games. Paper-tracked early-season games are logged separately and never counted here.</span></div>';
-  let by="book";const real=today.picks&&today.picks.length;const ex=bt.filter(r=>r.d==="2026-02-21");
-  function drawToday(){if(real){$("#today-kicker").textContent=today.date+" · college basketball · spreads and totals";
-      $("#today-lede").textContent=`${today.picks.length} picks today. Take the listed number or better; skip a pick if the line has moved past its limit.`;$("#today-picks").innerHTML=cardHTML(today.picks,by,false)}
-    else $("#today-picks").innerHTML=`<div class="banner"><b>Example</b><span>No picks posted today. Here's how a card looks: the ${ex.length} backtest picks from Saturday, Feb 21, 2026, with results.</span></div><div style="margin-top:18px">${cardHTML(ex,by,true)}</div>`}
+  else $("#live-body").innerHTML='<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first real pick, expected around Nov 21 once teams reach 5 games. Paper-tracked early-season games are logged separately and never counted here.</span></div>'})};
+if(onShow[cur])onShow[cur]();
+getJSON("ncaab_today.json").then(today=>{today=today||{picks:[]};let by="book",ex=null;const real=today.picks&&today.picks.length;
+  const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+  function drawToday(){if(real){$("#today-kicker").textContent=fmtDate(today.date)+" · college basketball · spreads and totals";
+      const nT=today.picks.filter(isT).length;
+      $("#today-lede").innerHTML=`<span class="summary"><b>${today.picks.length} pick${today.picks.length>1?"s":""}</b><span>${today.picks.length-nT} spread${today.picks.length-nT===1?"":"s"} · ${nT} total${nT===1?"":"s"} · 1 unit each</span>${today.posted?`<span>Posted ${esc(today.posted)} ET</span>`:""}</span>Take the listed number or better. Skip a pick if the line has moved past its worst line.`;
+      $("#today-picks").innerHTML=cardHTML(today.picks,by,false)}
+    else if(ex){const st=stats(ex);$("#today-picks").innerHTML=`<div class="banner"><b>Example</b><span>No picks posted today. Here's how a card looks: the ${ex.length} backtest picks from Saturday, Feb 21, 2026. That day went ${st.w}-${st.l}, ${fmtU(st.u)}.</span></div><div style="margin-top:18px">${cardHTML(ex,by,true)}</div>`}
+    else $("#today-picks").innerHTML='<p class="note">Loading an example card…</p>'}
   const gb=$("#g-book"),gt=$("#g-tier");gb.onclick=()=>{by="book";gb.setAttribute("aria-pressed","true");gt.setAttribute("aria-pressed","false");drawToday()};
   gt.onclick=()=>{by="tier";gt.setAttribute("aria-pressed","true");gb.setAttribute("aria-pressed","false");drawToday()};drawToday();
+  if(!real)getBT().then(bt=>{ex=bt.filter(r=>r.d==="2026-02-21");drawToday()});
 });
 })();
 </script>
 <script src="ufc.js"></script>
 
+<noscript><p style="padding:16px">This site needs JavaScript to show picks and results.</p></noscript>
 </body>
 </html>
