@@ -299,7 +299,7 @@ svg text{font-family:var(--body)}
         <li>Picks beat the closing number in every season. Graded at the near-close consensus line the card still wins 55.7%; at the plain 5am consensus and -110, 56.9%.</li>
         <li>Two full audits regraded every pick from the raw odds feed and checked every score against ESPN: zero mismatches. The second one found that 20% of games had never been matched to a line (team-name and home/away quirks in the odds feed); they are now in.</li></ul></div>
     </div>
-    <div class="panel flat prose"><h3>What to expect live</h3><p>At 1 unit a pick the backtest went 57.5% over 2,440 bets, +231 units, +9.5% ROI, with a worst drawdown of about 22 units. Tiers, cutoffs and caps were chosen on the same seasons they were tested on, so expect less live: roughly 55% and +4 to +5% ROI, about +25 to +30 units over a 600-bet season, with about a 1-in-6 chance of a losing season. Variance is real: even with a true 57% edge, 100-bet stretches at 50% happen. The live tab is the record that counts.</p></div>
+    <div class="panel flat prose"><h3>What to expect live</h3><p>At 1 unit a pick the backtest went 57.4% over 2,476 bets, +229 units, +9.2% ROI, with a worst drawdown of about 22 units. Tiers, cutoffs and caps were chosen on the same seasons they were tested on, so expect less live: roughly 55% and +4 to +5% ROI, about +25 to +30 units over a 600-bet season, with about a 1-in-6 chance of a losing season. Variance is real: even with a true 57% edge, 100-bet stretches at 50% happen. The live tab is the record that counts.</p></div>
   </section>
   <section class="view" id="v-hood" hidden>
     <div><div class="kicker">Under the hood · model specification</div><h1>The <em>engine</em> room</h1>
@@ -527,7 +527,7 @@ const getJSON=u=>fetch(u,{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch((
 const bydate=(a,b)=>a.d<b.d?-1:a.d>b.d?1:0;
 let btP=null;const getBT=()=>btP||(btP=getJSON("ncaab_backtest.json").then(bt=>{BT=fixT(bt||[]).sort(bydate);return BT}));
 // backtest data is the heavy file: load it only when needed (Backtest tab, or the example card), or once the page is idle
-let btDone=false;onShow.backtest=()=>{if(btDone)return;btDone=true;$("#bt-lab").innerHTML='<p class="note">Loading 2,440 graded picks…</p>';getBT().then(bt=>lab($("#bt-lab"),bt,"bt","4 seasons"))};
+let btDone=false;onShow.backtest=()=>{if(btDone)return;btDone=true;$("#bt-lab").innerHTML='<p class="note">Loading 2,476 graded picks…</p>';getBT().then(bt=>lab($("#bt-lab"),bt,"bt","4 seasons"))};
 let liveDone=false;onShow.live=()=>{if(liveDone)return;liveDone=true;getJSON("ncaab_live.json").then(live=>{live=fixT(live||[]).filter(r=>r.r==="W"||r.r==="L").sort(bydate);
   if(live.length)lab($("#live-body"),live,"lv","2026-27");
   else $("#live-body").innerHTML='<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first real pick, expected around Nov 21 once teams reach 5 games. Paper-tracked early-season games are logged separately and never counted here.</span></div>'})};
