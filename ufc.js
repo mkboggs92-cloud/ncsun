@@ -6,26 +6,96 @@
   if (!root) return;
   const css = `
 #ufc .ufc-views{display:grid;gap:22px}
+#ufc .summary{margin-top:14px}
+#ufc .kpis.open{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+#ufc .kpis.open b{font-size:26px}
+#ufc .kpis .types{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:8px;font-size:12px;opacity:.9}
+#ufc .tickets{grid-template-columns:repeat(auto-fill,minmax(min(430px,100%),1fr))}
+#ufc .ticket .main{gap:7px}
+#ufc .ticket .head{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#ufc .tbadge{display:inline-flex;align-items:center;gap:5px;font:800 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border-radius:999px;border:1.5px solid var(--ink);background:var(--panel2);color:var(--ink)}
+#ufc .tbadge.ml{background:var(--cobalt);color:var(--cobalt-ink);border-color:var(--cobalt)}
+#ufc .tbadge.fade{background:var(--sun);color:var(--sun-ink);border-color:var(--sun-ink)}
+#ufc .tbadge.gtd{background:transparent;color:var(--coral-ink);border-color:var(--coral-ink)}
+#ufc .tbadge.paper{background:transparent;border-style:dashed;color:var(--ink2);border-color:var(--ink2)}
+#ufc .units{margin-left:auto;font:400 15px/1 var(--display);color:var(--ink)}
+#ufc .units small{font:800 9.5px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-left:3px}
+#ufc .ticket .pick{font-size:21px}
+#ufc .ticket .game{font-size:13px}
+#ufc .pricegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;background:var(--panel2);border-radius:10px;padding:8px 10px}
+#ufc .pricegrid div{display:grid;gap:2px;min-width:0}
+#ufc .pricegrid div.worst{display:none}
+#ufc .pricegrid small{font:800 9.5px/1.1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ufc .pricegrid b{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
+#ufc .pricegrid b.pos{color:var(--win)}
+#ufc .pricegrid span{font-size:11px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ufc .why{display:grid;gap:4px;margin-top:2px}
+#ufc .why h4{margin:0 0 2px;font:800 10.5px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);display:flex;justify-content:space-between;gap:8px}
+#ufc .why h4 span{font-weight:600;letter-spacing:0;text-transform:none;font-size:11.5px}
+#ufc .why .row{display:grid;grid-template-columns:minmax(0,1fr) 120px 40px;gap:8px;align-items:center;font-size:12.5px;line-height:1.3}
+#ufc .why .lbl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ufc .why .lbl small{color:var(--ink2);font-size:11px;font-family:var(--mono);margin-left:5px}
+#ufc .why .bar{position:relative;height:10px;background:var(--panel2);border-radius:3px}
+#ufc .why .bar::before{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink2);opacity:.6}
+#ufc .why .bar i{position:absolute;top:0;bottom:0;background:var(--win);border-radius:0 4px 4px 0;left:50%}
+#ufc .why .bar i.neg{background:var(--loss);border-radius:4px 0 0 4px;left:auto;right:50%}
+#ufc .why .val{font-family:var(--mono);font-size:12px;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+#ufc .why .foot{font-size:11.5px;color:var(--ink2);margin-top:3px}
+#ufc .why .foot b{color:var(--ink);font-weight:700}
+#ufc .ticket.paper{border-style:dashed;box-shadow:none;background:transparent}
+#ufc .ticket.paper .stub{border-left-style:dashed;background:transparent}
+#ufc .ticket.paper .pick{color:var(--ink2)}
 #ufc .fightcard{display:grid;gap:0}
-#ufc .ev-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:10px}
-#ufc .fight{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
-#ufc .fight:last-child{border-bottom:0}
-#ufc .side{display:grid;gap:3px;min-width:0}
+#ufc .ev-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:6px}
+#ufc .fight{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,260px) minmax(0,1fr);gap:8px 14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+#ufc .fight:last-child{border-bottom:0;padding-bottom:4px}
+#ufc .fight.has-pick{background:linear-gradient(90deg,color-mix(in srgb,var(--sun) 22%,transparent),transparent 40%,transparent 60%,color-mix(in srgb,var(--sun) 22%,transparent));margin-inline:-18px;padding-inline:18px;border-radius:10px}
+#ufc .side{display:grid;gap:3px;min-width:0;align-content:start}
 #ufc .side.b{text-align:right;justify-items:end}
-#ufc .side .nm{font-weight:800;font-size:15px;overflow-wrap:anywhere}
-#ufc .side .px{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+#ufc .side .nm{font-weight:800;font-size:15.5px;line-height:1.2;overflow-wrap:anywhere;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#ufc .side.b .nm{justify-content:flex-end}
+#ufc .side .px{font-family:var(--mono);font-size:12px;color:var(--ink2);white-space:nowrap}
+#ufc .side .px b{color:var(--ink);font-weight:500}
 #ufc .side.pick .nm{color:var(--cobalt)}
-#ufc .mid{display:grid;justify-items:center;gap:4px;min-width:118px}
-#ufc .mid small{font:700 10.5px/1.2 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);text-align:center}
-#ufc .pbar{display:flex;width:118px;height:10px;border-radius:5px;overflow:hidden;border:1.5px solid var(--ink)}
+#ufc .side.fav .nm{color:var(--ink)}
+#ufc .mid{display:grid;justify-items:stretch;gap:5px;min-width:0}
+#ufc .pv{display:flex;justify-content:space-between;font:800 13px/1 var(--body);font-variant-numeric:tabular-nums}
+#ufc .pv .ma{color:var(--cobalt)} #ufc .pv .mb{color:var(--coral-ink)}
+#ufc .pbar{position:relative;display:flex;height:12px;border-radius:6px;overflow:visible;border:1.5px solid var(--ink);background:var(--panel2)}
 #ufc .pbar i{display:block;height:100%}
-#ufc .pv{font:800 13px/1 var(--body);font-variant-numeric:tabular-nums}
+#ufc .pbar i.a{background:var(--cobalt);border-radius:4px 0 0 4px}
+#ufc .pbar i.b{background:var(--coral);border-radius:0 4px 4px 0;margin-left:2px}
+#ufc .pbar .mk{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--ink);transform:translateX(-50%)}
+#ufc .pbar .mk::after{content:"";position:absolute;left:50%;top:-4px;width:0;height:0;border:4px solid transparent;border-top-color:var(--ink);transform:translateX(-50%)}
+#ufc .mid small{font:700 10px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);text-align:center;display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+#ufc .meth{display:flex;justify-content:center;gap:4px 10px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);text-align:center}
+#ufc .meth b{color:var(--ink);font-weight:700}
+#ufc .lean{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;font-size:12px;color:var(--ink2);margin-top:-4px}
+#ufc .lean div{min-width:0;display:flex;gap:6px;align-items:baseline}
+#ufc .lean div:last-child{text-align:right;justify-content:flex-end}
+#ufc .lean b{flex:none;font-weight:800;color:var(--ink)}
+#ufc .lean .dot{width:8px;height:8px;margin:0;flex:none;align-self:center}
+#ufc .lean span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 #ufc .badge{display:inline-block;font:800 10px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;background:var(--sun);color:var(--sun-ink);padding:4px 6px;border-radius:999px;border:1.5px solid var(--ink)}
-#ufc .meth{font-size:11.5px;color:var(--ink2)}
-#ufc .status{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2)}
+#ufc .badge.watch{background:var(--panel);color:var(--ink2);border-style:dashed;border-color:var(--ink2)}
+#ufc .status{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin-top:10px}
 #ufc .status b{color:var(--ink)}
 #ufc .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
-@media (max-width:560px){#ufc .fight{grid-template-columns:1fr;gap:6px}#ufc .side.b{text-align:left;justify-items:start}#ufc .mid{justify-items:start}}
+#ufc .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink2);align-items:center}
+#ufc .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+#ufc .legend .tick{display:inline-block;width:2px;height:12px;background:var(--ink);vertical-align:-2px;margin-right:7px}
+@media (max-width:640px){
+  #ufc .fight{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 10px;padding:14px 0}
+  #ufc .fight.has-pick{margin-inline:-14px;padding-inline:14px;background:color-mix(in srgb,var(--sun) 16%,transparent)}
+  #ufc .mid{order:-1;grid-column:1 / -1}
+  #ufc .side .nm{font-size:14.5px} #ufc .side .px{font-size:11.5px;white-space:normal}
+  #ufc .lean{grid-template-columns:1fr;gap:3px} #ufc .lean div:last-child{text-align:left;justify-content:flex-start}
+  #ufc .pricegrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 10px}
+  #ufc .pricegrid div.market{display:none} #ufc .pricegrid div.worst{display:grid}
+  #ufc .ticket{grid-template-columns:1fr} #ufc .ticket .stub,#ufc .ticket .notch{display:none}
+  #ufc .why .row{grid-template-columns:minmax(0,1fr) 72px 36px;font-size:12px}
+  #ufc .ticket .pick{font-size:19px}
+}
 `;
   const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
@@ -35,7 +105,7 @@
   const pct = v => (v * 100).toFixed(1) + "%";
   const sgn = v => v > 0 ? "pos" : (v < 0 ? "neg" : "");
   const am = o => o == null ? "–" : (o > 0 ? "+" + o : String(o));
-  const BOOK = { FD: "FanDuel", MGM: "BetMGM", DraftKings: "DraftKings", Caesars: "Caesars", BetRivers: "BetRivers", best: "Best book" };
+  const BOOK = { FD: "FanDuel", DK: "DraftKings", CZR: "Caesars", MGM: "BetMGM", DraftKings: "DraftKings", Caesars: "Caesars", BetRivers: "BetRivers", best: "Best book" };
   const MK = { ML: "Moneyline", GTD: "Goes the distance", A_DEC: "Wins by decision", B_DEC: "Wins by decision", "O2.5": "Over 2.5 rounds", "O4.5": "Over 4.5 rounds", A_SUB: "Wins by submission", B_SUB: "Wins by submission" };
   const TIER = { ML: "Moneyline", DEC_A: "Decision · KO fade", DEC_B: "Decision", A_DEC: "Decision", B_DEC: "Decision", GTD: "Goes the distance", "O4.5": "Over 4.5 rounds", A_SUB: "Submission", B_SUB: "Submission" };
   const tierOf = r => r.tier || ((r.mk || "ML") === "ML" ? "ML" : r.mk);
@@ -166,23 +236,57 @@
     draw();
   }
 
-  function ticket(r, showRes) {
-    const su = r.su || 1, t = tierOf(r), worst = minPrice(r.p, barOf(r));
-    return `<article class="ticket"><span class="notch t"></span><span class="notch b"></span><div class="main">
-      <div class="tier">${esc(TIER[t] || t)} · ${su} unit${su === 1 ? "" : "s"}</div><div class="pick">${esc(r.lab || r.pk)}</div>
-      <div class="game">${isProp(r) ? esc(r.op) : "vs " + esc(r.op)}${r.div ? " · " + esc(cap(r.div)) : ""} · ${esc(dateTxt(r.d))}</div>
-      <div class="price"><span>${esc(BOOK[r.bk] || r.bk)} ${am(r.o)}</span><span>fair ${am(fair(r.p))}</span><span>+${(r.e || 0).toFixed(1)} pts</span>${showRes && r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${r.r === "W" ? "Won" : r.r === "L" ? "Lost" : esc(r.r)}</span>` : ""}</div></div>
-      <div class="stub"><div><b class="lim">${am(worst)}</b><small>Worst price</small></div></div></article>`;
+  // ---------------------------------------------------------------- tickets + "why"
+  const SHORT = { Moneyline: "ML", "Decision · KO fade": "KO fade", Decision: "decision", "Goes the distance": "distance" };
+  const BADGE = { ML: "ml", DEC_A: "fade", DEC_B: "dec", A_DEC: "dec", B_DEC: "dec", GTD: "gtd" };
+  const pct0 = v => v == null ? "–" : Math.round(v * 100) + "%";
+  const pts = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(1);
+  function whyChart(w, r) {
+    if (!w || !w.items || !w.items.length) return "";
+    const max = Math.max(1, ...w.items.map(x => Math.abs(x.pts)));
+    const rows = w.items.map(x => { const wd = Math.abs(x.pts) / max * 50; return `<div class="row"><div class="lbl" title="${esc(x.label)}${x.v ? " · " + esc(x.v) : ""}">${esc(x.label)}${x.v ? `<small>${esc(x.v)}</small>` : ""}</div><div class="bar" aria-hidden="true"><i class="${x.pts < 0 ? "neg" : ""}" style="width:${wd.toFixed(1)}%"></i></div><div class="val ${x.pts > 0 ? "pos" : x.pts < 0 ? "neg" : ""}">${pts(x.pts)}</div></div>` }).join("");
+    const t = tierOf(r), dec = t === "DEC_A" || t === "DEC_B";
+    let foot = "";
+    if (w.p != null) foot += `Model <b>${pct0(w.p)}</b>${w.base != null && Math.abs(w.base - 0.5) > 0.001 ? ` <span>(base ${pct0(w.base)})</span>` : ""}`;
+    if (r.m != null) foot += ` · Market <b>${pct0(r.m)}</b>`;
+    if (r.p != null) foot += ` · Blended <b>${pct0(r.p)}</b> vs ${pct0(1 / r.dec)} at the price`;
+    if (dec && w.ko != null) foot += `<br>${w.fade != null ? `<b>KO fade</b>: model has the KO at <b>${pct0(w.ko)}</b>, ${pts(w.fade * 100)} pts below the market` : `Model KO chance <b>${pct0(w.ko)}</b>${t === "DEC_A" ? " · 5+ pts below the market (KO fade)" : ""}`}`;
+    const sr = `Reasons, in probability points: ${w.items.map(x => `${x.label} ${pts(x.pts)}`).join(", ")}`;
+    return `<div class="why" role="img" aria-label="${esc(sr)}"><h4>Why the model likes it<span>points for / against</span></h4>${rows}${foot ? `<div class="foot">${foot}</div>` : ""}</div>`;
+  }
+  function ticket(r, showRes, paper) {
+    const su = paper ? 0 : (r.su || 1), t = tierOf(r), worst = r.p ? minPrice(r.p, barOf(r)) : null;
+    const badge = paper ? `<span class="tbadge paper">Paper · ${esc(TIER[t] || MK[r.mk] || t)}</span>` : `<span class="tbadge ${BADGE[t] || ""}">${esc(TIER[t] || t)}</span>`;
+    const res = showRes && r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${r.r === "W" ? "Won" : r.r === "L" ? "Lost" : esc(r.r)}</span>` : "";
+    return `<article class="ticket${paper ? " paper" : ""}"><span class="notch t"></span><span class="notch b"></span><div class="main">
+      <div class="head">${badge}${res}<span class="units">${paper ? "0" : su}<small>unit${su === 1 ? "" : "s"}</small></span></div>
+      <div class="pick">${esc(r.lab || r.pk)}</div>
+      <div class="game">${isProp(r) ? esc(r.op) : "vs " + esc(r.op)}${r.div ? " · " + esc(cap(r.div)) : ""} · ${esc(dateTxt(r.d))}${r.ev ? " · " + esc(r.ev) : ""}</div>
+      <div class="pricegrid"><div><small>Bet at</small><b>${am(r.o)}</b><span>${esc(BOOK[r.bk] || r.bk)}</span></div>
+        <div><small>Fair</small><b>${r.p ? am(fair(r.p)) : "–"}</b><span>${r.p ? pct0(r.p) + " to win" : "not priced"}</span></div>
+        <div><small>Edge</small><b class="${(r.e || 0) > 0 ? "pos" : ""}">${r.e != null ? (r.e > 0 ? "+" : "") + r.e.toFixed(1) : "–"}</b><span>${r.e != null ? `pts over ${pct0(1 / r.dec)}` : "not priced"}</span></div>
+        <div class="market"><small>Market</small><b>${r.m != null ? am(fair(r.m)) : "–"}</b><span>${r.m != null ? pct0(r.m) + " fair" : "no fair line"}</span></div>
+        <div class="worst"><small>Worst price</small><b>${worst != null ? am(worst) : "–"}</b><span>still a bet</span></div></div>
+      ${whyChart(r.why, r)}</div>
+      <div class="stub"><div><b class="lim">${worst != null ? am(worst) : "–"}</b><small>Worst price</small></div></div></article>`;
   }
 
+  // ---------------------------------------------------------------- fight rows
+  const short = n => { const t = String(n || "").trim().split(/\s+/); return t.length >= 3 && /^(dos|de|da|del|van|von|la|le|di)$/i.test(t[t.length - 2]) ? t.slice(-2).join(" ") : t[t.length - 1] || "" };
   function fightRow(f) {
-    const pa = f.a.p ?? 0.5, pb = 1 - pa;
-    const side = (s, cls) => `<div class="side ${cls}${s.pick ? " pick" : ""}"><span class="nm">${esc(s.n)}${s.pick ? ' <span class="badge">Pick</span>' : ""}</span>
-      <span class="px">FanDuel ${am(s.fd)}${s.mgm != null ? ` · BetMGM ${am(s.mgm)}` : ""}</span><span class="px">fair ${am(fair(s.p))}${s.ufc != null ? ` · ${s.ufc} UFC fight${s.ufc === 1 ? "" : "s"}` : ""}</span></div>`;
-    const tags = [f.tf ? "Title fight" : f.rd >= 5 ? "5 rounds" : "", cap(f.div), f.debut ? "Debut, no bet" : ""].filter(Boolean).join(" · ");
-    return `<div class="fight">${side(f.a, "a")}<div class="mid"><span class="pv">${pct(pa)} · ${pct(pb)}</span>
-      <span class="pbar" aria-hidden="true"><i style="width:${pa * 100}%;background:var(--cobalt)"></i><i style="width:${pb * 100}%;background:var(--coral)"></i></span>
-      <small>${esc(tags)}</small>${f.pgtd != null ? `<span class="meth">Goes the distance ${pct(f.pgtd)}${f.pdec_a != null ? ` · ${esc(f.a.n.split(" ").slice(-1)[0])} dec ${pct(f.pdec_a)}` : ""}${f.pdec_b != null ? ` · ${esc(f.b.n.split(" ").slice(-1)[0])} dec ${pct(f.pdec_b)}` : ""}</span>` : f.ko != null ? `<span class="meth">KO ${pct(f.ko)} · Sub ${pct(f.sub)} · Dec ${pct(f.dec)}</span>` : ""}${f.watch ? `<span class="badge">Prop watch</span><span class="meth">${esc(f.watch)}</span>` : ""}</div>${side(f.b, "b")}</div>`;
+    const pa = f.a.p ?? 0.5, pb = 1 - pa, mk = f.a.mkt, bets = f.bets || [], hasPick = !!(f.a.pick || f.b.pick || bets.length);
+    const propPicks = bets.length ? `<small>${bets.map(b => `<span class="badge">Pick · ${esc(TIER[b.tier] || MK[b.mk] || b.mk)} ${am(b.o)}</span>`).join(" ")}</small>` : "";
+    const side = (s, cls) => `<div class="side ${cls}${s.pick ? " pick" : ""}${(cls === "a" ? pa : pb) >= 0.5 ? " fav" : ""}"><span class="nm">${esc(s.n)}${s.pick ? ` <span class="badge">Pick ${am(s.pick.o)}</span>` : ""}</span>
+      <span class="px">FD <b>${am(s.fd)}</b>${s.dk != null ? ` · DK <b>${am(s.dk)}</b>` : ""}${s.czr != null ? ` · CZR <b>${am(s.czr)}</b>` : ""}</span><span class="px">fair ${am(fair(s.p))}</span>${s.ufc != null ? `<span class="px">${s.ufc} UFC fight${s.ufc === 1 ? "" : "s"}</span>` : ""}</div>`;
+    const tags = [f.tf ? "Title fight" : f.rd >= 5 ? "5 rounds" : "3 rounds", cap(f.div), f.debut ? "Debut · no bet" : ""].filter(Boolean).join(" · ");
+    const meth = f.pgtd != null ? `<span class="meth"><span>Distance <b>${pct0(f.pgtd)}</b></span>${f.pdec_a != null ? `<span>${esc(short(f.a.n))} dec <b>${pct0(f.pdec_a)}</b></span>` : ""}${f.pdec_b != null ? `<span>${esc(short(f.b.n))} dec <b>${pct0(f.pdec_b)}</b></span>` : ""}</span>`
+      : f.ko != null ? `<span class="meth"><span>KO <b>${pct0(f.ko)}</b></span><span>Sub <b>${pct0(f.sub)}</b></span><span>Dec <b>${pct0(f.dec)}</b></span></span>` : "";
+    const lean = (f.why_a && f.why_a.length) || (f.why_b && f.why_b.length) ? `<div class="lean">
+      <div><i class="dot" style="background:var(--cobalt)"></i><b>${esc(short(f.a.n))}</b><span>${(f.why_a || []).map(x => esc(x.label)).join(" · ") || "–"}</span></div>
+      <div><i class="dot" style="background:var(--coral)"></i><b>${esc(short(f.b.n))}</b><span>${(f.why_b || []).map(x => esc(x.label)).join(" · ") || "–"}</span></div></div>` : "";
+    return `<div class="fight${hasPick ? " has-pick" : ""}">${side(f.a, "a")}<div class="mid"><span class="pv"><span class="ma">${pct0(pa)}</span><span class="mb">${pct0(pb)}</span></span>
+      <span class="pbar" role="img" aria-label="${esc(f.a.n)} ${pct0(pa)}, ${esc(f.b.n)} ${pct0(pb)}${mk != null ? `; market ${pct0(mk)}` : ""}"><i class="a" style="width:calc(${(pa * 100).toFixed(1)}% - 1px)"></i><i class="b" style="flex:1"></i>${mk != null ? `<span class="mk" style="left:${(mk * 100).toFixed(1)}%" title="Market ${pct0(mk)}"></span>` : ""}</span>
+      <small>${esc(tags)}</small>${propPicks}${meth}${f.watch ? `<small><span class="badge watch">Prop watch</span></small><span class="meth">${esc(f.watch)}</span>` : ""}</div>${side(f.b, "b")}${lean}</div>`;
   }
 
   const M = x => `<div class="mbox"><math display="block">${x}</math></div>`;
@@ -199,6 +303,7 @@
     <div><div class="kicker" id="ufc-kicker">UFC · moneylines and props</div><h1>Fight <em>night</em></h1>
       <p class="lede" id="ufc-lede">Picks lock the first time they clear the rule and are graded at that price. Moneylines post 1 to 3 weeks out; props about 3 days before an event.</p>
       <div class="status" id="ufc-status"></div></div>
+    <div id="ufc-summary"></div>
     <div id="ufc-picks"></div>
     <div id="ufc-cards" class="ufc-views"></div>
   </section>
@@ -207,12 +312,12 @@
     <div><div class="kicker">Since October 2026 · real picks only</div><h1>2026 <em>live</em></h1>
       <p class="lede">Every pick posted here, graded at the book and price shown when it locked, at the stake shown. Nothing from the backtest is mixed in.</p></div>
     <div id="ufc-live" class="ufc-views"></div>
-    <div class="panel flat prose" id="ufc-paper"></div>
+    <div class="panel flat" id="ufc-paper" style="display:grid;gap:10px"></div>
   </section>
 
   <section class="view" data-uview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2021 to 2026</div><h1>The <em>ride</em> so far</h1>
-      <p class="lede">Each year was predicted by models trained only on earlier fights. Moneylines are graded at the price FanDuel or BetMGM posted when it first opened the fight; props at the best closing price of five books. The card rule is applied event by event: at most 5 bets and 3 of one type, at the stakes it would have used. Simulated results, not a live record.</p></div>
+      <p class="lede">Each year was predicted by models trained only on earlier fights. Moneylines are graded at FanDuel's (or BetMGM's, before it left BestFightOdds) opening price; props at the best closing price of FanDuel, DraftKings and Caesars. Blends use only earlier years, so bets start in 2023. The card rule is applied in the order live picks lock: moneylines first (at most 2), then props, at most 5 a card, at the stakes it would have used. Simulated results, not a live record.</p></div>
     <div id="ufc-bt" class="ufc-views"></div>
   </section>
 
@@ -224,7 +329,7 @@
       <div class="panel stop"><h3>Ratings</h3><p>Our own Bradley-Terry rating, solved over the whole web of who beat whom and refit monthly, plus FightMatrix's three rating systems and division rank going into each fight. Adding FightMatrix cut the win model's error noticeably and lifted the moneyline backtest from +12% to +13.5%.</p></div>
       <div class="panel stop"><h3>Two models</h3><p>A win model (LightGBM plus logistic regression on about 85 inputs) and a prop model that reads how each fighter wins and loses: KO, submission and decision rates over his whole career, how fast, how recently, durability, striking, age and reach. Every fight is fed both ways, so the corner never matters.</p></div>
       <div class="panel stop"><h3>Market blend</h3><p>Neither model is bet raw. Each is blended with the book's own price, with weights fit out of sample for that book and how long the line has been up. The model earns weight only where it beats the market on its own.</p></div>
-      <div class="panel stop"><h3>The card</h3><p>Moneyline picks need 3 points of edge at +400 or shorter. Decision picks need 3 points when the model also rates that fighter's KO chance 5+ points below the market (a "KO fade"), otherwise 5. Goes-the-distance needs 5. At most 5 bets a card, 3 of one type, best first. 1.5 units on KO fades and 8+ point edges, 1 unit otherwise.</p></div>
+      <div class="panel stop"><h3>The card</h3><p>Moneyline picks need 3 points of edge at +400 or shorter. Decision picks need 3 points when the model also rates that fighter's KO chance 5+ points below the market (a "KO fade"), otherwise 5. Goes-the-distance needs 5. At most 5 bets a card: no more than 2 moneylines (they lock weeks early) and 3 of any prop type, best first. 1.5 units on KO fades and 8+ point edges, 1 unit otherwise.</p></div>
     </div>
     <div class="grid2">
       <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
@@ -234,7 +339,7 @@
         <li>More than 5 bets on one card, even when more qualify.</li></ul></div>
       <div class="panel flat prose"><h3>How the backtest stayed honest</h3><ul>
         <li>Walk-forward: each year predicted by models trained only on earlier years.</li>
-        <li>Graded at real prices with juice: FanDuel and BetMGM openers for moneylines, five books' closing prices for props.</li>
+        <li>Graded at real prices with juice: FanDuel/BetMGM openers for moneylines, FanDuel/DraftKings/Caesars closing prices for props. Every blend is fit only on earlier years.</li>
         <li>Moneyline picks beat the closing line by about 3.5% on average.</li>
         <li>Placebo checks: shuffled ratings and a shuffled prop model each lost their edge.</li>
         <li>Every year from 2021 to 2026 was profitable under the card rule.</li></ul></div>
@@ -284,7 +389,7 @@
 
       <div class="panel eq"><h3>07 · Decision rule and card</h3>
         ${M(`<mtext>bet</mtext><mo>⇔</mo><mi>p</mi><mo>−</mo><mfrac><mn>1</mn><mi>d</mi></mfrac><mo>≥</mo><msub><mi>τ</mi><mtext>type</mtext></msub><mo>,</mo><mspace width=".6em"/><msub><mi>τ</mi><mtext>ML</mtext></msub><mo>=</mo><msub><mi>τ</mi><mtext>KO fade</mtext></msub><mo>=</mo><mn>.03</mn><mo>,</mo><mspace width=".4em"/><msub><mi>τ</mi><mtext>DEC</mtext></msub><mo>=</mo><msub><mi>τ</mi><mtext>GTD</mtext></msub><mo>=</mo><mn>.05</mn>`)}
-        <p class="note">Price caps: d ≤ 5 (+400) for moneylines, d ≤ 11 (+1000) for props. No debutants. Per card, rank KO fades first, then by expected value p·d − 1; keep at most 5, at most 3 of one type. Stake 1.5 units on KO fades and on edges of 8+ points, else 1 unit. Picks lock the first time they qualify; earlier locks count toward the caps.</p></div>
+        <p class="note">Price caps: d ≤ 5 (+400) for moneylines, d ≤ 11 (+1000) for props. No debutants. Per card, rank KO fades first, then by expected value p·d − 1; keep at most 5, at most 2 moneylines and 3 of any other type. Stake 1.5 units on KO fades and on edges of 8+ points, else 1 unit. Picks lock the first time they qualify; earlier locks count toward the caps.</p></div>
 
       <div class="panel eq"><h3>08 · Staking, grading and CLV</h3>
         <p>Profit per unit at decimal price <i>d</i>, and closing-line value with the de-vigged closing probability <i>c</i>:</p>
@@ -326,14 +431,14 @@
     Promise.all([getJSON("ufc_live.json"), getJSON("ufc_paper.json")]).then(([live, paper]) => {
       live = (live || []).filter(r => ["W", "L", "D", "NC", "Void"].includes(r.r)).sort(bydate);
       if (live.length) lab($("#ufc-live"), live, "ulv", "since Oct 2026");
-      else $("#ufc-live").innerHTML = '<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first locked pick and grows after each event.</span></div>';
+      else getJSON("ufc_today.json").then(t => { const n = ((t && t.picks) || []).length; $("#ufc-live").innerHTML = `<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first locked pick and grows after each event.${n ? ` ${n} pick${n > 1 ? "s are" : " is"} locked and waiting on the fight card.` : ""}</span></div>` });
       paper = (paper || []).sort(bydate).reverse(); const g = paper.filter(r => r.r === "W" || r.r === "L"), s = stats(g);
-      $("#ufc-paper").innerHTML = `<h3>Paper tracked, not bet</h3><p>Over 4.5 rounds in 5-round fights, and submissions against opponents who have been submitted before. Graded at 1 unit for the record only.${g.length ? ` So far ${s.w}-${s.l}, ${fmtU(s.u)}.` : " Nothing graded yet."}</p>
+      $("#ufc-paper").innerHTML = `<h3>Paper tracked, not bet</h3><p class="note" style="font-size:14px;max-width:72ch">Over 4.5 rounds in 5-round fights, and submissions against opponents who have been submitted before. Graded at 1 unit for the record only.${g.length ? ` So far ${s.w}-${s.l}, ${fmtU(s.u)}.` : " Nothing graded yet."}</p>
         ${paper.length ? `<div class="tbl"><table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Fight</th><th>Price</th><th>Result</th><th>Units</th></tr></thead><tbody>${paper.slice(0, 40).map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.lab || r.pk)}</b></td><td class="l">${esc(r.op)}</td><td class="mono">${am(r.o)}</td><td>${r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span>` : '<span class="tag small">Open</span>'}</td><td class="${sgn(r.u || 0)}">${r.r ? fmtU(r.u || 0) : "–"}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
     }) };
   route(); if (onShow[cur]) onShow[cur]();
 
-  Promise.all([getJSON("ufc_today.json"), getJSON("ufc_status.json")]).then(([today, status]) => {
+  Promise.all([getJSON("ufc_today.json"), getJSON("ufc_status.json"), getJSON("ufc_paper.json")]).then(([today, status, paper]) => {
     today = today || { events: [], picks: [] };
     const upd = today.updated ? new Date(today.updated.replace(" ", "T")) : null;
     const hrs = upd ? (Date.now() - upd.getTime()) / 3.6e6 : null;
@@ -342,20 +447,26 @@
     $("#ufc-status").innerHTML = `<span><span class="dot" style="background:${color}"></span>Prices updated <b>${upd ? upd.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "not yet"}</b></span>
       ${hrs != null && hrs > 36 ? `<span><b>Stale:</b> the laptop run hasn't reported in ${Math.round(hrs)} hours</span>` : ""}${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Runs 9 AM and 5 PM ET</span>`;
     const picks = (today.picks || []).slice().sort(bydate);
+    const openPaper = (paper || []).filter(r => !r.r).sort(bydate);
     const evs = today.events || [];
-    if (evs.length) $("#ufc-kicker").textContent = `${dateTxt(evs[0].d)} · ${evs[0].ev}`;
+    if (evs.length) $("#ufc-kicker").textContent = `Next up: ${dateTxt(evs[0].d)} · ${evs[0].ev}`;
     if (picks.length) {
       const by = {}; picks.forEach(r => { const t = TIER[tierOf(r)] || tierOf(r); by[t] = (by[t] || 0) + 1 });
-      const units = picks.reduce((a, r) => a + (r.su || 1), 0);
-      $("#ufc-lede").innerHTML = `<span class="summary"><b>${picks.length} open pick${picks.length > 1 ? "s" : ""}</b><span>${Object.entries(by).map(([k, v]) => `${v} ${k.toLowerCase()}`).join(" · ")}</span><span>${units} unit${units === 1 ? "" : "s"} total</span></span>Take the listed price or better. Skip a pick if it has moved past its worst price.`;
-    }
+      const units = picks.reduce((a, r) => a + (r.su || 1), 0), cards = new Set(picks.map(r => r.d)).size;
+      $("#ufc-lede").innerHTML = `Take the listed price or better. Skip a pick if it has moved past its worst price.`;
+      $("#ufc-summary").innerHTML = `<div class="kpis open"><div><small>Open picks</small><b>${picks.length}</b><span>on ${cards} card${cards === 1 ? "" : "s"}</span></div>
+        <div><small>Units at risk</small><b>${units % 1 ? units.toFixed(1) : units}u</b><span>$${Math.round(units * 100).toLocaleString()} at $100/unit</span></div>
+        <div><small>By type</small><b>${Object.keys(by).length}</b><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(SHORT[k] || k.toLowerCase())}`).join(" · ")}</span></div>
+        <div><small>Paper angles</small><b>${openPaper.length}</b><span>tracked, not staked</span></div></div>`;
+    } else $("#ufc-summary").innerHTML = "";
     // group open picks by event, like the college card groups by book
     const groups = new Map(); picks.forEach(p => { const k = `${p.d}|${p.ev || "UFC"}`; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(p) });
-    $("#ufc-picks").innerHTML = picks.length
-      ? `<div class="books">${[...groups.entries()].map(([k, g]) => { const [d, ev] = k.split("|"); return `<div><div class="bookhead"><span class="logo">${g.length}</span><h2>${esc(ev)}</h2><span class="note">${esc(dateTxt(d))} · ${g.length} pick${g.length > 1 ? "s" : ""}</span></div><div class="tickets">${g.map(r => ticket(r, false)).join("")}</div></div>` }).join("")}</div>`
-      : `<div class="banner"><b>No picks</b><span>Nothing on the upcoming cards clears the rule right now. Moneyline picks usually show up 1 to 3 weeks before an event, props about 3 days out.</span></div>`;
+    $("#ufc-picks").innerHTML = (picks.length
+      ? `<div class="books">${[...groups.entries()].map(([k, g]) => { const [d, ev] = k.split("|"); return `<div><div class="bookhead"><span class="logo">${g.length}</span><h2>${esc(ev)}</h2><span class="note">${esc(dateTxt(d))} · ${g.length} pick${g.length > 1 ? "s" : ""} · ${g.reduce((a, r) => a + (r.su || 1), 0)}u</span></div><div class="tickets">${g.map(r => ticket(r, false)).join("")}</div></div>` }).join("")}</div>`
+      : `<div class="banner"><b>No picks</b><span>Nothing on the upcoming cards clears the rule right now. Moneyline picks usually show up 1 to 3 weeks before an event, props about 3 days out.</span></div>`)
+      + (openPaper.length ? `<div class="books" style="margin-top:22px"><div><div class="bookhead"><span class="logo" style="background:transparent;color:var(--ink);border:2px dashed var(--ink2)">${openPaper.length}</span><h2>Paper tracked</h2><span class="note">Logged and graded at 1u for the record, never staked</span></div><div class="tickets">${openPaper.map(r => ticket(r, false, true)).join("")}</div></div></div>` : "");
     $("#ufc-cards").innerHTML = evs.length ? evs.map(e => `<div class="panel"><div class="ev-head"><h2>${esc(e.ev)}</h2><span class="note">${esc(dateTxt(e.d))} · ${e.fights.length} fight${e.fights.length === 1 ? "" : "s"} with a line</span></div>
-      <div class="fightcard">${e.fights.map(fightRow).join("")}</div></div>`).join("") + `<p class="note">Percentages are the model blended with the market. "Fair" is the price where a bet breaks even at that chance. Method splits are model-only, for reference.</p>`
+      <div class="fightcard">${e.fights.map(fightRow).join("")}</div></div>`).join("") + `<div class="legend"><span><i style="background:var(--cobalt)"></i>Red corner</span><span><i style="background:var(--coral)"></i>Blue corner</span><span><span class="tick"></span>Market's fair chance</span><span>Bars are the model blended with the market. "Fair" is the break-even price at that chance. Method splits are model-only, for reference. Under each fight: what the model weighs most for either side.</span></div>`
       : `<div class="banner"><b>Quiet</b><span>No UFC lines are posted for the next 45 days yet.</span></div>`;
   });
 })();
