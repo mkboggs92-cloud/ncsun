@@ -96,6 +96,35 @@
   #ufc .why .row{grid-template-columns:minmax(0,1fr) 72px 36px;font-size:12px}
   #ufc .ticket .pick{font-size:19px}
 }
+#ufc .slip{display:grid;gap:10px}
+#ufc .slip-ev{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:8px 0 0}
+#ufc .slip-ev h2{font-size:20px}
+#ufc details.bet{background:var(--panel);border:2px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink)}
+#ufc details.bet.paper{border-style:dashed;box-shadow:none}
+#ufc details.bet>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto auto;gap:6px 14px;align-items:center;padding:12px 14px;min-height:56px}
+#ufc details.bet>summary::-webkit-details-marker{display:none}
+#ufc details.bet>summary::after{content:"+";display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);font-weight:800}
+#ufc details.bet[open]>summary::after{content:"−"}
+#ufc .bet .u{font:400 24px/1 var(--display);min-width:46px;text-align:center}
+#ufc .bet .u small{display:block;margin-top:3px;font:800 9px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+#ufc .bet .what{display:grid;gap:4px;min-width:0;justify-items:start}
+#ufc .bet .what b{font:400 17px/1.1 var(--display);text-transform:uppercase;overflow-wrap:anywhere}
+#ufc .bet .what>span:last-child{font-size:12.5px;color:var(--ink2)}
+#ufc .bet .px2{display:grid;justify-items:end;gap:2px;font-family:var(--mono);font-size:13px;white-space:nowrap}
+#ufc .bet .px2 b{font-size:18px}
+#ufc .bet .px2 span{color:var(--ink2);font-size:11.5px}
+#ufc .bet .body{padding:12px 14px 14px;display:grid;gap:12px;border-top:1px dashed var(--line)}
+#ufc details.more{border:2px solid var(--line);border-radius:12px;background:var(--panel)}
+#ufc details.more>summary{cursor:pointer;list-style:none;padding:14px 16px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font:800 13px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase}
+#ufc details.more>summary::-webkit-details-marker{display:none}
+#ufc details.more>summary::before{content:"+";display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--coral);color:#fff}
+#ufc details.more[open]>summary::before{content:"−"}
+#ufc details.more>summary span{font:500 12.5px/1.3 var(--body);letter-spacing:0;text-transform:none;color:var(--ink2)}
+#ufc details.more>.inner{padding:0 16px 16px;display:grid;gap:18px}
+#ufc .slipsum{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;font-size:14px;color:var(--ink2)}
+#ufc .slipsum b{font:400 26px/1 var(--display);color:var(--ink)}
+@media (max-width:640px){#ufc details.bet>summary{grid-template-columns:auto 1fr;padding:10px 12px}#ufc details.bet>summary::after{display:none}#ufc .bet .px2{grid-column:2;justify-items:start;grid-auto-flow:column;gap:10px;align-items:baseline}#ufc details.more>.inner{padding:0 10px 12px}}
+
 `;
   const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
@@ -271,6 +300,23 @@
       <div class="stub"><div><b class="lim">${worst != null ? am(worst) : "–"}</b><small>Worst price</small></div></div></article>`;
   }
 
+  function betRow(r, paper) {
+    const su = paper ? 0 : (r.su || 1), t = tierOf(r), worst = r.p ? minPrice(r.p, barOf(r)) : null;
+    const badge = paper ? `<span class="tbadge paper">Paper</span>` : `<span class="tbadge ${BADGE[t] || ""}">${esc(TIER[t] || t)}</span>`;
+    const top = r.why && r.why.items ? r.why.items.filter(x => x.pts > 0).slice(0, 2).map(x => x.label).join(" · ") : "";
+    return `<details class="bet${paper ? " paper" : ""}"><summary>
+      <span class="u">${paper ? "–" : su}<small>${paper ? "paper" : "unit" + (su === 1 ? "" : "s")}</small></span>
+      <span class="what">${badge}<b>${esc(r.lab || r.pk)}</b><span>${isProp(r) ? esc(r.op) : "vs " + esc(r.op)}${top ? " · " + esc(top) : ""}</span></span>
+      <span class="px2"><b>${am(r.o)}</b><span>${esc(BOOK[r.bk] || r.bk)}</span>${worst != null ? `<span>take ${am(worst)} or better</span>` : ""}</span>
+    </summary><div class="body">
+      <div class="pricegrid"><div><small>Bet at</small><b>${am(r.o)}</b><span>${esc(BOOK[r.bk] || r.bk)}</span></div>
+        <div><small>Fair</small><b>${r.p ? am(fair(r.p)) : "–"}</b><span>${r.p ? pct0(r.p) + " to win" : "not priced"}</span></div>
+        <div><small>Edge</small><b class="${(r.e || 0) > 0 ? "pos" : ""}">${r.e != null ? (r.e > 0 ? "+" : "") + r.e.toFixed(1) : "–"}</b><span>${r.e != null && r.dec ? `pts over ${pct0(1 / r.dec)}` : ""}</span></div>
+        <div class="market"><small>Market</small><b>${r.m != null ? am(fair(r.m)) : "–"}</b><span>${r.m != null ? pct0(r.m) + " fair" : "no fair line"}</span></div>
+        <div class="worst"><small>Worst price</small><b>${worst != null ? am(worst) : "–"}</b><span>still a bet</span></div></div>
+      ${whyChart(r.why, r)}<p class="note">${esc(dateTxt(r.d))}${r.ev ? " · " + esc(r.ev) : ""}${r.posted ? " · locked " + esc(r.posted) : ""}</p></div></details>`;
+  }
+
   // ---------------------------------------------------------------- fight rows
   const short = n => { const t = String(n || "").trim().split(/\s+/); return t.length >= 3 && /^(dos|de|da|del|van|von|la|le|di)$/i.test(t[t.length - 2]) ? t.slice(-2).join(" ") : t[t.length - 1] || "" };
   function fightRow(f) {
@@ -305,7 +351,7 @@
       <div class="status" id="ufc-status"></div></div>
     <div id="ufc-summary"></div>
     <div id="ufc-picks"></div>
-    <div id="ufc-cards" class="ufc-views"></div>
+    <details class="more" id="ufc-more-card"><summary>Full fight card<span>every fight with a line: prices, model chances, method splits, what the model weighs</span></summary><div class="inner"><div id="ufc-cards" class="ufc-views"></div></div></details>
   </section>
 
   <section class="view" data-uview="live" hidden>
@@ -454,17 +500,14 @@
       const by = {}; picks.forEach(r => { const t = TIER[tierOf(r)] || tierOf(r); by[t] = (by[t] || 0) + 1 });
       const units = picks.reduce((a, r) => a + (r.su || 1), 0), cards = new Set(picks.map(r => r.d)).size;
       $("#ufc-lede").innerHTML = `Take the listed price or better. Skip a pick if it has moved past its worst price.`;
-      $("#ufc-summary").innerHTML = `<div class="kpis open"><div><small>Open picks</small><b>${picks.length}</b><span>on ${cards} card${cards === 1 ? "" : "s"}</span></div>
-        <div><small>Units at risk</small><b>${units % 1 ? units.toFixed(1) : units}u</b><span>$${Math.round(units * 100).toLocaleString()} at $100/unit</span></div>
-        <div><small>By type</small><b>${Object.keys(by).length}</b><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(SHORT[k] || k.toLowerCase())}`).join(" · ")}</span></div>
-        <div><small>Paper angles</small><b>${openPaper.length}</b><span>tracked, not staked</span></div></div>`;
+      $("#ufc-summary").innerHTML = `<div class="slipsum"><span><b>${picks.length}</b> bet${picks.length === 1 ? "" : "s"}</span><span><b>${units % 1 ? units.toFixed(1) : units}u</b> at risk</span><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(SHORT[k] || k.toLowerCase())}`).join(" · ")}</span><span>Tap a bet for the prices and why the model likes it.</span></div>`;
     } else $("#ufc-summary").innerHTML = "";
     // group open picks by event, like the college card groups by book
     const groups = new Map(); picks.forEach(p => { const k = `${p.d}|${p.ev || "UFC"}`; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(p) });
     $("#ufc-picks").innerHTML = (picks.length
-      ? `<div class="books">${[...groups.entries()].map(([k, g]) => { const [d, ev] = k.split("|"); return `<div><div class="bookhead"><span class="logo">${g.length}</span><h2>${esc(ev)}</h2><span class="note">${esc(dateTxt(d))} · ${g.length} pick${g.length > 1 ? "s" : ""} · ${g.reduce((a, r) => a + (r.su || 1), 0)}u</span></div><div class="tickets">${g.map(r => ticket(r, false)).join("")}</div></div>` }).join("")}</div>`
+      ? `<div class="slip">${[...groups.entries()].map(([k, g]) => { const [d, ev] = k.split("|"); return `<div class="slip-ev"><h2>${esc(ev)}</h2><span class="note">${esc(dateTxt(d))} · ${g.length} bet${g.length > 1 ? "s" : ""} · ${g.reduce((a, r) => a + (r.su || 1), 0)}u</span></div>${g.map(r => betRow(r)).join("")}` }).join("")}</div>`
       : `<div class="banner"><b>No picks</b><span>Nothing on the upcoming cards clears the rule right now. Moneyline picks usually show up 1 to 3 weeks before an event, props about 3 days out.</span></div>`)
-      + (openPaper.length ? `<div class="books" style="margin-top:22px"><div><div class="bookhead"><span class="logo" style="background:transparent;color:var(--ink);border:2px dashed var(--ink2)">${openPaper.length}</span><h2>Paper tracked</h2><span class="note">Logged and graded at 1u for the record, never staked</span></div><div class="tickets">${openPaper.map(r => ticket(r, false, true)).join("")}</div></div></div>` : "");
+      + (openPaper.length ? `<details class="more" style="margin-top:14px"><summary>Paper tracked (${openPaper.length})<span>angles logged and graded for the record, never staked</span></summary><div class="inner"><div class="slip">${openPaper.map(r => betRow(r, true)).join("")}</div></div></details>` : "");
     $("#ufc-cards").innerHTML = evs.length ? evs.map(e => `<div class="panel"><div class="ev-head"><h2>${esc(e.ev)}</h2><span class="note">${esc(dateTxt(e.d))} · ${e.fights.length} fight${e.fights.length === 1 ? "" : "s"} with a line</span></div>
       <div class="fightcard">${e.fights.map(fightRow).join("")}</div></div>`).join("") + `<div class="legend"><span><i style="background:var(--cobalt)"></i>Red corner</span><span><i style="background:var(--coral)"></i>Blue corner</span><span><span class="tick"></span>Market's fair chance</span><span>Bars are the model blended with the market. "Fair" is the break-even price at that chance. Method splits are model-only, for reference. Under each fight: what the model weighs most for either side.</span></div>`
       : `<div class="banner"><b>Quiet</b><span>No UFC lines are posted for the next 45 days yet.</span></div>`;
