@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Nothing Can Stop Us Now Betting: model picks for college basketball and UFC, with a fully graded backtest.">
+<title>Nothing Can Stop Us Now</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Figtree:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a theme-park ride for picks. Sticky ride-sign header, "stops" as tabs, ticket-stub pick cards,
+   a coaster-track equity curve, and a Slice Lab where one filter set drives every number on the page. */
+:root{
+  --sky:#E9EEFF; --panel:#FFFFFF; --panel2:#F3F6FF; --ink:#0F1736; --ink2:#4A5478; --line:#D3DBF5;
+  --cobalt:#2443E6; --cobalt-ink:#FFFFFF; --coral:#FF5B3D; --sun:#FFC93A; --sun-ink:#3A2A00;
+  --win:#179B5A; --loss:#DE3550; --track:#0F1736; --ball:#FF8A2B;
+  --display:"Bungee","Arial Black",Impact,sans-serif;
+  --body:"Figtree",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sky:#0A0F2C; --panel:#131A45; --panel2:#1A2356; --ink:#EEF2FF; --ink2:#A7B1DA; --line:#2A3572;
+  --cobalt:#7F96FF; --cobalt-ink:#0A0F2C; --coral:#FF7A5F; --sun:#FFD15C; --sun-ink:#2A1E00;
+  --win:#3FD38A; --loss:#FF6B81; --track:#C9D3FF; --ball:#FF9A45; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --sky:#0A0F2C; --panel:#131A45; --panel2:#1A2356; --ink:#EEF2FF; --ink2:#A7B1DA; --line:#2A3572;
+  --cobalt:#7F96FF; --cobalt-ink:#0A0F2C; --coral:#FF7A5F; --sun:#FFD15C; --sun-ink:#2A1E00;
+  --win:#3FD38A; --loss:#FF6B81; --track:#C9D3FF; --ball:#FF9A45; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--sky);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle at 1px 1px,var(--line) 1px,transparent 1.5px) 0 0/22px 22px;opacity:.55}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+button{font-family:inherit}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+/* ---------- header ---------- */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--sky);border-bottom:2px solid var(--ink)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0}
+.brand svg{width:66px;height:54px;flex:none}
+.wordmark{font-family:var(--display);line-height:.92;font-size:19px;letter-spacing:.01em;text-transform:uppercase}
+.wordmark span{display:block}
+.wordmark .b{color:var(--coral)}
+.wordmark small{display:inline-block;margin-top:5px;font:800 10px/1 var(--body);letter-spacing:.32em;background:var(--ink);color:var(--sky);padding:3px 6px 3px 8px;border-radius:3px}
+.seg{display:flex;background:var(--panel);border:2px solid var(--ink);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--ink2);font:800 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-selected="true"]{background:var(--ink);color:var(--sky)}
+nav.stops{display:flex;gap:8px;flex-wrap:wrap;padding-block:18px 6px}
+nav.stops button{display:flex;align-items:center;gap:8px;border:2px solid var(--ink);background:var(--panel);color:var(--ink);font:800 13px/1 var(--body);letter-spacing:.04em;text-transform:uppercase;padding:10px 14px 10px 10px;border-radius:999px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+nav.stops button i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--sun);color:var(--sun-ink);font:400 11px/1 var(--display);font-style:normal}
+nav.stops button[aria-selected="true"]{background:var(--cobalt);color:var(--cobalt-ink);transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+@media (hover:hover){nav.stops button:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}}
+
+/* ---------- type ---------- */
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5.2vw,54px);line-height:.98;text-transform:uppercase;letter-spacing:.005em}
+h1 em{font-style:normal;color:var(--coral)}
+h2{font-family:var(--display);font-weight:400;font-size:22px;text-transform:uppercase}
+h3{font:800 14px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase}
+.kicker{display:inline-flex;align-items:center;gap:8px;font:800 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--cobalt);margin-bottom:10px}
+.kicker::before{content:"";width:18px;height:3px;background:var(--coral);border-radius:2px}
+.lede{max-width:66ch;color:var(--ink2);margin:10px 0 0;font-size:16px}
+.note{color:var(--ink2);font-size:12.5px;margin:4px 0 0}
+section.view{display:grid;gap:22px;padding-top:14px}
+
+/* ---------- panels ---------- */
+.panel{background:var(--panel);border:2px solid var(--ink);border-radius:var(--r);padding:18px;min-width:0;box-shadow:5px 5px 0 var(--ink)}
+.panel.flat{box-shadow:none;border-color:var(--line)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:18px}
+.banner{display:flex;gap:12px;align-items:flex-start;border:2px dashed var(--ink);background:var(--panel);padding:14px 16px;border-radius:var(--r);max-width:84ch}
+.banner b{font-family:var(--display);font-weight:400;color:var(--coral)}
+#bt-lab,#live-body{display:grid;gap:22px}
+
+/* KPI marquee */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:var(--ink);color:var(--sky);border-radius:var(--r);overflow:hidden;border:2px solid var(--ink)}
+.kpis div{padding:14px 16px;border-right:1px dashed var(--ink2)}
+.kpis div:last-child{border-right:0}
+.kpis small{display:block;font:700 11px/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.kpis b{display:block;font:400 30px/1.05 var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
+.kpis span{font-size:12px;opacity:.8}
+.kpis b.pos{color:var(--sun)} .kpis b.neg{color:var(--coral)}
+.pos{color:var(--win)} .neg{color:var(--loss)}
+
+/* ---------- Slice Lab ---------- */
+.lab{display:grid;gap:14px}
+.lab-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.active{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:30px}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--sky);border:0;border-radius:999px;padding:6px 9px 6px 12px;font:700 12px/1 var(--body);cursor:pointer}
+.pill::after{content:"×";font-size:15px;line-height:1;opacity:.75}
+.ghost{border:2px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:8px 13px;font:800 12px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.ghost:disabled{opacity:.35;cursor:default}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:12px;margin-top:12px}
+.fgroup{background:var(--panel2);border-radius:10px;padding:10px 12px;min-width:0}
+.fgroup h4{margin:0 0 8px;font:800 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 10px;font:600 12.5px/1.2 var(--body);cursor:pointer;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--cobalt);border-color:var(--cobalt);color:var(--cobalt-ink)}
+.chip small{opacity:.65;margin-left:5px}
+.lab-controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}
+label.f{display:grid;gap:5px;font:800 11px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+select,input[type=search]{font:600 14px var(--body);color:var(--ink);background:var(--panel);border:2px solid var(--ink);border-radius:10px;padding:8px 10px;min-width:min(190px,100%)}
+.viewtog{display:flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden}
+.viewtog button{border:0;background:var(--panel);color:var(--ink);font:800 12px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;padding:10px 12px;cursor:pointer}
+.viewtog button[aria-pressed="true"]{background:var(--ink);color:var(--sky)}
+details.filters>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+details.filters>summary::-webkit-details-marker{display:none}
+details.filters>summary::before{content:"+";display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--coral);color:#fff;font-weight:800}
+details.filters[open]>summary::before{content:"−"}
+
+/* tables */
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+th{font:800 11px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);text-align:right;padding:9px 10px;border-bottom:2px solid var(--ink);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child,td.l,th.l{text-align:left}
+tr.sub td:first-child{padding-left:28px;color:var(--ink2)}
+tr.tot td{font-weight:800;border-top:2px solid var(--ink)}
+.mono{font-family:var(--mono);font-size:13px}
+.tag{display:inline-block;font:800 10.5px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:999px;border:1.5px solid currentColor}
+.tag.w{color:var(--win)} .tag.l{color:var(--loss)} .tag.small{color:var(--ink2);border-style:dashed}
+.ubar{position:relative;display:inline-block;width:110px;height:10px;border-radius:5px;background:var(--panel2);vertical-align:middle}
+.ubar i{position:absolute;top:0;bottom:0;border-radius:5px}
+.ubar::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.5}
+.heat td.c{text-align:center;min-width:96px;border:3px solid var(--panel);border-radius:8px;color:var(--ink)}
+.heat td.c b{display:block;font:800 15px/1.1 var(--body)}
+.heat td.c span{font-size:11px}
+
+/* ---------- tickets ---------- */
+.books{display:grid;gap:22px}
+.bookhead{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.bookhead .logo{display:inline-grid;place-items:center;min-width:46px;height:30px;padding:0 8px;border-radius:7px;background:var(--ink);color:var(--sky);font:400 13px/1 var(--display)}
+.tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(255px,100%),1fr));gap:16px}
+.ticket{position:relative;display:grid;grid-template-columns:1fr 66px;background:var(--panel);border:2px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);min-width:0}
+.ticket .main{padding:12px 12px 12px 14px;display:grid;gap:5px;min-width:0;align-content:start}
+.ticket .stub{border-left:2px dashed var(--ink);display:grid;place-items:center;text-align:center;padding:8px 4px;background:var(--panel2);border-radius:0 10px 10px 0}
+.ticket .stub b{display:block;font:400 22px/1 var(--display)}
+.ticket .stub small{font:800 9.5px/1.1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.ticket.big .stub{background:var(--sun);color:var(--sun-ink)} .ticket.big .stub small{color:var(--sun-ink)}
+.ticket .tier{font:800 10.5px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--cobalt)}
+.ticket .pick{font:400 20px/1.08 var(--display);text-transform:uppercase;overflow-wrap:anywhere}
+.ticket .game{color:var(--ink2);font-size:13px}
+.ticket .price{display:flex;flex-wrap:wrap;gap:4px 10px;font-family:var(--mono);font-size:12.5px;align-items:center}
+.ticket .notch{position:absolute;right:57px;width:16px;height:16px;border-radius:50%;background:var(--sky);border:2px solid var(--ink)}
+.ticket .notch.t{top:-9px;clip-path:inset(50% 0 0 0)} .ticket .notch.b{bottom:-9px;clip-path:inset(0 0 50% 0)}
+
+/* ---------- how ---------- */
+.ridemap{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:22px 16px;counter-reset:stop;padding-top:10px}
+.stop{position:relative;padding-top:30px}
+.stop::before{counter-increment:stop;content:counter(stop);position:absolute;top:-16px;left:16px;width:36px;height:36px;border-radius:50%;background:var(--coral);color:#fff;border:2px solid var(--ink);display:grid;place-items:center;font:400 16px/1 var(--display)}
+.stop p{margin:8px 0 0}
+.prose{display:grid;gap:10px;max-width:72ch}
+.prose p,.prose ul{margin:0}.prose ul{padding-left:20px;display:grid;gap:6px}
+.pager{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+footer{margin-top:44px;border-top:2px solid var(--ink);padding-top:14px;color:var(--ink2);font-size:12.5px;max-width:86ch}
+svg text{font-family:var(--body)}
+.hood{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(460px,100%),1fr));gap:18px}
+.eq{display:grid;gap:10px;align-content:start}
+.eq p{margin:0}
+.mbox{overflow-x:auto;padding:14px 12px;background:var(--panel2);border-radius:10px;font-size:1.15em;color:var(--ink);text-align:center}
+.mbox math{color:var(--ink)}
+.eq h3{font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:.02em}
+@media (max-width:640px){.wordmark{font-size:15px}.brand svg{width:52px;height:43px}.kpis b{font-size:24px}.panel{padding:14px;box-shadow:3px 3px 0 var(--ink)}.ubar{width:70px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="brand">
+    <!-- Original mascot: a basketball rider, hands up, ticket in hand, in a coaster car on a looping track -->
+    <svg viewBox="0 0 80 64" role="img" aria-label="Nothing Can Stop Us Now logo">
+      <path d="M3 54 C 16 54, 22 21, 40 21 C 57 21, 55 45, 45 45 C 35 45, 37 30, 50 27 C 62 24, 70 35, 77 54" fill="none" stroke="var(--track)" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M3 58 L77 58" stroke="var(--track)" stroke-width="2" stroke-dasharray="3 4"/>
+      <g transform="translate(14 27)">
+        <path d="M-5 6 L-11 -6 M-3 4 L-6 -9" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M13 5 L19 -6 M11 3 L14 -10" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/>
+        <rect x="14.5" y="-16" width="9" height="6" rx="1.2" fill="var(--sun)" stroke="var(--ink)" stroke-width="1.4" transform="rotate(18 19 -13)"/>
+        <circle cx="4" cy="6" r="10" fill="var(--ball)" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M-6 6 H14 M4 -4 V16 M-3 -1 C 1 4, 1 9, -3 13 M11 -1 C 7 4, 7 9, 11 13" fill="none" stroke="var(--ink)" stroke-width="1.3"/>
+        <circle cx="1" cy="3.5" r="1.7" fill="var(--ink)"/><circle cx="7.5" cy="3.5" r="1.7" fill="var(--ink)"/>
+        <path d="M0.5 8.5 Q4 12.5 8 8.5" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M-10 13 H20 L17 24 H-7 Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M-6 17 H16" stroke="var(--panel)" stroke-width="1.6" stroke-linecap="round" opacity=".85"/>
+        <circle cx="-2" cy="26" r="3" fill="var(--ink)"/><circle cx="12" cy="26" r="3" fill="var(--ink)"/>
+      </g>
+    </svg>
+    <div class="wordmark"><span>Nothing Can</span><span class="b">Stop Us Now</span><small>Betting</small></div>
+  </div>
+  <div class="seg" role="tablist" aria-label="Model">
+    <button id="m-ncaab" role="tab" aria-selected="true" data-model="ncaab">College hoops</button>
+    <button id="m-ufc" role="tab" aria-selected="false" data-model="ufc">UFC</button>
+  </div>
+</div></header>
+
+<main class="wrap">
+<div id="ncaab">
+  <nav class="stops" role="tablist" aria-label="Sections">
+    <button id="t-today" role="tab" data-view="today" aria-selected="true"><i>1</i>Today's card</button>
+    <button id="t-live" role="tab" data-view="live" aria-selected="false"><i>2</i>2026-27 live</button>
+    <button id="t-backtest" role="tab" data-view="backtest" aria-selected="false"><i>3</i>Backtest</button>
+    <button id="t-how" role="tab" data-view="how" aria-selected="false"><i>4</i>How it works</button>
+    <button id="t-hood" role="tab" data-view="hood" aria-selected="false"><i>5</i>Under the hood</button>
+  </nav>
+
+  <section class="view" id="v-today">
+    <div>
+      <div class="kicker" id="today-kicker">College basketball · spreads and totals</div>
+      <h1>Today's <em>card</em></h1>
+      <p class="lede" id="today-lede">The 2026-27 season opens Nov 1. Picks start once both teams have played 5 games, around Nov 21. Until then the model is tracked on paper.</p>
+    </div>
+    <div class="lab-controls"><div class="viewtog" role="group" aria-label="Group picks"><button id="g-book" aria-pressed="true">By book</button><button id="g-tier" aria-pressed="false">By tier</button></div></div>
+    <div id="today-picks"></div>
+  </section>
+
+  <section class="view" id="v-live" hidden>
+    <div><div class="kicker">Season to date · real picks only</div><h1>2026-27 <em>live</em></h1>
+      <p class="lede">Every pick posted here, graded at the line and price listed when it was posted. Nothing from the backtest is mixed in.</p></div>
+    <div id="live-body"></div>
+  </section>
+
+  <section class="view" id="v-backtest" hidden>
+    <div><div class="kicker">Out-of-sample backtest · 2022-23 to 2025-26</div><h1>The <em>ride</em> so far</h1>
+      <p class="lede">Each season was predicted by models trained only on earlier seasons, using what was known at 5am on game day. Spreads and totals share one card: at most 6 picks a weekday and 12 on Saturday, one bet per game, graded at the best 5am price at DraftKings, Caesars or FanDuel. Simulated results, not a live record.</p></div>
+    <div id="bt-lab"></div>
+  </section>
+
+  <section class="view" id="v-how" hidden>
+    <div><div class="kicker">The theory</div><h1>Fade the <em>luck</em>. Respect the <em>air</em>.</h1>
+      <p class="lede">Shooting in small samples is mostly noise, but lines are built partly from results. When a team's shot-making runs far ahead of what its shots should produce, it gets overrated, and the model bets against it. Totals add one quirk the market barely prices: altitude.</p></div>
+    <div class="ridemap">
+      <div class="panel stop"><h3>Zone luck</h3><p>Actual minus expected points at the rim, from midrange and from three, on offense and defense, season to date. Expected rates shrink toward last season's league average, so a few hot nights barely move it.</p></div>
+      <div class="panel stop"><h3>KenPom drift</h3><p>A team's KenPom rating this morning minus its preseason rating. Teams that have jumped furthest since preseason tend to be overrated, so the model fades them too.</p></div>
+      <div class="panel stop"><h3>Ensembles</h3><p>Five machine-learning models for spreads (31 variables, each game fed both ways to remove home bias) and five for totals (68 variables: pace, efficiency, luck, KenPom drift, preseason projections, altitude and more). Each votes on a side and a strength.</p></div>
+      <div class="panel stop"><h3>Altitude</h3><p>Teams at 5,000 ft and up post inflated scoring at home, and totals get set off those averages. The model bets overs at high venues and unders when those teams come down to sea level, when the totals ensemble agrees. The edge grows with elevation.</p></div>
+      <div class="panel stop"><h3>The card</h3><p>Ranked: totals altitude, spread tri-agree, then spread luck + ensemble. Every pick is 1 unit: the tiers have similar measured edges, so flat staking keeps it simple. Totals tri-agree is tracked on paper, not bet. At most 6 picks a weekday and 12 on Saturday, one bet per game, and only picks with a line at DK, Caesars or FanDuel. When a spread and an altitude total collide, the altitude total wins.</p></div>
+    </div>
+    <div class="grid2">
+      <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
+        <li>Any game where either team has played fewer than 5 games. Every early-season model and rule tested lost money at real prices.</li>
+        <li>Neutral-site games, for the luck tiers (altitude totals can play at neutral venues).</li>
+        <li>Ensemble-only spreads and totals with no luck or altitude signal. They don't beat these books.</li>
+        <li>Two bets on one game.</li></ul></div>
+      <div class="panel flat prose"><h3>How the backtest stayed honest</h3><ul>
+        <li>Walk-forward: every season predicted only from earlier seasons.</li>
+        <li>Every stat from games before tip-off; KenPom and Barttorvik snapshots dated before each game.</li>
+        <li>Graded at the real 5am price and juice, not -110.</li>
+        <li>Random sides win about 51% at these prices. With the models retrained on shuffled results the card still hits about 54%, so the luck and altitude rules carry most of the edge and the ensemble adds roughly 3 points on top.</li>
+        <li>Picks beat the closing number in every season. Graded at the near-close consensus line the card still wins 55.7%; at the plain 5am consensus and -110, 56.9%.</li>
+        <li>Two full audits regraded every pick from the raw odds feed and checked every score against ESPN: zero mismatches. The second one found that 20% of games had never been matched to a line (team-name and home/away quirks in the odds feed); they are now in.</li></ul></div>
+    </div>
+    <div class="panel flat prose"><h3>What to expect live</h3><p>At 1 unit a pick the backtest went 57.1% over 2,453 bets, +216 units, +8.8% ROI, with a worst drawdown of 19 units. Tiers, cutoffs and caps were chosen on the same seasons they were tested on, so expect less live: roughly 55% and +4 to +5% ROI, about +25 to +30 units over a 600-bet season, with about a 1-in-6 chance of a losing season. Variance is real: even with a true 57% edge, 100-bet stretches at 50% happen. The live tab is the record that counts.</p></div>
+  </section>
+  <section class="view" id="v-hood" hidden>
+    <div><div class="kicker">Under the hood · model specification</div><h1>The <em>engine</em> room</h1>
+      <p class="lede">Every equation, loss function and hyperparameter behind the card. Everything is computed point-in-time: a game's inputs use only information timestamped before 5:00 a.m. ET on game day.</p></div>
+
+    <div class="hood">
+      <div class="panel eq"><h3>01 · Point-in-time features</h3>
+        <p>Season-to-date team statistics are cumulative sums with the current game removed, so game <i>g</i> never sees its own box score.</p>
+        <div class="mbox"><math display="block"><msubsup><mi>S</mi><mrow><mi>t</mi></mrow><mrow><mo>(</mo><mi>g</mi><mo>)</mo></mrow></msubsup><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>g</mi><mo>−</mo><mn>1</mn></mrow></munderover><msub><mi>s</mi><mrow><mi>t</mi><mo>,</mo><mi>j</mi></mrow></msub><mspace width="1em"/><mtext>(cumsum − current)</mtext></math></div>
+        <p class="note">KenPom ratings come from the dated daily archive; Barttorvik from its time-machine snapshots. League baselines come from the prior season only. Both teams need at least 5 prior games.</p></div>
+
+      <div class="panel eq"><h3>02 · Bayesian-shrunk zone luck</h3>
+        <p>For zone <i>z</i> ∈ {rim, mid, three} with <i>m</i> makes on <i>a</i> attempts, expected rate shrinks toward the prior-season league rate with pseudo-count <i>k<sub>z</sub></i>:</p>
+        <div class="mbox"><math display="block"><msub><mover><mi>p</mi><mo>^</mo></mover><mi>z</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>m</mi><mi>z</mi></msub><mo>+</mo><msub><mi>k</mi><mi>z</mi></msub><msubsup><mi>p</mi><mi>z</mi><mtext>lg</mtext></msubsup></mrow><mrow><msub><mi>a</mi><mi>z</mi></msub><mo>+</mo><msub><mi>k</mi><mi>z</mi></msub></mrow></mfrac><mspace width="1.2em"/><msub><mi>Λ</mi><mtext>off</mtext></msub><mo>=</mo><munder><mo>∑</mo><mi>z</mi></munder><msub><mi>v</mi><mi>z</mi></msub><mspace width=".2em"/><msub><mi>a</mi><mi>z</mi></msub><mrow><mo>(</mo><mfrac><msub><mi>m</mi><mi>z</mi></msub><msub><mi>a</mi><mi>z</mi></msub></mfrac><mo>−</mo><msub><mover><mi>p</mi><mo>^</mo></mover><mi>z</mi></msub><mo>)</mo></mrow></math></div>
+        <p class="note"><i>v<sub>z</sub></i> = point value (2, 2, 3). Offense <i>k</i> = 100 / 150 / 250; defense <i>k</i> = 200 / 400 / 1,500. Net luck = Λ<sub>off</sub> − Λ<sub>def</sub> per game; the game signal is home minus away. Tails are fixed at the 19th / 81st percentiles of a held-out season.</p></div>
+
+      <div class="panel eq"><h3>03 · Rating drift</h3>
+        <div class="mbox"><math display="block"><msub><mi>D</mi><mi>t</mi></msub><mo>=</mo><msubsup><mtext>AdjEM</mtext><mi>t</mi><mtext>today</mtext></msubsup><mo>−</mo><msubsup><mtext>AdjEM</mtext><mi>t</mi><mtext>pre</mtext></msubsup><mspace width="1.2em"/><msub><mi>D</mi><mtext>game</mtext></msub><mo>=</mo><msub><mi>D</mi><mtext>home</mtext></msub><mo>−</mo><msub><mi>D</mi><mtext>away</mtext></msub></math></div>
+        <p class="note">Faded at the 15% tails. For totals, the analogue is scoring-environment drift (offense + defense efficiency vs preseason) and KenPom's preseason projected total vs the line.</p></div>
+
+      <div class="panel eq"><h3>04 · Mirror augmentation (spreads)</h3>
+        <p>Let <i>P</i> swap home and away and negate every directional feature. Training doubles to {(x, y), (Px, −y)}, and predictions are made antisymmetric so the model cannot learn a phantom home bias:</p>
+        <div class="mbox"><math display="block"><msub><mi>f</mi><mtext>sym</mtext></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mrow><mo>[</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>P</mi><mi>x</mi><mo>)</mo><mo>]</mo></mrow><mspace width="1em"/><mo>⇒</mo><mspace width="1em"/><msub><mi>f</mi><mtext>sym</mtext></msub><mo>(</mo><mi>P</mi><mi>x</mi><mo>)</mo><mo>=</mo><mo>−</mo><msub><mi>f</mi><mtext>sym</mtext></msub><mo>(</mo><mi>x</mi><mo>)</mo></math></div>
+        <p class="note">Target: cover margin <i>y</i> = (home − away) + spread at 5am. Totals target: (home + away) − total at 5am.</p></div>
+
+      <div class="panel eq"><h3>05 · Loss functions</h3>
+        <p>Cover margins are heavy-tailed (excess kurtosis ≈ 0.3, σ ≈ 11.1 points), so the regressors use robust losses:</p>
+        <div class="mbox"><math display="block"><msub><mi>L</mi><mi>δ</mi></msub><mo>(</mo><mi>r</mi><mo>)</mo><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mfrac><mn>1</mn><mn>2</mn></mfrac><msup><mi>r</mi><mn>2</mn></msup></mtd><mtd><mrow><mo>|</mo><mi>r</mi><mo>|</mo><mo>≤</mo><mi>δ</mi></mrow></mtd></mtr><mtr><mtd><mi>δ</mi><mo>(</mo><mo>|</mo><mi>r</mi><mo>|</mo><mo>−</mo><mfrac><mi>δ</mi><mn>2</mn></mfrac><mo>)</mo></mtd><mtd><mtext>otherwise</mtext></mtd></mtr></mtable></mrow><mspace width="1.4em"/><msub><mi>ρ</mi><mi>τ</mi></msub><mo>(</mo><mi>r</mi><mo>)</mo><mo>=</mo><mi>r</mi><mo>(</mo><mi>τ</mi><mo>−</mo><mn>𝟙</mn><mo>[</mo><mi>r</mi><mo>&lt;</mo><mn>0</mn><mo>]</mo><mo>)</mo></math></div>
+        <p class="note">Huber with δ = 12 (LightGBM, XGBoost pseudo-Huber), pinball loss at τ = 0.5 for the median model, binary log-loss for the cover classifier, and ridge regression:</p>
+        <div class="mbox"><math display="block"><mover><mi>β</mi><mo>^</mo></mover><mo>=</mo><munder><mo>argmin</mo><mi>β</mi></munder><msubsup><mrow><mo>‖</mo><mi>y</mi><mo>−</mo><mi>X</mi><mi>β</mi><mo>‖</mo></mrow><mn>2</mn><mn>2</mn></msubsup><mo>+</mo><mi>α</mi><msubsup><mrow><mo>‖</mo><mi>β</mi><mo>‖</mo></mrow><mn>2</mn><mn>2</mn></msubsup><mo>,</mo><mspace width=".6em"/><mi>α</mi><mo>∈</mo><mo>{</mo><msup><mn>10</mn><mn>0</mn></msup><mo>,</mo><mo>…</mo><mo>,</mo><msup><mn>10</mn><mn>4.5</mn></msup><mo>}</mo></math></div><p class="note">α chosen by efficient leave-one-out (generalized) cross-validation on the training seasons.</p></div>
+
+      <div class="panel eq"><h3>06 · Gradient-boosted trees</h3>
+        <p>Additive trees fit to the loss gradient, heavily regularized for a low signal-to-noise target:</p>
+        <div class="mbox"><math display="block"><msub><mi>F</mi><mi>M</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>m</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover><mi>η</mi><mspace width=".15em"/><msub><mi>h</mi><mi>m</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>,</mo><mspace width=".8em"/><msub><mi>w</mi><mi>j</mi></msub><mo>=</mo><mo>−</mo><mfrac><mrow><msub><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><msub><mi>I</mi><mi>j</mi></msub></mrow></msub><msub><mi>g</mi><mi>i</mi></msub></mrow><mrow><msub><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><msub><mi>I</mi><mi>j</mi></msub></mrow></msub><msub><mi>h</mi><mi>i</mi></msub><mo>+</mo><mi>λ</mi></mrow></mfrac></math></div>
+        <div class="tbl"><table><thead><tr><th>Hyperparameter</th><th>Value</th></tr></thead><tbody>
+          <tr><td>Trees <i>M</i> · learning rate η</td><td class="mono">400 · 0.02</td></tr>
+          <tr><td>Leaves per tree (LightGBM) · max depth (XGBoost)</td><td class="mono">7 · 3</td></tr>
+          <tr><td>Min samples per leaf</td><td class="mono">200</td></tr>
+          <tr><td>Row subsample · column subsample</td><td class="mono">0.8 · 0.7</td></tr>
+          <tr><td>L2 leaf penalty λ</td><td class="mono">10</td></tr></tbody></table></div></div>
+
+      <div class="panel eq"><h3>07 · Ensembles</h3>
+        <p>Each model's output is standardized by the spread of its own predictions on the prior season, then averaged:</p>
+        <div class="mbox"><math display="block"><msub><mi>z</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>f</mi><mi>i</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo></mrow><msubsup><mi>σ</mi><mi>i</mi><mrow><mo>(</mo><mi>T</mi><mo>−</mo><mn>1</mn><mo>)</mo></mrow></msubsup></mfrac><mspace width="1.2em"/><mi>E</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><mn>5</mn></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>5</mn></munderover><msub><mi>z</mi><mi>i</mi></msub></math></div>
+        <div class="tbl"><table><thead><tr><th>Market</th><th class="l">Members (loss · feature set)</th></tr></thead><tbody>
+          <tr><td>Spreads</td><td class="l">LightGBM Huber · 31 vars; ridge · 10; ridge · 19; LightGBM classifier · 5 luck vars; LightGBM median · 31</td></tr>
+          <tr><td>Totals (luck tiers)</td><td class="l">LightGBM Huber · 43; ridge · 12; ridge · 43; LightGBM classifier · 5; LightGBM median · 43</td></tr>
+          <tr><td>Totals (altitude)</td><td class="l">LightGBM Huber · 66; ridge · 12; ridge · 66; LightGBM classifier · 9 (luck + altitude); LightGBM median · 66. The 66 add altitude, FT luck, matchup and volatility features</td></tr></tbody></table></div>
+        <p class="note">Nested forward feature selection was tested and lost to the full regularized set (mean out-of-sample correlation 0.056 vs 0.072), so nothing is pruned.</p></div>
+
+      <div class="panel eq"><h3>08 · Decision rule and card</h3>
+        <div class="mbox"><math display="block"><mtext>bet</mtext><mo>⇔</mo><mi>sgn</mi><mo>(</mo><mi>E</mi><mo>)</mo><mo>=</mo><mi>sgn</mi><mo>(</mo><mo>−</mo><mi>Λ</mi><mo>)</mo><mo>∧</mo><mo>|</mo><mi>E</mi><mo>|</mo><mo>≥</mo><msub><mi>τ</mi><mtext>tier</mtext></msub><mspace width="1.2em"/><mtext>stake</mtext><mo>∈</mo><mo>{</mo><mn>1</mn><mi>u</mi><mo>}</mo></math></div>
+        <p class="note">The signal is the faded luck sign −Λ (plus drift or preseason-total agreement for tri-agree tiers, τ = 1 SD for totals) or the altitude sign A ∈ {+1 over at 5,000 ft+, −1 under for 5,000 ft+ teams below 2,000 ft}, where only the sign of E must agree.</p>
+        <p>Tiers rank as totals altitude › spread tri-agree › spread luck + ensemble; totals tri-agree is tracked on paper only. Picks with no line at DK, Caesars or FanDuel are dropped before the cap. Per day the top <i>K</i> are kept, <i>K</i> = 6 (weekdays) or 12 (Saturday), subject to one bet per game.</p></div>
+
+      <div class="panel eq"><h3>09 · Grading, CLV and nulls</h3>
+        <p>Payout per unit from American odds <i>o</i>, and closing-line value in points for a spread bet at line ℓ<sub>b</sub> against close ℓ<sub>c</sub>:</p>
+        <div class="mbox"><math display="block"><mi>π</mi><mo>(</mo><mi>o</mi><mo>)</mo><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mi>o</mi><mo>/</mo><mn>100</mn></mtd><mtd><mi>o</mi><mo>&gt;</mo><mn>0</mn></mtd></mtr><mtr><mtd><mn>100</mn><mo>/</mo><mo>|</mo><mi>o</mi><mo>|</mo></mtd><mtd><mi>o</mi><mo>&lt;</mo><mn>0</mn></mtd></mtr></mtable></mrow><mspace width="1.4em"/><mtext>CLV</mtext><mo>=</mo><mi>s</mi><mo>·</mo><mo>(</mo><msub><mi>ℓ</mi><mi>b</mi></msub><mo>−</mo><msub><mi>ℓ</mi><mi>c</mi></msub><mo>)</mo></math></div>
+        <p>A slice's edge is scored against the 51% no-skill baseline at best price; with many slices tested, the bar is the 95th percentile of the simulated maximum:</p>
+        <div class="mbox"><math display="block"><mi>Z</mi><mo>=</mo><mfrac><mrow><mover><mi>p</mi><mo>^</mo></mover><mo>−</mo><mn>0.51</mn></mrow><msqrt><mrow><mn>0.25</mn><mo>/</mo><mi>n</mi></mrow></msqrt></mfrac><mspace width="1.2em"/><msup><mi>Z</mi><mo>*</mo></msup><mo>=</mo><msub><mi>Q</mi><mn>0.95</mn></msub><mrow><mo>(</mo><munder><mo>max</mo><mi>k</mi></munder><msubsup><mi>Z</mi><mi>k</mi><mtext>null</mtext></msubsup><mo>)</mo></mrow><mo>≈</mo><mn>3.0</mn></math></div>
+        <p class="note">Random sides at best price win about 51%. Retraining every model on shuffled results still leaves the card at 53.9-54.2%, which is the edge of the luck and altitude rules alone; the trained ensemble adds about 3 points.</p></div>
+    </div>
+  </section>
+</div>
+
+<div id="ufc" hidden></div>
+
+<footer>Picks are posted for information and entertainment, not betting advice. Backtested and past results don't guarantee future results. 21+. If gambling stops being fun, call 1-800-GAMBLER.</footer>
+</main>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtU=v=>(v>0?"+":"")+v.toFixed(1)+"u";
+const pct=v=>(v*100).toFixed(1)+"%";
+const sgn=v=>v>0?"pos":(v<0?"neg":"");
+const lnTxt=l=>l===0?"PK":(l>0?"+"+l:String(l));
+const oddsTxt=o=>o>0?"+"+o:String(o);
+const BOOK={DK:"DraftKings",CZR:"Caesars",FD:"FanDuel"};
+const LEVEL={P:"P4 / Big East",M:"Mid-major",L:"Low-major"};
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const isT=r=>r.mk==="Total";
+
+const DIMS={
+ mkt:{n:"Market",f:r=>isT(r)?"Totals":"Spreads",order:["Spreads","Totals"]},
+ tier:{n:"Tier",f:r=>r.t,order:["Totals altitude","Totals tri-agree","Spread tri-agree","Spread luck + ensemble"]},
+ season:{n:"Season",f:r=>r.s},
+ fav:{n:"Spread side",f:r=>isT(r)?"Total":(r.ln<0?"Favorite":r.ln>0?"Underdog":"Pick'em"),order:["Favorite","Pick'em","Underdog","Total"]},
+ ou:{n:"Over / under",f:r=>isT(r)?r.side:"Spread",order:["Over","Under","Spread"]},
+ line:{n:"Spread size",f:r=>{if(isT(r))return"Total";const l=r.ln;return l<=-10?"Fav 10+":l<=-5?"Fav 5-9.5":l<0?"Fav 0.5-4.5":l===0?"Pick'em":l<5?"Dog 0.5-4.5":l<10?"Dog 5-9.5":l<15?"Dog 10-14.5":"Dog 15+"},order:["Fav 10+","Fav 5-9.5","Fav 0.5-4.5","Pick'em","Dog 0.5-4.5","Dog 5-9.5","Dog 10-14.5","Dog 15+","Total"]},
+ venue:{n:"Home / away",f:r=>isT(r)?(r.ha==="N"?"Total, neutral":"Total"):(r.ha==="H"?"Home":r.ha==="A"?"Away":"Neutral"),order:["Home","Away","Neutral","Total","Total, neutral"]},
+ lvl:{n:"Team level",f:r=>LEVEL[r.ct],order:[LEVEL.P,LEVEL.M,LEVEL.L]},
+ match:{n:"Matchup level",f:r=>r.ct===r.co?"Both "+LEVEL[r.ct]:LEVEL[r.ct]+" vs "+LEVEL[r.co]},
+ conf:{n:"Conference game",f:r=>r.cg?"Conference":"Non-conference",order:["Conference","Non-conference"]},
+ total:{n:"Game total",f:r=>r.tot==null?"No total":r.tot<=130?"130 or less":r.tot<=140?"130.5-140":r.tot<=150?"140.5-150":"150.5+",order:["130 or less","130.5-140","140.5-150","150.5+","No total"]},
+ elev:{n:"Venue elevation",f:r=>!isT(r)?"Spread pick":r.el>=6000?"6,000 ft+":r.el>=5000?"5,000-5,999 ft":r.el>=2000?"2,000-4,999 ft":"Under 2,000 ft",order:["6,000 ft+","5,000-5,999 ft","2,000-4,999 ft","Under 2,000 ft","Spread pick"]},
+ month:{n:"Month",f:r=>MON[+r.d.slice(5,7)-1],order:["Nov","Dec","Jan","Feb","Mar","Apr"]},
+ dow:{n:"Day",f:r=>DOW[new Date(r.d+"T12:00:00").getDay()],order:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]},
+ tip:{n:"Tip time (ET)",f:r=>!r.sl?"Unknown":r.sl.startsWith("after")?"Before 5pm":r.sl.startsWith("even")?"5-8:30pm":"8:30pm+",order:["Before 5pm","5-8:30pm","8:30pm+","Unknown"]},
+ book:{n:"Book",f:r=>BOOK[r.bk]||r.bk},
+ odds:{n:"Price",f:r=>r.o>-110?"Better than -110":r.o===-110?"-110":"Worse than -110",order:["Better than -110","-110","Worse than -110"]},
+ gp:{n:"Games played",f:r=>r.gp<10?"5-9":r.gp<20?"10-19":"20+",order:["5-9","10-19","20+"]},
+ clv:{n:"Vs closing line",f:r=>r.clv==null?"No close near tip":r.clv>0?"Beat the close":r.clv<0?"Worse than close":"Tied",order:["Beat the close","Tied","Worse than close","No close near tip"]},
+ move:{n:"Line move after post",f:r=>r.mv==null?"No close near tip":r.mv>=1?"Toward us 1+":r.mv>0?"Toward us 0.5":r.mv===0?"No move":r.mv>-1?"Against 0.5":"Against 1+",order:["Toward us 1+","Toward us 0.5","No move","Against 0.5","Against 1+","No close near tip"]},
+};
+const FILTER_DIMS=["mkt","tier","season","fav","ou","venue","lvl","conf","elev","month","book","tip"];
+
+function stats(rows){let w=0,l=0,u=0,risk=0,c=0,cn=0;for(const r of rows){r.r==="W"?w++:l++;u+=r.p;risk+=r.u;if(r.clv!=null){c+=r.clv;cn++}}const n=w+l;return{n,w,l,wp:n?w/n:0,u,roi:risk?u/risk:0,clv:cn?c/cn:null}}
+function groupBy(rows,dim){const m=new Map();for(const r of rows){const k=DIMS[dim].f(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r)}const o=DIMS[dim].order;
+  return[...m.entries()].sort((a,b)=>{if(o){const ia=o.indexOf(a[0]),ib=o.indexOf(b[0]);return(ia<0?99:ia)-(ib<0?99:ib)}return a[0]<b[0]?-1:1})}
+const clvTxt=c=>c==null?"–":(c>0?"+":"")+c.toFixed(2);
+
+/* coaster chart: the equity curve drawn as track, with the car at the current total */
+function coaster(el,rows){
+  if(rows.length<2){el.innerHTML='<p class="note">Not enough graded picks to draw the ride yet.</p>';return}
+  const W=760,H=270,L=50,R=18,T=40,B=34,n=rows.length;let c=0;const ys=rows.map(r=>(c+=r.p));
+  const ymin=Math.min(0,...ys),ymax=Math.max(1,...ys),span=ymax-ymin||1,step=span>300?100:span>120?50:span>40?20:span>15?5:2;
+  const x=i=>L+i/(n-1)*(W-L-R),y=v=>T+(ymax-v)/span*(H-T-B);
+  let g="";for(let v=Math.ceil(ymin/step)*step;v<=ymax;v+=step)g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" ${v===0?'stroke-width="2"':'stroke-dasharray="2 5"'}/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--ink2)">${v>0?"+":""}${v}u</text>`;
+  let s="",prev=null;rows.forEach((r,i)=>{if(r.s!==prev){s+=`<line x1="${x(i)}" x2="${x(i)}" y1="${T-10}" y2="${H-B}" stroke="var(--line)"/><text x="${x(i)+5}" y="${H-B+20}" font-size="11.5" font-weight="700" fill="var(--ink2)">${r.s}</text>`;prev=r.s}});
+  const k=Math.max(1,Math.floor(n/140)),pts=[];for(let i=0;i<n;i+=k)pts.push([x(i),y(ys[i])]);if(pts[pts.length-1][0]!==x(n-1))pts.push([x(n-1),y(ys[n-1])]);
+  const path=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join("");
+  let ties="";for(let i=1;i<pts.length;i+=2){const a=pts[i-1],b=pts[i];const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1,nx=-dy/len*6,ny=dx/len*6;ties+=`<line x1="${(b[0]+nx).toFixed(1)}" y1="${(b[1]+ny).toFixed(1)}" x2="${(b[0]-nx).toFixed(1)}" y2="${(b[1]-ny).toFixed(1)}" stroke="var(--track)" stroke-width="1.6" opacity=".5"/>`}
+  const end=pts[pts.length-1],pre=pts[Math.max(0,pts.length-3)],ang=Math.atan2(end[1]-pre[1],end[0]-pre[0])*180/Math.PI,last=ys[n-1],base=y(Math.max(ymin,0));
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}">${g}${s}
+   <path d="${path} L${end[0]} ${base} L${pts[0][0]} ${base} Z" fill="var(--cobalt)" opacity=".10"/>
+   ${ties}<path d="${path}" fill="none" stroke="var(--track)" stroke-width="3.2" stroke-linejoin="round"/>
+   <g transform="translate(${end[0].toFixed(1)} ${end[1].toFixed(1)}) rotate(${ang.toFixed(1)})"><rect x="-24" y="-14" width="24" height="10" rx="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/><circle cx="-19" cy="-2" r="2.6" fill="var(--ink)"/><circle cx="-5" cy="-2" r="2.6" fill="var(--ink)"/><circle cx="-12" cy="-19" r="5.5" fill="var(--ball)" stroke="var(--ink)" stroke-width="1.6"/></g>
+   <text x="${(end[0]-8).toFixed(1)}" y="${Math.max(16,end[1]-30).toFixed(1)}" text-anchor="end" font-size="15" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>`}
+
+function kpis(el,s,label){el.innerHTML=`<div><small>Bets</small><b>${s.n.toLocaleString()}</b><span>${label}</span></div><div><small>Record</small><b>${s.w}-${s.l}</b><span>${pct(s.wp)} win rate</span></div>
+ <div><small>Units</small><b class="${s.u>=0?"pos":"neg"}">${fmtU(s.u)}</b><span>${s.u>=0?"+":"−"}$${Math.abs(Math.round(s.u*100)).toLocaleString()} at $100/unit</span></div>
+ <div><small>ROI</small><b>${(s.roi*100).toFixed(1)}%</b><span>per unit risked</span></div><div><small>Vs close</small><b>${clvTxt(s.clv)}</b><span>avg points</span></div>`}
+
+function ticket(r,showRes){const big=false;const pick=isT(r)?`${r.side} ${r.ln}`:`${r.tm} ${lnTxt(r.ln)}`;
+  const game=isT(r)?`${r.op} at ${r.tm}${r.el>=5000?` · ${r.el.toLocaleString()} ft`:""}`:`${r.ha==="A"?"at":"vs"} ${r.op}`;
+  return `<article class="ticket ${big?"big":""}"><span class="notch t"></span><span class="notch b"></span><div class="main"><div class="tier">${esc(r.t)}</div><div class="pick">${esc(pick)}</div><div class="game">${esc(game)}</div>
+  <div class="price"><span>${esc(BOOK[r.bk]||r.bk)} ${oddsTxt(r.o)}</span>${r.min!=null?`<span>${isT(r)?(r.side==="Over"?"max":"min"):"min"} ${r.min}</span>`:""}${showRes&&r.r?`<span class="tag ${r.r==="W"?"w":"l"}">${r.r==="W"?"Won":"Lost"} ${esc(r.sc||"")}</span>`:""}</div></div>
+  <div class="stub"><div><b>${r.u}U</b><small>Stake</small></div></div></article>`}
+function cardHTML(picks,by,showRes){const key=by==="book"?(r=>BOOK[r.bk]||r.bk):(r=>r.t);const order=by==="book"?["FanDuel","DraftKings","Caesars"]:DIMS.tier.order;
+  const g=new Map();picks.forEach(p=>{const k=key(p);if(!g.has(k))g.set(k,[]);g.get(k).push(p)});const ab={FanDuel:"FD",DraftKings:"DK",Caesars:"CZR"};
+  return `<div class="books">${[...g.keys()].sort((a,b)=>order.indexOf(a)-order.indexOf(b)).map(k=>`<div><div class="bookhead"><span class="logo">${esc(by==="book"?ab[k]||k:"★")}</span><h2>${esc(k)}</h2><span class="note">${g.get(k).length} pick${g.get(k).length>1?"s":""}</span></div><div class="tickets">${g.get(k).map(p=>ticket(p,showRes)).join("")}</div></div>`).join("")}</div>`}
+
+/* Slice Lab: one filter set drives the KPIs, the ride chart, the breakdown and the bet log */
+function lab(root,all,idp,label){
+  const F={};FILTER_DIMS.forEach(d=>F[d]=new Set());
+  const opts=Object.entries(DIMS).map(([k,d])=>`<option value="${k}">${d.n}</option>`).join("");
+  root.innerHTML=`<div class="kpis" id="${idp}-k"></div>
+  <div class="panel"><div class="lab-head"><h2>The ride</h2><span class="note" id="${idp}-sub"></span></div><div id="${idp}-chart"></div></div>
+  <div class="panel lab"><div class="lab-head"><h2>Slice lab</h2><div class="active" id="${idp}-active"></div></div>
+   <details class="filters" open><summary><h3>Filters</h3><span class="note">Tap chips to narrow every number on this page. Chips in the same group add together.</span></summary>
+    <div class="fgrid">${FILTER_DIMS.map(d=>`<div class="fgroup"><h4>${DIMS[d].n}</h4><div class="chips">${groupBy(all,d).map(([k,v])=>`<button class="chip" data-d="${d}" data-v="${esc(k)}" aria-pressed="false">${esc(k)}<small>${v.length}</small></button>`).join("")}</div></div>`).join("")}</div></details>
+   <div class="lab-controls">
+     <label class="f" for="${idp}-a">Break down by<select id="${idp}-a">${opts}</select></label>
+     <label class="f" for="${idp}-b">Then by<select id="${idp}-b"><option value="">Nothing</option>${opts}</select></label>
+     <div class="viewtog" role="group" aria-label="View"><button id="${idp}-vt" aria-pressed="true">Table</button><button id="${idp}-vh" aria-pressed="false">Heatmap</button></div>
+     <button class="ghost" id="${idp}-clear">Clear filters</button>
+   </div>
+   <div class="tbl" id="${idp}-out"></div><p class="note">Rows under 75 bets are marked small. Treat them as noise until they grow.</p></div>
+  <div class="panel"><div class="lab-head"><h2>Bet log</h2><label class="f" for="${idp}-q">Team<input id="${idp}-q" type="search" placeholder="Search a team"></label></div><div class="tbl" id="${idp}-log"></div></div>`;
+  const a=$(`#${idp}-a`),b=$(`#${idp}-b`),vt=$(`#${idp}-vt`),vh=$(`#${idp}-vh`),q=$(`#${idp}-q`);a.value="tier";let heat=false,page=0;
+  const filtered=()=>all.filter(r=>FILTER_DIMS.every(d=>!F[d].size||F[d].has(DIMS[d].f(r))));
+  function row(lbl,s,max,cls){const w=Math.min(50,Math.abs(s.u)/max*50);return `<tr class="${cls||""}"><td>${esc(lbl)}${s.n<75&&cls!=="tot"?' <span class="tag small">small</span>':""}</td><td>${s.n}</td><td class="mono">${s.w}-${s.l}</td><td>${pct(s.wp)}</td><td class="${sgn(s.u)}">${fmtU(s.u)}</td><td class="${sgn(s.roi)}">${(s.roi*100).toFixed(1)}%</td><td>${clvTxt(s.clv)}</td><td><span class="ubar" aria-hidden="true"><i style="left:${s.u>=0?50:50-w}%;width:${w}%;background:var(${s.u>=0?"--win":"--loss"})"></i></span></td></tr>`}
+  function breakdown(rows){const A=a.value,Bd=b.value&&b.value!==a.value?b.value:"";
+    if(!rows.length)return'<p class="note">No bets match these filters.</p>';
+    if(heat&&Bd){const ra=groupBy(rows,A),cb=groupBy(rows,Bd).map(x=>x[0]);
+      const cell=rs=>{if(!rs.length)return'<td class="c"><span>–</span></td>';const s=stats(rs);const o=Math.min(70,Math.round(Math.abs(s.roi)*260+8));
+        return `<td class="c" style="background:color-mix(in srgb,var(${s.roi>=0?"--win":"--loss"}) ${o}%,var(--panel))" title="${s.w}-${s.l}, ${fmtU(s.u)}"><b>${pct(s.wp)}</b><span>${s.n} bets · ${(s.roi*100).toFixed(0)}%</span></td>`};
+      return `<table class="heat"><thead><tr><th class="l">${esc(DIMS[A].n)} ↓ · ${esc(DIMS[Bd].n)} →</th>${cb.map(c=>`<th style="text-align:center">${esc(c)}</th>`).join("")}</tr></thead><tbody>${ra.map(([k,v])=>`<tr><td><b>${esc(k)}</b></td>${cb.map(c=>cell(v.filter(r=>DIMS[Bd].f(r)===c))).join("")}</tr>`).join("")}</tbody></table><p class="note">Each cell: win rate, then bets and ROI. Green is profitable, red is losing; deeper color means bigger ROI.</p>`}
+    if(heat&&!Bd)return'<p class="note">Pick a second slice under "Then by" to see the heatmap.</p>';
+    const g=groupBy(rows,A);let max=1;const blocks=g.map(([k,v])=>{const s=stats(v);max=Math.max(max,Math.abs(s.u));const subs=Bd?groupBy(v,Bd).map(([k2,v2])=>{const s2=stats(v2);max=Math.max(max,Math.abs(s2.u));return[k2,s2]}):[];return[k,s,subs]});
+    return `<table><thead><tr><th>${esc(DIMS[A].n)}</th><th>Bets</th><th>W-L</th><th>Win%</th><th>Units</th><th>ROI</th><th title="Average points vs the closing line">CLV</th><th></th></tr></thead><tbody>${blocks.map(([k,s,subs])=>row(k,s,max)+subs.map(([k2,s2])=>row(k2,s2,max,"sub")).join("")).join("")}${row("All filtered bets",stats(rows),max,"tot")}</tbody></table>`}
+  function log(rows){const qq=q.value.trim().toLowerCase();const f=rows.filter(r=>!qq||r.tm.toLowerCase().includes(qq)||r.op.toLowerCase().includes(qq)).slice().reverse();
+    const PER=30,pages=Math.max(1,Math.ceil(f.length/PER));page=Math.min(page,pages-1);const v=f.slice(page*PER,page*PER+PER);
+    $(`#${idp}-log`).innerHTML=`<table><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Game</th><th>Price</th><th class="l">Book</th><th class="l">Tier</th><th>Score</th><th>Result</th><th>Units</th></tr></thead><tbody>${v.map(r=>`<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(isT(r)?r.side+" "+r.ln:r.tm+" "+lnTxt(r.ln))}</b></td><td class="l">${esc(isT(r)?r.op+" at "+r.tm:(r.ha==="A"?"at ":"vs ")+r.op)}</td><td class="mono">${oddsTxt(r.o)}</td><td class="l">${esc(r.bk)}</td><td class="l">${esc(r.t)} · ${r.u}u</td><td class="mono">${esc(r.sc)}</td><td><span class="tag ${r.r==="W"?"w":"l"}">${r.r}</span></td><td class="${sgn(r.p)}">${fmtU(r.p)}</td></tr>`).join("")}</tbody></table>
+    <div class="pager"><button class="ghost" id="${idp}-pp" ${page<=0?"disabled":""}>Newer</button><span class="note">Page ${page+1} of ${pages} · ${f.length.toLocaleString()} bets</span><button class="ghost" id="${idp}-pn" ${page>=pages-1?"disabled":""}>Older</button></div>`;
+    $(`#${idp}-pp`).onclick=()=>{page--;log(rows)};$(`#${idp}-pn`).onclick=()=>{page++;log(rows)}}
+  function draw(){const rows=filtered();kpis($(`#${idp}-k`),stats(rows),label);coaster($(`#${idp}-chart`),rows);
+    $(`#${idp}-sub`).textContent=rows.length===all.length?"Every bet, in date order":`${rows.length.toLocaleString()} of ${all.length.toLocaleString()} bets match your filters`;
+    $(`#${idp}-out`).innerHTML=breakdown(rows);
+    const act=FILTER_DIMS.flatMap(d=>[...F[d]].map(v=>`<button class="pill" data-d="${d}" data-v="${esc(v)}" title="Remove this filter">${esc(DIMS[d].n)}: ${esc(v)}</button>`));
+    $(`#${idp}-active`).innerHTML=act.length?act.join(""):'<span class="note">No filters. Showing every bet.</span>';
+    root.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",F[c.dataset.d].has(c.dataset.v)));page=0;log(rows)}
+  root.addEventListener("click",e=>{const c=e.target.closest(".chip,.pill");if(!c)return;const d=c.dataset.d,v=c.dataset.v;F[d].has(v)?F[d].delete(v):F[d].add(v);draw()});
+  $(`#${idp}-clear`).onclick=()=>{FILTER_DIMS.forEach(d=>F[d].clear());draw()};
+  [a,b].forEach(x=>x.addEventListener("change",draw));q.addEventListener("input",()=>{page=0;log(filtered())});
+  vt.onclick=()=>{heat=false;vt.setAttribute("aria-pressed","true");vh.setAttribute("aria-pressed","false");draw()};
+  vh.onclick=()=>{heat=true;vh.setAttribute("aria-pressed","true");vt.setAttribute("aria-pressed","false");if(!b.value)b.value=a.value==="season"?"mkt":"season";draw()};
+  draw()}
+
+const VIEWS=["today","live","backtest","how","hood"];
+function show(v){document.querySelectorAll("nav.stops button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));VIEWS.forEach(x=>$("#v-"+x).hidden=x!==v);try{localStorage.setItem("ncsun-view",v)}catch(e){}}
+function model(m){document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-selected",b.dataset.model===m));$("#ncaab").hidden=m!=="ncaab";$("#ufc").hidden=m!=="ufc"}
+document.querySelectorAll("nav.stops button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>model(b.dataset.model)));
+const h=(location.hash||"").slice(1);if(h==="ufc")model("ufc");else if(VIEWS.includes(h))show(h);else{try{const v=localStorage.getItem("ncsun-view");if(VIEWS.includes(v))show(v)}catch(e){}}
+
+const getJSON=u=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
+const bydate=(a,b)=>a.d<b.d?-1:a.d>b.d?1:0;
+Promise.all([getJSON("ncaab_backtest.json"),getJSON("ncaab_live.json"),getJSON("ncaab_today.json")]).then(([bt,live,today])=>{
+  bt=(bt||[]).sort(bydate);live=(live||[]).filter(r=>r.r==="W"||r.r==="L").sort(bydate);today=today||{picks:[]};
+  lab($("#bt-lab"),bt,"bt","4 seasons");
+  if(live.length)lab($("#live-body"),live,"lv","2026-27");
+  else $("#live-body").innerHTML='<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first real pick, expected around Nov 21 once teams reach 5 games. Paper-tracked early-season games are logged separately and never counted here.</span></div>';
+  let by="book";const real=today.picks&&today.picks.length;const ex=bt.filter(r=>r.d==="2026-02-21");
+  function drawToday(){if(real){$("#today-kicker").textContent=today.date+" · college basketball · spreads and totals";
+      $("#today-lede").textContent=`${today.picks.length} picks today. Take the listed number or better; skip a pick if the line has moved past its limit.`;$("#today-picks").innerHTML=cardHTML(today.picks,by,false)}
+    else $("#today-picks").innerHTML=`<div class="banner"><b>Example</b><span>No picks posted today. Here's how a card looks: the ${ex.length} backtest picks from Saturday, Feb 21, 2026, with results.</span></div><div style="margin-top:18px">${cardHTML(ex,by,true)}</div>`}
+  const gb=$("#g-book"),gt=$("#g-tier");gb.onclick=()=>{by="book";gb.setAttribute("aria-pressed","true");gt.setAttribute("aria-pressed","false");drawToday()};
+  gt.onclick=()=>{by="tier";gt.setAttribute("aria-pressed","true");gb.setAttribute("aria-pressed","false");drawToday()};drawToday();
+});
+})();
+</script>
+<script src="ufc.js"></script>
+
+</body>
+</html>
