@@ -150,7 +150,6 @@
   const DIMS = {
     mk: { n: "Market", f: r => MK[r.mk || "ML"] || r.mk, order: ["Moneyline", "Wins by decision", "Goes the distance", "Over 2.5 rounds"] },
     tier: { n: "Bet type", f: r => TIER[tierOf(r)] || tierOf(r), order: ["Moneyline", "Decision · KO fade", "Decision", "Goes the distance"] },
-    stake: { n: "Stake", f: r => (r.su || 1) > 1 ? "1.5 units" : "1 unit", order: ["1 unit", "1.5 units"] },
     season: { n: "Season", f: r => r.d.slice(0, 4) },
     side: { n: "Favorite / dog", f: r => r.dec < 2 ? "Favorite" : "Underdog", order: ["Favorite", "Underdog"] },
     price: { n: "Price", f: r => r.o <= -300 ? "-300 or shorter" : r.o <= -200 ? "-299 to -200" : r.o <= -140 ? "-199 to -140" : r.o < 100 ? "-139 to -101" : r.o <= 150 ? "+100 to +150" : r.o <= 400 ? "+151 to +400" : "+401 or longer", order: ["-300 or shorter", "-299 to -200", "-199 to -140", "-139 to -101", "+100 to +150", "+151 to +400", "+401 or longer"] },
@@ -165,7 +164,7 @@
     clv: { n: "Vs closing line", f: r => r.clv == null ? "No close" : r.clv > 0 ? "Beat the close" : "Worse than close", order: ["Beat the close", "Worse than close", "No close"] },
     month: { n: "Month", f: r => MON[+r.d.slice(5, 7) - 1], order: MON },
   };
-  const FILTERS = ["tier", "season", "stake", "side", "price", "edge", "gender", "weight", "rounds", "exp", "ending", "book"];
+  const FILTERS = ["tier", "season", "side", "price", "edge", "gender", "weight", "rounds", "exp", "ending", "book"];
 
   function stats(rows) {
     let w = 0, l = 0, v = 0, u = 0, c = 0, cn = 0, risk = 0;
@@ -244,7 +243,7 @@
     function log(rows) {
       const qq = q.value.trim().toLowerCase(); const f = rows.filter(r => !qq || r.pk.toLowerCase().includes(qq) || r.op.toLowerCase().includes(qq)).slice().reverse();
       const PER = 30, pages = Math.max(1, Math.ceil(f.length / PER)); page = Math.min(page, pages - 1); const v = f.slice(page * PER, page * PER + PER);
-      $(`#${idp}-log`).innerHTML = `<table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Opponent</th><th>Price</th><th class="l">Book</th><th>Model</th><th>Edge</th><th class="l">Ended</th><th>Result</th><th>Units</th></tr></thead><tbody>${v.map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.lab || r.pk)}</b></td><td class="l">${esc(r.op)}</td><td class="mono">${am(r.o)}</td><td class="l">${esc(r.bk)}</td><td>${pct(r.p)}</td><td>${r.e.toFixed(1)}</td><td class="l">${esc(DIMS.ending.f(r))}${r.rnd ? " R" + r.rnd : ""}</td><td><span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span></td><td class="${sgn(r.u)}">${fmtU(r.u)}${(r.su || 1) !== 1 ? ` <small class="note">${r.su}u</small>` : ""}</td></tr>`).join("")}</tbody></table>
+      $(`#${idp}-log`).innerHTML = `<table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Opponent</th><th>Price</th><th class="l">Book</th><th>Model</th><th>Edge</th><th class="l">Ended</th><th>Result</th><th>Units</th></tr></thead><tbody>${v.map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.lab || r.pk)}</b></td><td class="l">${esc(r.op)}</td><td class="mono">${am(r.o)}</td><td class="l">${esc(r.bk)}</td><td>${pct(r.p)}</td><td>${r.e.toFixed(1)}</td><td class="l">${esc(DIMS.ending.f(r))}${r.rnd ? " R" + r.rnd : ""}</td><td><span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span></td><td class="${sgn(r.u)}">${fmtU(r.u)}</td></tr>`).join("")}</tbody></table>
       <div class="pager"><button class="ghost" id="${idp}-pp" ${page <= 0 ? "disabled" : ""}>Newer</button><span class="note">Page ${page + 1} of ${pages} · ${f.length.toLocaleString()} bets</span><button class="ghost" id="${idp}-pn" ${page >= pages - 1 ? "disabled" : ""}>Older</button></div>`;
       $(`#${idp}-pp`).onclick = () => { page--; log(rows) }; $(`#${idp}-pn`).onclick = () => { page++; log(rows) };
     }
@@ -356,14 +355,14 @@
 
   <section class="view" data-uview="live" hidden>
     <div><div class="kicker">Since October 2026 · real picks only</div><h1>2026 <em>live</em></h1>
-      <p class="lede">Every pick posted here, graded at the book and price shown when it locked, at the stake shown. Nothing from the backtest is mixed in.</p></div>
+      <p class="lede">Every pick posted here, graded at the book and price shown when it locked, 1 unit each. Nothing from the backtest is mixed in.</p></div>
     <div id="ufc-live" class="ufc-views"></div>
     <div class="panel flat" id="ufc-paper" style="display:grid;gap:10px"></div>
   </section>
 
   <section class="view" data-uview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2021 to 2026</div><h1>The <em>ride</em> so far</h1>
-      <p class="lede">Each year was predicted by models trained only on earlier fights. Moneylines are graded at FanDuel's (or BetMGM's, before it left BestFightOdds) opening price; props at the best closing price of FanDuel, DraftKings and Caesars. Blends use only earlier years, so bets start in 2023. The card rule is applied in the order live picks lock: moneylines first (at most 2), then props, at most 5 a card, at the stakes it would have used. Simulated results, not a live record.</p></div>
+      <p class="lede">Each year was predicted by models trained only on earlier fights. Moneylines are graded at FanDuel's (or BetMGM's, before it left BestFightOdds) opening price; props at the best closing price of FanDuel, DraftKings and Caesars. Blends use only earlier years, so bets start in 2023. The card rule is applied in the order live picks lock: moneylines first (at most 2), then props, at most 5 a card, 1 unit each. Simulated results, not a live record.</p></div>
     <div id="ufc-bt" class="ufc-views"></div>
   </section>
 
@@ -375,7 +374,7 @@
       <div class="panel stop"><h3>Ratings</h3><p>Our own Bradley-Terry rating, solved over the whole web of who beat whom and refit monthly, plus FightMatrix's three rating systems and division rank going into each fight. Adding FightMatrix cut the win model's error noticeably and lifted the moneyline backtest from +12% to +13.5%.</p></div>
       <div class="panel stop"><h3>Two models</h3><p>A win model (LightGBM plus logistic regression on about 85 inputs) and a prop model that reads how each fighter wins and loses: KO, submission and decision rates over his whole career, how fast, how recently, durability, striking, age and reach. Every fight is fed both ways, so the corner never matters.</p></div>
       <div class="panel stop"><h3>Market blend</h3><p>Neither model is bet raw. Each is blended with the book's own price, with weights fit out of sample for that book and how long the line has been up. The model earns weight only where it beats the market on its own.</p></div>
-      <div class="panel stop"><h3>The card</h3><p>Moneyline picks need 3 points of edge at +400 or shorter. Decision picks need 3 points when the model also rates that fighter's KO chance 5+ points below the market (a "KO fade"), otherwise 5. Goes-the-distance needs 5. At most 5 bets a card: no more than 2 moneylines (they lock weeks early) and 3 of any prop type, best first. 1.5 units on KO fades and 8+ point edges, 1 unit otherwise.</p></div>
+      <div class="panel stop"><h3>The card</h3><p>Moneyline picks need 3 points of edge at +400 or shorter. Decision picks need 3 points when the model also rates that fighter's KO chance 5+ points below the market (a "KO fade"), otherwise 5. Goes-the-distance needs 5. At most 5 bets a card: no more than 2 moneylines (they lock weeks early) and 3 of any prop type, best first. Every bet is 1 unit.</p></div>
     </div>
     <div class="grid2">
       <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
@@ -435,12 +434,12 @@
 
       <div class="panel eq"><h3>07 · Decision rule and card</h3>
         ${M(`<mtext>bet</mtext><mo>⇔</mo><mi>p</mi><mo>−</mo><mfrac><mn>1</mn><mi>d</mi></mfrac><mo>≥</mo><msub><mi>τ</mi><mtext>type</mtext></msub><mo>,</mo><mspace width=".6em"/><msub><mi>τ</mi><mtext>ML</mtext></msub><mo>=</mo><msub><mi>τ</mi><mtext>KO fade</mtext></msub><mo>=</mo><mn>.03</mn><mo>,</mo><mspace width=".4em"/><msub><mi>τ</mi><mtext>DEC</mtext></msub><mo>=</mo><msub><mi>τ</mi><mtext>GTD</mtext></msub><mo>=</mo><mn>.05</mn>`)}
-        <p class="note">Price caps: d ≤ 5 (+400) for moneylines, d ≤ 11 (+1000) for props. No debutants. Per card, rank KO fades first, then by expected value p·d − 1; keep at most 5, at most 2 moneylines and 3 of any other type. Stake 1.5 units on KO fades and on edges of 8+ points, else 1 unit. Picks lock the first time they qualify; earlier locks count toward the caps.</p></div>
+        <p class="note">Price caps: d ≤ 5 (+400) for moneylines, d ≤ 11 (+1000) for props. No debutants. Per card, rank KO fades first, then by expected value p·d − 1; keep at most 5, at most 2 moneylines and 3 of any other type. Every bet is 1 unit. Picks lock the first time they qualify; earlier locks count toward the caps.</p></div>
 
       <div class="panel eq"><h3>08 · Staking, grading and CLV</h3>
         <p>Profit per unit at decimal price <i>d</i>, and closing-line value with the de-vigged closing probability <i>c</i>:</p>
         ${M(`<mi>π</mi><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mi>s</mi><mo>(</mo><mi>d</mi><mo>−</mo><mn>1</mn><mo>)</mo></mtd><mtd><mtext>win</mtext></mtd></mtr><mtr><mtd><mo>−</mo><mi>s</mi></mtd><mtd><mtext>loss</mtext></mtd></mtr></mtable></mrow><mspace width="1.4em"/><mtext>CLV</mtext><mo>=</mo><mi>c</mi><mo>·</mo><mi>d</mi><mo>−</mo><mn>1</mn>`)}
-        <p class="note">Draws, no contests and cancelled fights are void. Fractional Kelly was tested against the unit tiers. Quarter Kelly made more units only by risking twice as much, and it under-staked KO fades, so the tiers stay.</p></div>
+        <p class="note">Draws, no contests and cancelled fights are void. Staking is flat: 1 unit a bet. Bigger stakes on the strongest picks (1.5u) added about 3 points of ROI in the backtest but nearly doubled the worst drawdown; quarter Kelly made more units only by risking twice as much.</p></div>
     </div>
   </section>`;
 
