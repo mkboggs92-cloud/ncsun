@@ -35,6 +35,9 @@
 #ufc .bet .sub{font-size:13px;color:var(--ink2);line-height:1.35}
 #ufc .bet .px2{display:grid;justify-items:end;align-content:start;gap:4px;text-align:right;white-space:nowrap}
 #ufc .bet .px2 b{font:500 24px/1 var(--mono);color:var(--ink)}
+#ufc .pubsplit{font-size:12.5px;color:var(--ink2);margin:8px 0 2px}
+#ufc .pubsplit b{color:var(--ink)}
+#ufc .side .px.pub{opacity:.85}
 #ufc .bet .px2 span{font:700 12px/1.2 var(--body);color:var(--ink2)}
 #ufc .bet .line{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--ink2);padding-top:9px;border-top:1px dashed var(--line)}
 #ufc .bet .floor{font:700 12.5px/1.2 var(--body);color:var(--ink);background:var(--panel2);border-radius:999px;padding:5px 10px}
@@ -390,6 +393,10 @@
     const live = cells.filter(c => c.o != null), good = live.filter(c => c.ok).sort((a, b) => toDec(b.o) - toDec(a.o));
     return { cells, best: good[0] || null, gone: live.length > 0 && !good.length, worst };
   }
+  // DraftKings public splits (information only; being collected to test later)
+  const pubTxt = (u, full) => !u ? "" : full
+    ? `DraftKings public on this side: <b>${u.bets}%</b> of bets · <b>${u.handle}%</b> of money${u.handle - u.bets >= 15 ? " (bigger bettors on it)" : u.bets - u.handle >= 15 ? " (mostly small bets)" : ""} <span class="note">as of ${esc(u.at)} UTC</span>`
+    : `DK ${u.bets}% bets · ${u.handle}% $`;
   function betRow(r, paper, side) {
     const t = tierOf(r), worst = r.p ? minPrice(r.p, barOf(r)) : null, bn = paper ? null : booksNow(r, side);
     const badge = paper ? `<span class="tbadge paper">Paper · ${esc(TIER[t] || MK[r.mk] || t)}</span>` : `<span class="tbadge ${BADGE[t] || ""}">${esc(TIER[t] || t)}</span>`;
@@ -413,7 +420,7 @@
         <div><small>Edge</small><b class="${(r.e || 0) > 0 ? "pos" : ""}">${r.e != null ? (r.e > 0 ? "+" : "") + r.e.toFixed(1) : "–"}</b><span>${r.e != null && r.dec ? `pts over ${pct0(1 / r.dec)}` : ""}</span></div>
         <div><small>Market</small><b>${r.m != null ? am(fair(r.m)) : "–"}</b><span>${r.m != null ? pct0(r.m) + " fair" : "no fair line"}</span></div>
         <div><small>Worst price</small><b>${worst != null ? am(worst) : "–"}</b><span>still a bet</span></div></div>
-      ${nowHTML}${whyChart(r.why, r)}
+      ${r.pub ? `<p class="pubsplit">${pubTxt(r.pub, true)}</p>` : ""}${nowHTML}${whyChart(r.why, r)}
       <p class="note">${esc(dateTxt(r.d))}${r.ev ? " · " + esc(r.ev) : ""}${r.posted ? ` · posted ${esc(r.posted)} ET` : ""}${paper ? "" : " · 1 unit · posted picks stand and are graded at this price, even if the line moves"}</p></div></details>`;
   }
 
@@ -424,7 +431,7 @@
     const propPicks = bets.length ? `<small>${bets.map(b => `<span class="badge">Pick · ${esc(TIER[b.tier] || MK[b.mk] || b.mk)} ${am(b.o)}</span>`).join(" ")}</small>` : "";
     const px = s => BK3.filter(([, k]) => s[k] != null).map(([b, k]) => `${b} <b>${am(s[k])}</b>`).join(" · ") || "no line";
     const side = (s, cls) => `<div class="side ${cls}${s.pick ? " pick" : ""}"><span class="nm">${esc(s.n)}${s.pick ? ` <span class="badge">Pick ${am(s.pick.o)}</span>` : ""}</span>
-      <span class="px">${px(s)}</span><span class="px">fair ${am(fair(s.p))}</span>${s.ufc != null ? `<span class="px">${s.ufc} UFC fight${s.ufc === 1 ? "" : "s"}</span>` : ""}</div>`;
+      <span class="px">${px(s)}</span><span class="px">fair ${am(fair(s.p))}</span>${s.pub ? `<span class="px pub" title="DraftKings public: share of bets / share of money">${pubTxt(s.pub)}</span>` : ""}${s.ufc != null ? `<span class="px">${s.ufc} UFC fight${s.ufc === 1 ? "" : "s"}</span>` : ""}</div>`;
     const tags = [f.tf ? "Title fight" : f.rd >= 5 ? "5 rounds" : "3 rounds", cap(f.div), f.debut ? "Debut · no bet" : ""].filter(Boolean).join(" · ");
     const meth = f.pgtd != null ? `<span class="meth"><span>Distance <b>${pct0(f.pgtd)}</b></span>${f.pdec_a != null ? `<span>${esc(short(f.a.n))} dec <b>${pct0(f.pdec_a)}</b></span>` : ""}${f.pdec_b != null ? `<span>${esc(short(f.b.n))} dec <b>${pct0(f.pdec_b)}</b></span>` : ""}</span>`
       : f.ko != null ? `<span class="meth"><span>KO <b>${pct0(f.ko)}</b></span><span>Sub <b>${pct0(f.sub)}</b></span><span>Dec <b>${pct0(f.dec)}</b></span></span>` : "";
@@ -584,7 +591,7 @@
   <section class="view" data-uview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2023 to 2026</div><h1>The <em>ride</em> so far</h1>
       <p class="lede">Each year was predicted by models trained only on earlier fights, and every blend is fit only on earlier years, so bets start in 2023. Moneylines are graded at FanDuel's (or BetMGM's, before it left BestFightOdds) opening price; props at the best closing price of FanDuel, DraftKings and Caesars. The card rule is applied in the order live picks lock: at most 5 a card, 2 moneylines, one prop per fight, 1 unit each. Simulated results, not a live record.</p>
-      <div class="panel flat prose" style="margin-top:12px"><h3>What to expect live</h3><p>Backtest ROI runs ahead of what the edge supports: some of it is luck, and the rules were chosen on these same years. The model's own expected value points to roughly <b>+3% to +7% on moneylines</b> and <b>+5% to +20% on props</b>. At about 160 bets a season that is a typical year of +8u to +15u, with a real chance (20-33%) of a losing season. Closing-line value settles the question about 15 times faster than ROI: if live moneyline picks keep beating the close after ~100 bets, the edge is real.</p></div></div>
+      <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>Backtest ROI runs ahead of what the edge supports: some of it is luck, and the rules were chosen on these same years. The model's own expected value points to roughly <b>+3% to +7% on moneylines</b> and <b>+5% to +20% on props</b>. At about 160 bets a season that is a typical year of +8u to +15u, with a real chance (20-33%) of a losing season. Closing-line value settles the question about 15 times faster than ROI: if live moneyline picks keep beating the close after ~100 bets, the edge is real.</p></div></div>
     <div id="ufc-bt" class="ufc-views"></div>
   </section>
 
