@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nothing Can Stop Us Now Betting</title>
-<meta name="description" content="Model picks for college basketball spreads and totals, plus UFC. Every pick graded at the real price, with a full out-of-sample backtest.">
+<meta name="description" content="Model picks for college basketball spreads and totals, plus UFC, and our hand-picked college football card. Every pick graded at the real price, with a full out-of-sample backtest.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Nothing Can Stop Us Now Betting">
 <meta property="og:title" content="Nothing Can Stop Us Now Betting">
@@ -240,6 +240,7 @@ svg text{font-family:var(--body)}
   <div class="seg" role="tablist" aria-label="Model">
     <button id="m-ncaab" role="tab" aria-selected="true" data-model="ncaab">College hoops</button>
     <button id="m-ufc" role="tab" aria-selected="false" data-model="ufc">UFC</button>
+    <button id="m-cfb" role="tab" aria-selected="false" data-model="cfb">Football</button>
   </div>
 </div></header>
 
@@ -367,7 +368,9 @@ svg text{font-family:var(--body)}
 
 <div id="ufc" hidden></div>
 
-<footer>Picks are posted for information and entertainment, not betting advice. Backtested and past results don't guarantee future results. 21+. If gambling stops being fun, call 1-800-GAMBLER.</footer>
+<div id="cfb" hidden></div>
+
+<footer>College football picks are our own calls, not model output. Picks are posted for information and entertainment, not betting advice. Backtested and past results don't guarantee future results. 21+. If gambling stops being fun, call 1-800-GAMBLER.</footer>
 </main>
 
 <script>
@@ -514,13 +517,13 @@ function lab(root,all,idp,label){
 const VIEWS=["today","live","backtest","how","hood"];let cur="today";const onShow={};
 function show(v,push){cur=v;document.querySelectorAll("nav.stops button").forEach(b=>{const on=b.dataset.view===v;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1;if(on&&push)b.scrollIntoView({block:"nearest",inline:"nearest"})});VIEWS.forEach(x=>$("#v-"+x).hidden=x!==v);
   if(push)history.replaceState(null,"",v==="today"?location.pathname+location.search:"#"+v);if(onShow[v])onShow[v]()}
-function model(m,push){document.querySelectorAll(".seg button").forEach(b=>{const on=b.dataset.model===m;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1});$("#ncaab").hidden=m!=="ncaab";$("#ufc").hidden=m!=="ufc";
-  if(push)history.replaceState(null,"",m==="ufc"?"#ufc":(cur==="today"?location.pathname+location.search:"#"+cur))}
+function model(m,push){document.querySelectorAll(".seg button").forEach(b=>{const on=b.dataset.model===m;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1});$("#ncaab").hidden=m!=="ncaab";$("#ufc").hidden=m!=="ufc";$("#cfb").hidden=m!=="cfb";
+  if(push)history.replaceState(null,"",m==="ufc"?"#ufc":m==="cfb"?"#cfb":(cur==="today"?location.pathname+location.search:"#"+cur))}
 document.querySelectorAll("nav.stops button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view,true)));
 document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>model(b.dataset.model,true)));
 document.querySelectorAll('[role="tablist"]').forEach(tl=>tl.addEventListener("keydown",e=>{const t=[...tl.querySelectorAll('[role="tab"]')],i=t.indexOf(document.activeElement);if(i<0)return;
   const j=e.key==="ArrowRight"?(i+1)%t.length:e.key==="ArrowLeft"?(i-1+t.length)%t.length:e.key==="Home"?0:e.key==="End"?t.length-1:-1;if(j<0)return;e.preventDefault();t[j].focus();t[j].click()}));
-function route(){const h=(location.hash||"").slice(1);if(h==="ufc")model("ufc");else{model("ncaab");show(VIEWS.includes(h)?h:"today")}}
+function route(){const h=(location.hash||"").slice(1);if(h==="ufc")model("ufc");else if(h==="cfb"||h.startsWith("cfb-"))model("cfb");else{model("ncaab");show(VIEWS.includes(h)?h:"today")}}
 addEventListener("hashchange",route);route();
 
 const getJSON=u=>fetch(u,{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null);
@@ -556,6 +559,7 @@ getJSON("ncaab_today.json").then(today=>{today=today||{picks:[]};fixT(today.pick
 })();
 </script>
 <script src="ufc.js"></script>
+<script src="cfb.js"></script>
 
 <noscript><p style="padding:16px">This site needs JavaScript to show picks and results.</p></noscript>
 </body>
