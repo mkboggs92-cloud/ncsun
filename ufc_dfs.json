@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-05 17:00",
+ "updated": "2026-10-06 09:00",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -93,9 +93,9 @@
       "d8da10db80131bec"
      ],
      "salary": 49900,
-     "proj": 415.1,
-     "p10": 291.8,
-     "p90": 538.4,
+     "proj": 415.0,
+     "p10": 291.7,
+     "p90": 538.3,
      "note": "Best projected total that differs from the first lineup by at least 2 fighters."
     }
    ],
@@ -786,13 +786,13 @@
      "date": "2026-10-10",
      "event": "UFC Fight Night: Allen vs. Duncan",
      "rounds": 3,
-     "proj": 50.2,
+     "proj": 50.1,
      "p10": 4.0,
      "p90": 106.4,
-     "p_win": 0.384,
-     "p_ko": 0.184,
-     "p_sub": 0.072,
-     "p_dec": 0.129,
+     "p_win": 0.383,
+     "p_ko": 0.183,
+     "p_sub": 0.071,
+     "p_dec": 0.128,
      "p_r1": 0.138,
      "mins": 8.7,
      "sig": 32.9,
@@ -805,7 +805,7 @@
      "debut": false,
      "salary": 7500,
      "dk_id": "44392888",
-     "value": 6.69,
+     "value": 6.68,
      "in": [
       2
      ]
@@ -821,7 +821,7 @@
      "proj": 71.6,
      "p10": 8.9,
      "p90": 117.1,
-     "p_win": 0.616,
+     "p_win": 0.617,
      "p_ko": 0.304,
      "p_sub": 0.118,
      "p_dec": 0.195,
