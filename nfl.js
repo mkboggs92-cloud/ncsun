@@ -369,7 +369,7 @@
 
   <section class="view" data-nview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2023 to 2025</div><h1>The <em>ride</em> so far</h1>
-      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 85 minutes before kickoff (right after inactives), at DraftKings, FanDuel, BetMGM, Caesars, BetRivers and Fanatics. The card rule is the live one: the 8 biggest edges on the Sunday day slate plus the single best pick in each primetime game, one pick per player, 1 unit each. Simulated results, not a live record.</p>
+      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 80 minutes before kickoff (just after inactives), at DraftKings, FanDuel, BetMGM, Caesars, BetRivers and Fanatics. The card rule is the live one: the 8 biggest edges on the Sunday afternoon slate plus the single best pick in every other game, one pick per player, 1 unit each. Simulated results, not a live record.</p>
       <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>The card's shape (blend weight, bet sides, card size) was chosen on 2023-24 and checked on 2025, which still came in around +9%. Some feature choices also used these seasons, and part of the under edge comes from books leaning overs more each year, so expect less live: roughly <b>+3% to +8%</b>, about +15u to +40u over a 500-pick season, with a real chance of a losing year. The closing line is a weak yardstick for props (it barely moves after inactives), so the live record is what counts.</p></div></div>
     <div id="nfl-bt" class="ufc-views"></div>
   </section>
@@ -378,22 +378,22 @@
     <div><div class="kicker">The theory</div><h1>Bet the <em>under</em> on the <em>right</em> guys.</h1>
       <p class="lede">Prop books shade overs, because that's what the public bets: across 2024-25 their no-vig over price ran 3 to 4 points too high. Blindly betting every under only breaks even, though. The edge is in which players: the model finds the unders where usage, role and matchup point lower than the line.</p></div>
     <div class="ridemap">
-      <div class="panel stop"><h3>Every snap since 2018</h3><p>nflverse play-by-play, snap counts, injury reports, weekly rosters, depth charts, Next Gen Stats and FTN charting: about 50,000 player-games, every input built from games before the one being priced.</p></div>
+      <div class="panel stop"><h3>Every snap since 2018</h3><p>nflverse play-by-play, snap counts, injury reports, weekly rosters, depth charts, Next Gen Stats, FTN charting and kickoff weather: about 50,000 player-games, every input built from games before the one being priced.</p></div>
       <div class="panel stop"><h3>Who's actually playing</h3><p>The biggest lever. Who is active today, each player's rank among active teammates, depth-chart order, and how his share has moved in past games when a teammate sat. When a WR1 or RB1 is out, the next man up gets priced, not averaged.</p></div>
       <div class="panel stop"><h3>Three models</h3><p>Receptions: targets × catch rate and a form-anchored count model, with spread that grows with volume. Yards: a Tweedie mean, a calibrated yards distribution and direct over/under classifiers. TDs: separate rushing and receiving TD models plus a goal-line structural model, so RBs get their carries counted.</p></div>
-      <div class="panel stop"><h3>Market blend</h3><p>No model is bet raw. Each is blended with the books' no-vig price at 80% market, 20% model. On their own the models lose to the books on receptions and yards; blended, they beat the books in all three markets.</p></div>
-      <div class="panel stop"><h3>The card</h3><p>Only unders on receptions and yards, plus anytime TD yeses: overs lost money in every season tested. Two-sided markets only. Rank by edge over the market: 8 picks on the Sunday day slate, 1 per primetime game, one pick per player, at most 2 per game.</p></div>
-      <div class="panel stop"><h3>Posted picks stand</h3><p>Picks post after inactives (about 90 minutes before kickoff) at whichever of the six books pays best, and are graded at that price even if the line or the model moves. A player ruled inactive voids the pick, as books do.</p></div>
+      <div class="panel stop"><h3>Market blend</h3><p>No model is bet raw. Each is blended with the books' no-vig price on the logit scale, 60% market and 40% model for the card. On their own the models lose to the books on receptions and yards; blended, they beat the books in all three markets.</p></div>
+      <div class="panel stop"><h3>The card</h3><p>Only unders on receptions and yards, plus anytime TD yeses: overs lost money in every season tested. Two-sided markets only. Rank by edge over the market: 8 picks shared across the Sunday afternoon slate (1 PM and 4 PM games), the single best pick in every other game (TNF, SNF, MNF, Saturday, London), one pick per player, at most 2 per game.</p></div>
+      <div class="panel stop"><h3>Posted picks stand</h3><p>Picks post just after inactives (about 80 minutes before kickoff) at whichever of the six books pays best, and are graded at that price even if the line or the model moves. A player ruled inactive voids the pick, as books do.</p></div>
     </div>
     <div class="grid2">
       <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
         <li>Overs on receptions and yards. Books already overprice them; the model's best overs still lost after the vig.</li>
         <li>Lines with only one side posted, or a single offshore book.</li>
-        <li>Pre-inactives prices on players tagged Questionable unless the scenario check (plays vs sits) still clears the edge.</li>
+        <li>Pre-inactives prices. Every pick waits for that game's inactives; a Questionable player whose props get pulled is treated as out and his teammates are re-priced.</li>
         <li>Pockets that only looked good in hindsight: of about 800 slices tested, almost none survived a multiple-testing check.</li></ul></div>
       <div class="panel flat prose"><h3>How the backtest stayed honest</h3><ul>
         <li>Walk-forward: every week predicted by models trained only on earlier weeks.</li>
-        <li>Real lines: every graded price is a quote that existed about 85 minutes before kickoff; nothing after kickoff.</li>
+        <li>Real lines: every graded price is a quote that existed about 80 minutes before kickoff; nothing after kickoff.</li>
         <li>Live-only information: the model sees only what a live run can see. Game-day inactive lists are inferred, not read from hindsight.</li>
         <li>An independent code audit: grading matches play-by-play exactly, and leak tests pass on every input.</li>
         <li>Card rules chosen on 2023-24, checked on 2025.</li></ul></div>
@@ -426,7 +426,7 @@
         <p class="note">w = 0.4 for the card pool. Chosen on 2023-24 from 0.2 / 0.25 / 0.3 / 0.4.</p></div>
       <div class="panel eq"><h3>07 · Decision rule and card</h3>
         ${M(`<mtext>edge</mtext><mo>=</mo><mi>p</mi><mo>−</mo><msub><mi>m</mi><mtext>side</mtext></msub><mo>,</mo><mspace width=".6em"/><mtext>EV</mtext><mo>=</mo><mi>p</mi><mi>d</mi><mo>−</mo><mn>1</mn><mo>≥</mo><mn>.03</mn>`)}
-        <p class="note">Unders on receptions and yards, anytime TD yeses. Two-sided markets only. Rank by edge; post the top 8 on the Sunday day slate and the top 1 per primetime game, one per player, at most 2 per game.</p></div>
+        <p class="note">Unders on receptions and yards, anytime TD yeses. Two-sided markets only. Rank by edge; post the top 8 across the Sunday afternoon slate and the top 1 in every other game, one per player, at most 2 per game. Each game locks after its own inactives.</p></div>
       <div class="panel eq"><h3>08 · Grading and CLV</h3>
         ${M(`<mi>π</mi><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mi>d</mi><mo>−</mo><mn>1</mn></mtd><mtd><mtext>win</mtext></mtd></mtr><mtr><mtd><mo>−</mo><mn>1</mn></mtd><mtd><mtext>loss</mtext></mtd></mtr></mtable></mrow><mspace width="1.4em"/><mtext>CLV</mtext><mo>=</mo><mi>c</mi><mo>·</mo><mi>d</mi><mo>−</mo><mn>1</mn>`)}
         <p class="note">Pushes and inactive players void. c is the de-vigged closing probability at the same line, so CLV includes the vig; most prop lines don't move between inactives and kickoff.</p></div>
@@ -477,7 +477,7 @@
     const fails = status ? Object.entries(status).filter(([k, v]) => v && v.ok === false).map(([k, v]) => `${k}${v.msg ? " (" + v.msg + ")" : ""}`) : [];
     const color = hrs == null || hrs > 72 || fails.length ? "var(--loss)" : "var(--win)";
     $("#nfl-status").innerHTML = `<span><span class="dot" style="background:${color}"></span>Lines updated <b>${upd ? upd.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "not yet"}</b></span>
-      ${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Picks lock about 85 min before each kickoff, right after inactives${today.next_lock_txt ? ` · next lock <b>${esc(today.next_lock_txt)} ET</b>` : ""}</span>${today.lines ? `<span>${today.lines.toLocaleString()} lines priced</span>` : ""}`;
+      ${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Picks lock about 80 min before each kickoff, just after inactives${today.next_lock_txt ? ` · next lock <b>${esc(today.next_lock_txt)} ET</b>` : ""}</span>${today.lines ? `<span>${today.lines.toLocaleString()} lines priced</span>` : ""}`;
     if (today.week) $("#nfl-kicker").textContent = `${today.season} · Week ${today.week} · receiving props`;
     const picks = (today.picks || []).slice().map(p => ({ ...p, posted: p.locked || today.posted })).sort(bydate);
     const day = picks.filter(p => p.slate !== "Primetime"), prime = picks.filter(p => p.slate === "Primetime");
@@ -488,7 +488,7 @@
       html += `<div class="slip"><div class="slipsum"><span><b>${picks.length}</b>pick${picks.length === 1 ? "" : "s"}</span><span><b>1u</b>each</span><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(k)}`).join(" · ")}</span><button class="ghost" id="nfl-copy">Copy card</button></div>
         ${sec("Sunday card", `${day.length} of 8 slots · biggest edges across the day slate`, day)}${sec("Primetime & standalone", "the single best pick in each game off the Sunday afternoon slate", prime)}</div>`;
     } else {
-      html += `<div class="banner"><b>No picks yet</b><span>Most books post receiving props late in the week, and each game's picks lock about 85 minutes before its kickoff, right after inactives.</span></div>`;
+      html += `<div class="banner"><b>No picks yet</b><span>Most books post receiving props late in the week, and each game's picks lock about 80 minutes before its kickoff, just after inactives.</span></div>`;
     }
     $("#nfl-picks").innerHTML = html;
     const cp = $("#nfl-copy"); if (cp) cp.onclick = () => {
