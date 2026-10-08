@@ -483,7 +483,7 @@
     const picks = (today.picks || []).slice().map(p => ({ ...p, posted: p.locked || today.posted })).sort(bydate);
     const tdp = picks.filter(p => p.sec === "td"), cardp = picks.filter(p => p.sec !== "td");
     const day = cardp.filter(p => p.slate !== "Primetime"), prime = cardp.filter(p => p.slate === "Primetime");
-    let html = "";
+    let html = today.notice ? `<div class="banner"><b>Note</b><span>${esc(today.notice)}</span></div>` : "";
     if (picks.length) {
       const by = {}; cardp.forEach(r => { const k = r.mk === "td" ? "anytime TD" : r.mk === "rec" ? "receptions under" : "yards under"; by[k] = (by[k] || 0) + 1 });
       const sec = (t, n, rs) => rs.length ? `<div class="slip-ev"><h2>${esc(t)}</h2><span class="note">${esc(n)}</span></div>` + rs.map(betRow).join("") : "";
