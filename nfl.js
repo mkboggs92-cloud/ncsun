@@ -308,7 +308,8 @@
     const badge = `<span class="tbadge ${r.mk === "td" ? "fade" : r.tier === "A" ? "ml" : ""}">${esc(MKT[r.mk])}${r.tier ? " · Tier " + esc(r.tier) : ""}</span>`;
     const sub = `${esc(r.pos)} · ${esc(r.tm)} ${esc(r.op)} · ${esc(dateTxt(r.d))}${r.kick ? " " + esc(kickTxt(r.kick)) : ""}`;
     let line = "";
-    if (worst != null) line += `<span class="floor">Take ${am(worst)} or better</span>`;
+    if (r.r) line += `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${r.r === "W" ? "Won" : r.r === "L" ? "Lost" : r.r === "P" ? "Push" : esc(r.r)}${r.act != null ? " · " + (r.mk === "td" ? (r.act > 0 ? "scored" : "no TD") : r.act + (r.mk === "rec" ? " rec" : " yds")) : ""}</span>`;
+    else if (worst != null) line += `<span class="floor">Take ${am(worst)} or better</span>`;
     if (r.e != null) line += `<span>Edge <b style="color:var(--win)">+${r.e.toFixed(1)}</b> pts</span>`;
     return `<details class="bet"><summary>
       <span class="what">${badge}<b>${esc(r.pk)} ${esc(r.mk === "td" ? "anytime TD" : r.sd + " " + r.ln)}</b><span class="sub">${r.mk === "td" ? "" : esc(MKT[r.mk].toLowerCase()) + " · "}${sub}</span></span>
@@ -368,7 +369,7 @@
 
   <section class="view" data-nview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2023 to 2025</div><h1>The <em>ride</em> so far</h1>
-      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted 75 minutes before kickoff (after inactives), at DraftKings, FanDuel, BetMGM, Caesars, BetRivers and Fanatics. The card rule is the live one: the 8 biggest edges on the Sunday day slate plus the single best pick in each primetime game, one pick per player, 1 unit each. Simulated results, not a live record.</p>
+      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 85 minutes before kickoff (right after inactives), at DraftKings, FanDuel, BetMGM, Caesars, BetRivers and Fanatics. The card rule is the live one: the 8 biggest edges on the Sunday day slate plus the single best pick in each primetime game, one pick per player, 1 unit each. Simulated results, not a live record.</p>
       <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>The card's shape (blend weight, bet sides, card size) was chosen on 2023-24 and checked on 2025, which still came in around +9%. Some feature choices also used these seasons, and part of the under edge comes from books leaning overs more each year, so expect less live: roughly <b>+3% to +8%</b>, about +15u to +40u over a 500-pick season, with a real chance of a losing year. The closing line is a weak yardstick for props (it barely moves after inactives), so the live record is what counts.</p></div></div>
     <div id="nfl-bt" class="ufc-views"></div>
   </section>
@@ -392,7 +393,7 @@
         <li>Pockets that only looked good in hindsight: of about 800 slices tested, almost none survived a multiple-testing check.</li></ul></div>
       <div class="panel flat prose"><h3>How the backtest stayed honest</h3><ul>
         <li>Walk-forward: every week predicted by models trained only on earlier weeks.</li>
-        <li>Real lines: every graded price is a quote that existed 75 minutes before kickoff; nothing after kickoff.</li>
+        <li>Real lines: every graded price is a quote that existed about 85 minutes before kickoff; nothing after kickoff.</li>
         <li>Live-only information: the model sees only what a live run can see. Game-day inactive lists are inferred, not read from hindsight.</li>
         <li>An independent code audit: grading matches play-by-play exactly, and leak tests pass on every input.</li>
         <li>Card rules chosen on 2023-24, checked on 2025.</li></ul></div>
@@ -473,12 +474,12 @@
     today = today || { picks: [], slate: [] };
     const upd = today.updated ? new Date(today.updated.replace(" ", "T")) : null;
     const hrs = upd ? (Date.now() - upd.getTime()) / 3.6e6 : null;
-    const fails = status ? Object.entries(status).filter(([k, v]) => v && v.ok === false).map(([k]) => k) : [];
+    const fails = status ? Object.entries(status).filter(([k, v]) => v && v.ok === false).map(([k, v]) => `${k}${v.msg ? " (" + v.msg + ")" : ""}`) : [];
     const color = hrs == null || hrs > 72 || fails.length ? "var(--loss)" : "var(--win)";
     $("#nfl-status").innerHTML = `<span><span class="dot" style="background:${color}"></span>Lines updated <b>${upd ? upd.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "not yet"}</b></span>
-      ${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Picks lock about 75 min before each kickoff, after inactives${today.next_lock_txt ? ` · next lock <b>${esc(today.next_lock_txt)} ET</b>` : ""}</span>${today.lines ? `<span>${today.lines.toLocaleString()} lines priced</span>` : ""}`;
+      ${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Picks lock about 85 min before each kickoff, right after inactives${today.next_lock_txt ? ` · next lock <b>${esc(today.next_lock_txt)} ET</b>` : ""}</span>${today.lines ? `<span>${today.lines.toLocaleString()} lines priced</span>` : ""}`;
     if (today.week) $("#nfl-kicker").textContent = `${today.season} · Week ${today.week} · receiving props`;
-    const picks = (today.picks || []).slice().map(p => ({ ...p, posted: today.posted })).sort(bydate);
+    const picks = (today.picks || []).slice().map(p => ({ ...p, posted: p.locked || today.posted })).sort(bydate);
     const day = picks.filter(p => p.slate !== "Primetime"), prime = picks.filter(p => p.slate === "Primetime");
     let html = "";
     if (picks.length) {
@@ -487,7 +488,7 @@
       html += `<div class="slip"><div class="slipsum"><span><b>${picks.length}</b>pick${picks.length === 1 ? "" : "s"}</span><span><b>1u</b>each</span><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(k)}`).join(" · ")}</span><button class="ghost" id="nfl-copy">Copy card</button></div>
         ${sec("Sunday card", `${day.length} of 8 slots · biggest edges across the day slate`, day)}${sec("Primetime & standalone", "the single best pick in each game off the Sunday afternoon slate", prime)}</div>`;
     } else {
-      html += `<div class="banner"><b>No picks yet</b><span>Most books post receiving props late in the week, and each game's picks lock about 75 minutes before its kickoff, after inactives.</span></div>`;
+      html += `<div class="banner"><b>No picks yet</b><span>Most books post receiving props late in the week, and each game's picks lock about 85 minutes before its kickoff, right after inactives.</span></div>`;
     }
     $("#nfl-picks").innerHTML = html;
     const cp = $("#nfl-copy"); if (cp) cp.onclick = () => {
