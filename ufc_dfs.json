@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-07 17:01",
+ "updated": "2026-10-08 09:01",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -87,15 +87,15 @@
      "ids": [
       "e564146b9cf6dbef",
       "8e5d953bdb9ae5e7",
-      "e03187ec8b5b6abc",
       "a93f94c923c3a9cb",
-      "eee0ef3e2b14816b",
-      "b9124c308671e303"
+      "81d2c551886bd5a1",
+      "3920d0cc288f9b0d",
+      "eee0ef3e2b14816b"
      ],
      "salary": 50000,
-     "proj": 413.9,
-     "p10": 291.1,
-     "p90": 536.7,
+     "proj": 414.5,
+     "p10": 293.2,
+     "p90": 535.8,
      "note": "Best projected total that differs from the first lineup by at least 2 fighters."
     }
    ],
@@ -419,14 +419,14 @@
      "date": "2026-10-10",
      "event": "UFC Fight Night: Allen vs. Duncan",
      "rounds": 3,
-     "proj": 70.3,
-     "p10": 14.0,
+     "proj": 70.0,
+     "p10": 13.7,
      "p90": 109.8,
-     "p_win": 0.716,
-     "p_ko": 0.333,
+     "p_win": 0.711,
+     "p_ko": 0.331,
      "p_sub": 0.045,
-     "p_dec": 0.337,
-     "p_r1": 0.174,
+     "p_dec": 0.335,
+     "p_r1": 0.173,
      "mins": 10.6,
      "sig": 40.1,
      "td": 0.74,
@@ -434,11 +434,11 @@
      "kd": 0.29,
      "pts_win": 89.9,
      "pts_loss": 21.0,
-     "ml": -250,
+     "ml": -245,
      "debut": false,
      "salary": 8900,
      "dk_id": "44392884",
-     "value": 7.9,
+     "value": 7.87,
      "in": []
     },
     {
@@ -449,29 +449,27 @@
      "date": "2026-10-10",
      "event": "UFC Fight Night: Allen vs. Duncan",
      "rounds": 3,
-     "proj": 45.6,
-     "p10": 5.7,
-     "p90": 101.8,
-     "p_win": 0.284,
-     "p_ko": 0.085,
-     "p_sub": 0.055,
-     "p_dec": 0.144,
-     "p_r1": 0.064,
+     "proj": 45.9,
+     "p10": 5.8,
+     "p90": 101.7,
+     "p_win": 0.289,
+     "p_ko": 0.086,
+     "p_sub": 0.056,
+     "p_dec": 0.146,
+     "p_r1": 0.065,
      "mins": 10.6,
-     "sig": 37.9,
+     "sig": 38.0,
      "td": 1.9,
      "ctrl": 2.2,
      "kd": 0.16,
      "pts_win": 96.2,
      "pts_loss": 25.5,
-     "ml": 190,
+     "ml": 186,
      "debut": false,
      "salary": 7300,
      "dk_id": "44392885",
-     "value": 6.25,
-     "in": [
-      2
-     ]
+     "value": 6.29,
+     "in": []
     },
     {
      "id": "3920d0cc288f9b0d",
@@ -481,27 +479,29 @@
      "date": "2026-10-10",
      "event": "UFC Fight Night: Allen vs. Duncan",
      "rounds": 3,
-     "proj": 59.5,
+     "proj": 60.3,
      "p10": 9.8,
-     "p90": 106.6,
-     "p_win": 0.501,
-     "p_ko": 0.125,
-     "p_sub": 0.217,
-     "p_dec": 0.158,
-     "p_r1": 0.168,
+     "p90": 106.8,
+     "p_win": 0.512,
+     "p_ko": 0.128,
+     "p_sub": 0.222,
+     "p_dec": 0.162,
+     "p_r1": 0.172,
      "mins": 10.2,
-     "sig": 38.8,
+     "sig": 38.7,
      "td": 0.78,
      "ctrl": 2.2,
      "kd": 0.22,
      "pts_win": 94.7,
      "pts_loss": 24.2,
-     "ml": -108,
+     "ml": -113,
      "debut": false,
      "salary": 8000,
      "dk_id": "44392886",
-     "value": 7.44,
-     "in": []
+     "value": 7.54,
+     "in": [
+      2
+     ]
     },
     {
      "id": "eb393afdbe3293d5",
@@ -511,26 +511,26 @@
      "date": "2026-10-10",
      "event": "UFC Fight Night: Allen vs. Duncan",
      "rounds": 3,
-     "proj": 55.2,
-     "p10": 5.8,
-     "p90": 105.9,
-     "p_win": 0.499,
-     "p_ko": 0.129,
-     "p_sub": 0.069,
-     "p_dec": 0.302,
-     "p_r1": 0.097,
+     "proj": 54.4,
+     "p10": 5.6,
+     "p90": 105.6,
+     "p_win": 0.488,
+     "p_ko": 0.126,
+     "p_sub": 0.067,
+     "p_dec": 0.295,
+     "p_r1": 0.095,
      "mins": 10.2,
-     "sig": 38.5,
-     "td": 1.17,
+     "sig": 38.4,
+     "td": 1.16,
      "ctrl": 2.1,
      "kd": 0.12,
      "pts_win": 91.2,
      "pts_loss": 19.4,
-     "ml": -118,
+     "ml": -113,
      "debut": false,
      "salary": 8200,
      "dk_id": "44392887",
-     "value": 6.73,
+     "value": 6.63,
      "in": []
     },
     {
@@ -591,9 +591,7 @@
      "salary": 9100,
      "dk_id": "44392893",
      "value": 8.56,
-     "in": [
-      2
-     ]
+     "in": []
     },
     {
      "id": "81d2c551886bd5a1",
@@ -623,7 +621,9 @@
      "salary": 8400,
      "dk_id": "44392894",
      "value": 7.6,
-     "in": []
+     "in": [
+      2
+     ]
     },
     {
      "id": "07047eb7d17fb0a2",
