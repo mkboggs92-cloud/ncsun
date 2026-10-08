@@ -27,7 +27,7 @@
   const to24 = s => { if (!s) return null; const m = String(s).match(/(\d+):(\d+)\s*(am|pm)/i); if (!m) return null; let h = +m[1] % 12; if (/pm/i.test(m[3])) h += 12; return `${String(h).padStart(2, "0")}:${m[2]}` };
 
   NCSUN.register({
-    id: "ncaab", name: "College hoops", short: "Hoops", tag: "Hoops", navName: "College hoops",
+    id: "ncaab", icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M6 5.5c3 3.5 3 9.5 0 13M18 5.5c-3 3.5-3 9.5 0 13"/></svg>', name: "College hoops", short: "Hoops", tag: "Hoops", navName: "College hoops",
     kicker: "College basketball · spreads and totals", h1: "Today's <em>card</em>",
     lede: "Flat 1-unit picks on spreads and totals from the luck-fade model. Take the listed number or better; skip a pick if the line has moved past its worst line.",
     defaultTime: "19:00", durationH: 2.5, seasonLabel: "2026-27",

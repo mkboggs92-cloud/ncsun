@@ -53,7 +53,7 @@
     draw();
   }
   NCSUN.register({
-    id: "cfb", name: "College football", short: "CFB", tag: "Football", navName: "Football",
+    id: "cfb", icon: '<svg viewBox="0 0 24 24"><path d="M4 16.5C4 10 10 4 20 4c0 10-6 16-16 16-.5 0-1 0-1.5-.2A12 12 0 0 1 4 16.5z"/><path d="M8.5 15.5l7-7M10 12l1.5 1.5M12.5 9.5 14 11"/></svg>', name: "College football", short: "CFB", tag: "Football", navName: "Football",
     kicker: "College football · sides and totals", h1: "This <em>week</em>",
     lede: "Hand picks, made together. No model, just film, numbers and arguments. 1 unit each.",
     seasonLabel: "2026",

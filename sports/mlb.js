@@ -32,7 +32,7 @@
     }, cfg.override || {});
   };
   NCSUN.register(NCSUN.generic({
-    id: "mlb", name: "MLB", short: "MLB", tag: "Baseball", hidden: true,
+    id: "mlb", icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 5.5c3 3.5 3 9.5 0 13M17 5.5c-3 3.5-3 9.5 0 13"/></svg>', name: "MLB", short: "MLB", tag: "Baseball", hidden: true,
     kicker: "MLB · moneylines and totals", h1: "First <em>pitch</em>", defaultTime: "19:00", durationH: 3.5, seasonLabel: "2027",
     car: '<circle cx="-12" cy="-19" r="5.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/><path d="M-15 -22 q3 3 0 6 M-9 -22 q-3 3 0 6" fill="none" stroke="var(--coral)" stroke-width="1.1"/>',
     cadence: "daily in season", note: "Runs each morning in season", empty: "The MLB model joins the site for the 2027 season.",

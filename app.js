@@ -109,18 +109,44 @@
       ddm = `<g aria-hidden="true"><line x1="${x0}" x2="${x1}" y1="${y0}" y2="${y0}" stroke="var(--loss)" stroke-dasharray="3 3"/><line x1="${x1}" x2="${x1}" y1="${y0}" y2="${y1}" stroke="var(--loss)" stroke-width="2"/><circle cx="${x1}" cy="${y1}" r="3.5" fill="var(--loss)"/><text x="${lx}" y="${Math.min(H - B - 6, y1 + 18)}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="var(--loss)">Worst drawdown −${dd.toFixed(1)}u</text></g>` }
     const end = pts[pts.length - 1], pre = pts[Math.max(0, pts.length - 3)], ang = Math.atan2(end[1] - pre[1], end[0] - pre[0]) * 180 / Math.PI, last = ys[n - 1], base = y(Math.max(ymin, 0));
     const rider = (sp && sp.car) || '<circle cx="-12" cy="-19" r="5.5" fill="var(--ball)" stroke="var(--ink)" stroke-width="1.6"/>';
-    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}; worst drawdown ${dd.toFixed(1)} units">${g}${s}
-     <path d="${path} L${end[0]} ${base} L${pts[0][0]} ${base} Z" fill="var(--cobalt)" opacity=".10"/>
-     ${ties}<path d="${path}" fill="none" stroke="var(--track)" stroke-width="${nar ? 2.6 : 3.2}" stroke-linejoin="round"/>${ddm}
-     <g transform="translate(${end[0].toFixed(1)} ${end[1].toFixed(1)}) rotate(${ang.toFixed(1)})"><rect x="-24" y="-14" width="24" height="10" rx="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/><circle cx="-19" cy="-2" r="2.6" fill="var(--ink)"/><circle cx="-5" cy="-2" r="2.6" fill="var(--ink)"/>${rider}</g>
-     <text x="${(end[0] - 8).toFixed(1)}" y="${Math.max(16, end[1] - 30).toFixed(1)}" text-anchor="end" font-size="${nar ? 14 : 15}" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>`;
+    el.innerHTML = `<svg class="ride" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}; worst drawdown ${dd.toFixed(1)} units">${g}${s}
+     <path class="area" d="${path} L${end[0]} ${base} L${pts[0][0]} ${base} Z" fill="var(--cobalt)"/>
+     <g class="ties">${ties}</g><path class="track" d="${path}" fill="none" stroke="var(--track)" stroke-width="${nar ? 2.6 : 3.2}" stroke-linejoin="round"/><g class="ddm">${ddm}</g>
+     <g class="car" transform="translate(${end[0].toFixed(1)} ${end[1].toFixed(1)}) rotate(${ang.toFixed(1)})"><rect x="-24" y="-14" width="24" height="10" rx="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/><circle cx="-19" cy="-2" r="2.6" fill="var(--ink)"/><circle cx="-5" cy="-2" r="2.6" fill="var(--ink)"/>${rider}</g>
+     <text class="endlbl" x="${(end[0] - 8).toFixed(1)}" y="${Math.max(16, end[1] - 30).toFixed(1)}" text-anchor="end" font-size="${nar ? 14 : 15}" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>`;
+    const tr = el.querySelector("path.track"); if (tr && tr.getTotalLength) tr.style.setProperty("--len", tr.getTotalLength().toFixed(0));
+  }
+  // sparkline: cumulative units over a run of graded picks (home tiles, the trend strip)
+  function spark(rows, w = 150, h = 40) {
+    if (rows.length < 2) return "";
+    let c = 0; const ys = rows.map(r => (c += r.pl || 0)), ymin = Math.min(0, ...ys), ymax = Math.max(0.5, ...ys), span = ymax - ymin || 1, n = ys.length;
+    const x = i => 3 + i / (n - 1) * (w - 10), y = v => 4 + (ymax - v) / span * (h - 8);
+    const pts = ys.map((v, i) => [x(i), y(v)]), d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(""), e = pts[n - 1], z = y(0);
+    const svg = `<svg class="spark" viewBox="0 0 ${w} ${h}" role="img" aria-label="Units over the last ${n} picks, ${fmtU(ys[n - 1])}"><line class="z" x1="3" x2="${w - 7}" y1="${z.toFixed(1)}" y2="${z.toFixed(1)}"/><path class="sa" d="${d} L${e[0].toFixed(1)} ${z.toFixed(1)} L${pts[0][0].toFixed(1)} ${z.toFixed(1)} Z"/><path class="sl" d="${d}" style="--len:${(n * w / n * 1.6).toFixed(0)}"/><circle class="e" cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="3.5"/></svg>`;
+    return svg;
+  }
+  const dots = rows => rows.length ? `<span class="dots"><small>Last ${rows.length}</small>${rows.map((r, i) => `<i class="${r.r === "W" ? "w" : r.r === "L" ? "l" : "p"}" style="--i:${i}" title="${esc(r.pick)} · ${r.r}"></i>`).join("")}</span>` : "";
+  // the trend strip on every ride's card page: this season at a glance before digging into history
+  function trendHTML(sp, live) {
+    const g = live.filter(r => r.status === "graded").sort(byTime); if (!g.length) return "";
+    const s = stats(g);
+    return `<div class="trend"><div class="tr-rec"><small>${esc(sp.seasonLabel || "Season")} so far</small><b>${recTxt(s)}</b><em class="${sgn(s.u)}">${fmtU(s.u)} · ${(s.roi * 100).toFixed(1)}% ROI</em></div>${spark(g.slice(-60))}${dots(g.slice(-10))}<button class="ghost" data-go="${sp.id}-live">Full record</button></div>`;
+  }
+  NCSUN.spark = spark;
+  // count-up for KPI numbers (first render only; respects reduced motion)
+  function countUp(el) {
+    if (reduced()) return;
+    el.querySelectorAll("b[data-n]").forEach(b => { const n = +b.dataset.n, fmt = b.dataset.f, t0 = performance.now(), dur = 900, fin = b.textContent;
+      const f = v => fmt === "u" ? fmtU(v) : fmt === "pct" ? (v >= 0 ? "+" : "") + v.toFixed(1) + "%" : Math.round(v).toLocaleString();
+      const step = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); b.textContent = k < 1 ? f(n * e) : fin; if (k < 1) requestAnimationFrame(step) }; requestAnimationFrame(step) });
   }
   function kpis(el, s, label, sp) {
     const clv = sp && sp.clv;
-    el.innerHTML = `<div><small>Bets</small><b>${s.n.toLocaleString()}</b><span>${esc(label)}</span></div><div><small>Record</small><b>${recTxt(s)}</b><span>${pct(s.wp)} win rate${s.v ? ` · ${s.v} void` : ""}</span></div>
-     <div><small>Units</small><b class="${s.u >= 0 ? "pos" : "neg"}">${fmtU(s.u)}</b><span>${s.u >= 0 ? "+" : "−"}$${Math.abs(Math.round(s.u * 100)).toLocaleString()} at $100/unit</span></div>
-     <div><small>ROI</small><b class="${s.roi >= 0 ? "pos" : "neg"}">${s.roi >= 0 ? "+" : ""}${(s.roi * 100).toFixed(1)}%</b><span>per unit risked</span></div>
+    el.innerHTML = `<div><small>Bets</small><b data-n="${s.n}" data-f="int">${s.n.toLocaleString()}</b><span>${esc(label)}</span></div><div><small>Record</small><b>${recTxt(s)}</b><span>${pct(s.wp)} win rate${s.v ? ` · ${s.v} void` : ""}</span></div>
+     <div><small>Units</small><b class="${s.u >= 0 ? "pos" : "neg"}" data-n="${s.u}" data-f="u">${fmtU(s.u)}</b><span>${s.u >= 0 ? "+" : "−"}$${Math.abs(Math.round(s.u * 100)).toLocaleString()} at $100/unit</span></div>
+     <div><small>ROI</small><b class="${s.roi >= 0 ? "pos" : "neg"}" data-n="${s.roi * 100}" data-f="pct">${s.roi >= 0 ? "+" : ""}${(s.roi * 100).toFixed(1)}%</b><span>per unit risked</span></div>
      ${clv ? `<div><small>Vs close</small><b>${clv.fmt(s.clv)}</b><span>${esc(clv.label)}</span></div>` : `<div><small>Break-even</small><b>52.4%</b><span>to beat -110</span></div>`}`;
+    if (!el.dataset.counted) { el.dataset.counted = "1"; countUp(el) }
   }
   NCSUN.coaster = coaster; NCSUN.kpis = kpis;
 
@@ -212,8 +238,9 @@
     if (r.extra) line += `<span>${r.extra}</span>`;
     const stub = `<span class="px2"><b>${am(r.o)}</b><span>${esc(r.bk)}</span></span>`;
     const body = opt.compact ? "" : bodyHTML(r, sp);
-    if (!body) return `<article class="bet ${st}${r.paper ? " paper" : ""}"><div class="sum"><span class="what">${badge}<b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}</span></div></article>`;
-    return `<details class="bet ${st}${r.paper ? " paper" : ""}"><summary><span class="what">${badge}<b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}<span class="tog"><span class="t1">Details</span><span class="t2">Hide</span></span></span></summary><div class="body">${body}</div></details>`;
+    const iv = opt.i != null ? ` style="--i:${Math.min(opt.i, 12)}"` : "";
+    if (!body) return `<article class="bet ${st}${r.paper ? " paper" : ""}"${iv}><div class="sum"><span class="what">${badge}<b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}</span></div></article>`;
+    return `<details class="bet ${st}${r.paper ? " paper" : ""}"${iv}><summary><span class="what">${badge}<b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}<span class="tog"><span class="t1">Details</span><span class="t2">Hide</span></span></span></summary><div class="body">${body}</div></details>`;
   }
   function bodyHTML(r, sp) {
     const cells = sp.cells ? sp.cells(r) : defaultCells(r);
@@ -245,7 +272,7 @@
   function cardList(recs, by, sp, opt = {}) {
     const { g, keys } = groupCards(recs, by, sp);
     return `<div class="books">${keys.map(k => { const rs = g.get(k), head = by === "event" && sp.groupHead ? sp.groupHead(rs[0], rs) : `<div class="bookhead"><span class="logo">${esc(by === "book" ? AB[k] || k.slice(0, 3).toUpperCase() : by === "tier" ? "★" : "▶")}</span><h2>${esc(k)}</h2><span class="note">${rs.length} ${plural(rs.length, "pick")}</span></div>`;
-      return `<div>${head}<div class="slip">${rs.map(r => betCard(r, opt)).join("")}</div></div>` }).join("")}</div>`;
+      return `<div>${head}<div class="slip">${rs.map((r, i) => betCard(r, Object.assign({ i }, opt))).join("")}</div></div>` }).join("")}</div>`;
   }
   NCSUN.cardList = cardList;
   function copyLines(recs, sp, title) {
@@ -304,7 +331,7 @@
       const picks = d.today.filter(r => !r.paper), meta = d.meta || {};
       if (meta.kicker) $("[data-k]", el).textContent = meta.kicker;
       if (meta.lede) $("[data-lede]", el).innerHTML = meta.lede;
-      $("[data-health]", el).innerHTML = healthHTML(meta.health);
+      $("[data-health]", el).innerHTML = healthHTML(meta.health) + trendHTML(sp, d.live);
       const ctl = $("[data-ctl]", el), tog = $(".viewtog", ctl), opts = sp.groupings || ["event", "book", "tier"]; let by = sp.defaultGroup || opts[0];
       const NAMES = { event: sp.groupName || "By game", book: "By book", tier: "By tier" };
       tog.innerHTML = opts.map(o => `<button data-by="${o}" aria-pressed="${o === by}">${esc(NAMES[o])}</button>`).join("");
@@ -365,20 +392,21 @@
   let curSport = "home", curView = {};
   function show(sportId, view, push) {
     const prev = curSport; curSport = sportId;
-    document.querySelectorAll(".seg button").forEach(b => { const on = b.dataset.model === sportId; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && push) b.scrollIntoView({ block: "nearest", inline: "nearest" }) });
+    document.querySelectorAll(".seg button, .tabbar button").forEach(b => { const on = b.dataset.model === sportId; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && push) b.scrollIntoView({ block: "nearest", inline: "nearest" }) });
     document.querySelectorAll("main > [data-sport]").forEach(x => x.hidden = x.dataset.sport !== sportId);
     mascot(sportId);
     if (sportId === "home") { if (push) history.replaceState(null, "", location.pathname + location.search); drawHome(); return }
     const sp = NCSUN.byId[sportId], root = document.getElementById(sportId), stops = [...root.querySelectorAll("nav.stops button")].map(b => b.dataset.view);
     view = stops.includes(view) ? view : stops[0]; curView[sportId] = view;
     root.querySelectorAll("nav.stops button").forEach(b => { const on = b.dataset.view === view; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && push) b.scrollIntoView({ block: "nearest", inline: "nearest" }) });
-    root.querySelectorAll("section.view").forEach(s => s.hidden = s.dataset.view !== view);
+    root.querySelectorAll("section.view").forEach(s => { const on = s.dataset.view === view; if (on && s.hidden) { s.classList.remove("in"); void s.offsetWidth; s.classList.add("in") } s.hidden = !on });
     if (push) history.replaceState(null, "", "#" + sportId + (view === stops[0] ? "" : "-" + view));
     sp.show(view);
     if (prev !== sportId && !push) scrollTo({ top: 0 });
   }
   NCSUN.show = show;
   const TAG_HOME = "All rides";
+  const ICON = { home: '<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg>', dot: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/></svg>' };
   function mascot(id) {
     const h = $("header.top"); const sp = NCSUN.byId[id];
     const m = id === "home" ? (NCSUN.homeMascot || NCSUN.sports[0].id) : id;
@@ -414,23 +442,28 @@
       if (live.length) bits.push(`<b>${live.length}</b> live now`); if (fin.length) bits.push(`<b>${fin.length}</b> awaiting a grade`);
       bits.push(`<b>${posted.length}</b> posted and waiting`);
       if (todayG.length) bits.push(`today <b>${recTxt(sT)}, ${fmtU(sT.u)}</b>`); else if (ydayG.length) bits.push(`yesterday <b>${recTxt(sY)}, ${fmtU(sY.u)}</b>`);
-      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>Every model's open bets and latest results in one place. Every bet is 1 unit; posted picks stand and are graded at the price they locked.`;
+      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>Every ride's open bets and latest results. 1 unit a pick; posted picks stand at the price they locked.`;
       $("#home-kicker").textContent = `${dateTxt(today)} · ${sports.length} models`;
       // model strip
-      const tiles = sports.map(s => { const d = s.data, m = d.meta || {}, g = d.live.filter(r => r.status === "graded"), st = stats(g), open = d.today.filter(r => !r.r && !r.paper), lv = open.filter(r => r.status === "live").length;
+      const tiles = sports.map((s, i) => { const d = s.data, m = d.meta || {}, g = d.live.filter(r => r.status === "graded").sort(byTime), st = stats(g), open = d.today.filter(r => !r.r && !r.paper), lv = open.filter(r => r.status === "live").length;
         const h = m.health || {}, ok = h.ok !== false;
-        return `<a class="tile" href="#${s.id}"><span class="tile-top"><b>${esc(s.name)}</b><span class="dot" title="${ok ? "Last run OK" : "Last run had a problem"}" style="background:var(${ok ? "--win" : "--loss"})"></span></span>
+        return `<a class="tile" href="#${s.id}" style="--i:${i}"><span class="tile-top"><b>${esc(s.name)}</b><span class="dot" title="${ok ? "Last run OK" : "Last run had a problem"}" style="background:var(${ok ? "--win" : "--loss"})"></span></span>
           <span class="tile-rec">${g.length ? `<b>${recTxt(st)}</b><em class="${sgn(st.u)}">${fmtU(st.u)}</em>` : `<b>–</b><em>no graded picks yet</em>`}</span>
+          ${g.length > 1 ? spark(g.slice(-40), 150, 34) : ""}
           <span class="tile-sub">${lv ? `<b>${lv} live</b> · ` : ""}${open.length ? `${open.length} open` : "nothing open"}${m.next ? ` · ${esc(m.next)}` : ""}</span>
           <span class="tile-foot">${h.at ? "Run " + esc(stampTxt(h.at)) : esc(m.cadence || "")}</span></a>` }).join("");
-      const sec = (id, title, note, recs, opt) => recs.length ? `<section class="hsec" id="h-${id}"><div class="lab-head"><h2>${title}</h2><span class="note">${note}</span></div><div class="slip">${recs.map(r => betCard(r, Object.assign({ home: true }, opt))).join("")}</div></section>` : "";
+      const sec = (id, title, note, recs, opt) => recs.length ? `<section class="hsec" id="h-${id}"><div class="lab-head"><h2>${title}</h2><span class="note">${note}</span></div><div class="slip">${recs.map((r, i) => betCard(r, Object.assign({ home: true, i }, opt))).join("")}</div></section>` : "";
+      // posted, grouped by day (CFB has no game date: "this week")
+      const dayName = d => !d ? "This week" : d === today ? "Today" : d === addDays(today, 1) ? "Tomorrow" : dateTxt(d);
+      const pdays = new Map(); posted.forEach(r => { const k = r.d || "~"; if (!pdays.has(k)) pdays.set(k, []); pdays.get(k).push(r) });
+      const postedHTML = posted.length ? `<section class="hsec" id="h-posted"><div class="lab-head"><h2>Posted and <em>waiting</em></h2><span class="note">${posted.length} ${plural(posted.length, "bet")} · soonest first</span></div>${[...pdays.entries()].map(([d, rs]) => `<div class="dayblk"><div class="dayhead"><b>${esc(dayName(d === "~" ? null : d))}</b><span>${rs.length} ${plural(rs.length, "bet")} · ${[...new Set(rs.map(r => NCSUN.byId[r.sport].short))].join(", ")}</span></div><div class="slip">${rs.map((r, i) => betCard(r, { home: true, i })).join("")}</div></div>`).join("")}</section>` : "";
       // graded, grouped by day
       const days = new Map(); recent.forEach(r => { if (!days.has(r.d)) days.set(r.d, []); days.get(r.d).push(r) });
-      const gradedHTML = days.size ? `<section class="hsec" id="h-graded"><div class="lab-head"><h2>Just <em>graded</em></h2><span class="note">last 7 days, every model</span></div>${[...days.entries()].map(([d, rs]) => { const s = stats(rs); return `<div class="dayblk"><div class="dayhead"><b>${esc(dateTxt(d))}</b><span>${recTxt(s)} · <em class="${sgn(s.u)}">${fmtU(s.u)}</em></span></div><div class="slip">${rs.map(r => betCard(r, { home: true, compact: true, when: false })).join("")}</div></div>` }).join("")}</section>` : "";
+      const gradedHTML = days.size ? `<section class="hsec" id="h-graded"><div class="lab-head"><h2>Just <em>graded</em></h2><span class="note">last 7 days, every model</span></div>${[...days.entries()].map(([d, rs]) => { const s = stats(rs); return `<div class="dayblk"><div class="dayhead"><b>${esc(dateTxt(d))}</b><span>${recTxt(s)} · <em class="${sgn(s.u)}">${fmtU(s.u)}</em></span></div><div class="slip">${rs.map((r, i) => betCard(r, { home: true, compact: true, when: false, i })).join("")}</div></div>` }).join("")}</section>` : "";
       // combined ride across every model
       const combined = sports.flatMap(s => s.data.live.filter(r => r.status === "graded")).sort(byTime), cs = stats(combined);
       const rideHTML = combined.length ? `<section class="hsec" id="h-ride"><div class="lab-head"><h2>All rides, <em>one track</em></h2><span class="note">every model's live picks this season, in date order</span></div><div class="kpis" id="h-k"></div><div class="panel"><div id="h-chart"></div><div class="legend" style="margin-top:10px">${sports.map(s => { const g = s.data.live.filter(r => r.status === "graded"), st = stats(g); return g.length ? `<span><b>${esc(s.short)}</b> ${recTxt(st)} · <em class="${sgn(st.u)}">${fmtU(st.u)}</em></span>` : "" }).join("")}</div></div></section>` : "";
-      el.innerHTML = `<div class="tiles">${tiles}</div>${sec("live", "Live <em>now</em>", "events in progress", live)}${sec("fin", "Just <em>finished</em>", "waiting on the grader", fin)}${sec("posted", "Posted and <em>waiting</em>", "soonest first", posted)}${gradedHTML}${rideHTML}<div id="h-activity"></div>`;
+      el.innerHTML = `<div class="tiles">${tiles}</div>${sec("live", "Live <em>now</em>", "events in progress", live)}${sec("fin", "Just <em>finished</em>", "waiting on the grader", fin)}${postedHTML}${gradedHTML}${rideHTML}<div id="h-activity"></div>`;
       if (combined.length) { kpis($("#h-k"), cs, "all models", null); coaster($("#h-chart"), combined, null) }
       activity();
       if (!live.length && !fin.length && !posted.length && !days.size) el.insertAdjacentHTML("afterbegin", `<div class="banner" style="margin-bottom:18px"><b>Quiet</b><span>Nothing open across the models right now. Each ride below shows when its next card is due.</span></div>`);
@@ -447,14 +480,16 @@
   function boot() {
     const seg = $(".seg"), order = NCSUN.sports.filter(s => !s.hidden);
     seg.innerHTML = `<button role="tab" data-model="home" aria-selected="true">Home</button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`).join("");
-    seg.querySelectorAll("button").forEach(b => b.addEventListener("click", () => show(b.dataset.model, curView[b.dataset.model], true)));
+    const bar = $(".tabbar"); if (bar) bar.innerHTML = `<button role="tab" data-model="home" aria-selected="true">${ICON.home}<span>Home</span></button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${s.icon || ICON.dot}<span>${esc(s.short)}</span></button>`).join("");
+    document.querySelectorAll(".seg button, .tabbar button").forEach(b => b.addEventListener("click", () => { show(b.dataset.model, curView[b.dataset.model], true); scrollTo({ top: 0 }) }));
     document.querySelectorAll('[role="tablist"]').forEach(tl => tl.addEventListener("keydown", e => { const t = [...tl.querySelectorAll('[role="tab"]')], i = t.indexOf(document.activeElement); if (i < 0) return;
       const j = e.key === "ArrowRight" ? (i + 1) % t.length : e.key === "ArrowLeft" ? (i - 1 + t.length) % t.length : e.key === "Home" ? 0 : e.key === "End" ? t.length - 1 : -1; if (j < 0) return; e.preventDefault(); t[j].focus(); t[j].click() }));
     document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (!g) return; e.preventDefault(); const [s, v] = g.dataset.go.split("-"); show(s, v, true); scrollTo({ top: 0 }) });
     order.forEach(mount);
     addEventListener("hashchange", route); route();
     // hidden sports (a model that hasn't published yet) show up as soon as their files exist
-    NCSUN.sports.filter(s => s.hidden && s.probe).forEach(s => load(s.probe).then(x => { if (!x) return; s.hidden = false; seg.insertAdjacentHTML("beforeend", `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`); seg.lastElementChild.addEventListener("click", () => show(s.id, null, true)); mount(s); homeDrawn = false; if (curSport === "home") drawHome() }));
+    NCSUN.sports.filter(s => s.hidden && s.probe).forEach(s => load(s.probe).then(x => { if (!x) return; s.hidden = false; seg.insertAdjacentHTML("beforeend", `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`); seg.lastElementChild.addEventListener("click", () => show(s.id, null, true));
+      const bar = $(".tabbar"); if (bar) { bar.insertAdjacentHTML("beforeend", `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${s.icon || ICON.dot}<span>${esc(s.short)}</span></button>`); bar.lastElementChild.addEventListener("click", () => { show(s.id, null, true); scrollTo({ top: 0 }) }) } mount(s); homeDrawn = false; if (curSport === "home") drawHome() }));
   }
   NCSUN.boot = boot;   // index.html calls this after every sports/*.js has registered
 })();

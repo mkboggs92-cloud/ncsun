@@ -158,7 +158,7 @@
 
   const M = x => `<div class="mbox"><math display="block">${x}</math></div>`;
   NCSUN.register({
-    id: "ufc", name: "UFC", short: "UFC", tag: "Fights",
+    id: "ufc", icon: '<svg viewBox="0 0 24 24"><path d="M8.5 3h7l5 5v8l-5 5h-7l-5-5V8z"/><path d="M9 14.5c0-2 1.3-3 3-3s3 1 3 3v2H9z"/><path d="M12 8.5v3"/></svg>', name: "UFC", short: "UFC", tag: "Fights",
     kicker: "UFC · moneylines and props", h1: "Fight <em>night</em>",
     lede: "Every bet is 1 unit. Take the listed price or better. Posted picks stand and are graded at the price they locked.",
     defaultTime: "18:00", durationH: 7, seasonLabel: "2026",

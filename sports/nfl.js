@@ -21,7 +21,7 @@
   }
   const M = x => `<div class="mbox"><math display="block">${x}</math></div>`;
   NCSUN.register({
-    id: "nfl", name: "NFL props", short: "NFL", tag: "NFL",
+    id: "nfl", icon: '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9.5" ry="6" transform="rotate(-35 12 12)"/><path d="M9 15l6-6M10 11.5l1.3 1.3M12.2 9.3l1.3 1.3M7.2 13.2l1.3 1.3"/></svg>', name: "NFL props", short: "NFL", tag: "NFL",
     kicker: "NFL · receiving props", h1: "Under <em>the</em> lights",
     lede: "Receptions, receiving yards and anytime TDs for WRs, TEs and RBs. Every pick is 1 unit. Take the listed price or better. Posted picks stand and are graded at the price they locked.",
     durationH: 3.5, seasonLabel: "2026",
