@@ -337,7 +337,7 @@
   // ---------------------------------------------------------------- slate projections
   function gameBlock(gm, picks) {
     const np = picks.filter(p => p.gm === gm.gm).length;
-    return `<details class="more"><summary>${esc(gm.gm)}<span>${esc(dateTxt(gm.d))} ${esc(kickTxt(gm.kick))}${gm.prime ? " · primetime" : ""}${np ? ` · ${np} pick${np > 1 ? "s" : ""}` : ""}</span></summary><div class="inner"><div class="tbl"><table><thead><tr><th class="l">Player</th><th>Pos</th><th>Team</th><th>Proj. rec</th><th>Proj. yds</th><th>Anytime TD</th></tr></thead><tbody>
+    return `<details class="more"><summary>${esc(gm.gm)}<span>${esc(dateTxt(gm.d))} ${esc(kickTxt(gm.kick))}${gm.prime ? " · standalone" : ""}${gm.lock && !np ? ` · locks ${esc(gm.lock)}` : ""}${np ? ` · ${np} pick${np > 1 ? "s" : ""}` : ""}</span></summary><div class="inner"><div class="tbl"><table><thead><tr><th class="l">Player</th><th>Pos</th><th>Team</th><th>Proj. rec</th><th>Proj. yds</th><th>Anytime TD</th></tr></thead><tbody>
       ${gm.players.map(p => `<tr><td class="l"><b>${esc(p.n)}</b></td><td>${esc(p.pos)}</td><td>${esc(p.tm)}</td><td class="mono">${p.rec.toFixed(1)}</td><td class="mono">${p.yds.toFixed(1)}</td><td class="mono">${pct0(p.td)} <span class="note">(${am(fair(p.td))})</span></td></tr>`).join("")}</tbody></table></div></div></details>`;
   }
 
@@ -476,7 +476,7 @@
     const fails = status ? Object.entries(status).filter(([k, v]) => v && v.ok === false).map(([k]) => k) : [];
     const color = hrs == null || hrs > 72 || fails.length ? "var(--loss)" : "var(--win)";
     $("#nfl-status").innerHTML = `<span><span class="dot" style="background:${color}"></span>Lines updated <b>${upd ? upd.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "not yet"}</b></span>
-      ${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Runs Thu 6:45 PM, Sun 11:45 AM and 7:30 PM, Mon 7:15 PM ET</span>${today.lines ? `<span>${today.lines.toLocaleString()} lines priced</span>` : ""}`;
+      ${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Picks lock about 75 min before each kickoff, after inactives${today.next_lock_txt ? ` · next lock <b>${esc(today.next_lock_txt)} ET</b>` : ""}</span>${today.lines ? `<span>${today.lines.toLocaleString()} lines priced</span>` : ""}`;
     if (today.week) $("#nfl-kicker").textContent = `${today.season} · Week ${today.week} · receiving props`;
     const picks = (today.picks || []).slice().map(p => ({ ...p, posted: today.posted })).sort(bydate);
     const day = picks.filter(p => p.slate !== "Primetime"), prime = picks.filter(p => p.slate === "Primetime");
@@ -485,9 +485,9 @@
       const by = {}; picks.forEach(r => { const k = r.mk === "td" ? "anytime TD" : r.mk === "rec" ? "receptions under" : "yards under"; by[k] = (by[k] || 0) + 1 });
       const sec = (t, n, rs) => rs.length ? `<div class="slip-ev"><h2>${esc(t)}</h2><span class="note">${esc(n)}</span></div>` + rs.map(betRow).join("") : "";
       html += `<div class="slip"><div class="slipsum"><span><b>${picks.length}</b>pick${picks.length === 1 ? "" : "s"}</span><span><b>1u</b>each</span><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(k)}`).join(" · ")}</span><button class="ghost" id="nfl-copy">Copy card</button></div>
-        ${sec("Sunday card", `${day.length} of 8 slots · biggest edges across the day slate`, day)}${sec("Primetime", "the single best pick in each night game", prime)}</div>`;
+        ${sec("Sunday card", `${day.length} of 8 slots · biggest edges across the day slate`, day)}${sec("Primetime & standalone", "the single best pick in each game off the Sunday afternoon slate", prime)}</div>`;
     } else {
-      html += `<div class="banner"><b>No picks yet</b><span>Most books post receiving props late in the week, and the card locks after inactives: Thursday night for TNF, about 11:45 AM ET Sunday for the day slate, and before each primetime game.</span></div>`;
+      html += `<div class="banner"><b>No picks yet</b><span>Most books post receiving props late in the week, and each game's picks lock about 75 minutes before its kickoff, after inactives.</span></div>`;
     }
     $("#nfl-picks").innerHTML = html;
     const cp = $("#nfl-copy"); if (cp) cp.onclick = () => {
