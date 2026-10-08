@@ -1,7 +1,7 @@
 /* NFL tab for "Nothing Can Stop Us Now". Self-contained: mounts into #nfl, reuses the page's design tokens and
    classes, and reads nfl_today.json, nfl_live.json, nfl_backtest.json and nfl_status.json published beside the page.
    Those files are rewritten by the NFL receiving-props model's runs; this script never changes.
-   Every pick is 1 unit. Posted picks stand. Books: DraftKings, FanDuel, BetMGM, Caesars, BetRivers, Fanatics. */
+   Every pick is 1 unit. Posted picks stand. Books: DraftKings, FanDuel, Caesars. */
 (function () {
   const root = document.getElementById("nfl");
   if (!root) return;
@@ -369,8 +369,8 @@
 
   <section class="view" data-nview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2023 to 2025</div><h1>The <em>ride</em> so far</h1>
-      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 80 minutes before kickoff (just after inactives), at DraftKings, FanDuel, BetMGM, Caesars, BetRivers and Fanatics. The card rule is the live one: the 8 biggest edges on the Sunday afternoon slate plus the single best pick in every other game, one pick per player, 1 unit each. Simulated results, not a live record.</p>
-      <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>The card's shape (blend weight, bet sides, card size) was chosen on 2023-24 and checked on 2025, which still came in around +9%. Some feature choices also used these seasons, and part of the under edge comes from books leaning overs more each year, so expect less live: roughly <b>+3% to +8%</b>, about +15u to +40u over a 500-pick season, with a real chance of a losing year. The closing line is a weak yardstick for props (it barely moves after inactives), so the live record is what counts.</p></div></div>
+      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 80 minutes before kickoff (just after inactives), taking only prices from DraftKings, FanDuel and Caesars (every book still counts toward the market's fair price). The card rule is the live one: the 8 biggest edges on the Sunday afternoon slate plus the single best pick in every other game, one pick per player, 1 unit each. Simulated results, not a live record.</p>
+      <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>The card's shape (blend weight, bet sides, card size) was chosen on 2023-24 and checked on 2025. Taking only DraftKings, FanDuel and Caesars prices, 2025 came in around +5% (+13.5% across 2023-25). Some feature choices also used these seasons, and part of the under edge comes from books leaning overs more each year, so expect less live: roughly <b>+2% to +7%</b>, about +10u to +35u over a 500-pick season, with a real chance of a losing year. The closing line is a weak yardstick for props (it barely moves after inactives), so the live record is what counts.</p></div></div>
     <div id="nfl-bt" class="ufc-views"></div>
   </section>
 
@@ -383,7 +383,7 @@
       <div class="panel stop"><h3>Three models</h3><p>Receptions: targets × catch rate and a form-anchored count model, with spread that grows with volume. Yards: a Tweedie mean, a calibrated yards distribution and direct over/under classifiers. TDs: separate rushing and receiving TD models plus a goal-line structural model, so RBs get their carries counted.</p></div>
       <div class="panel stop"><h3>Market blend</h3><p>No model is bet raw. Each is blended with the books' no-vig price on the logit scale, 60% market and 40% model for the card. On their own the models lose to the books on receptions and yards; blended, they beat the books in all three markets.</p></div>
       <div class="panel stop"><h3>The card</h3><p>Only unders on receptions and yards, plus anytime TD yeses: overs lost money in every season tested. Two-sided markets only. Rank by edge over the market: 8 picks shared across the Sunday afternoon slate (1 PM and 4 PM games), the single best pick in every other game (TNF, SNF, MNF, Saturday, London), one pick per player, at most 2 per game.</p></div>
-      <div class="panel stop"><h3>Posted picks stand</h3><p>Picks post just after inactives (about 80 minutes before kickoff) at whichever of the six books pays best, and are graded at that price even if the line or the model moves. A player ruled inactive voids the pick, as books do.</p></div>
+      <div class="panel stop"><h3>Posted picks stand</h3><p>Picks post just after inactives (about 80 minutes before kickoff) at whichever of DraftKings, FanDuel or Caesars pays best, and are graded at that price even if the line or the model moves. A player ruled inactive voids the pick, as books do.</p></div>
     </div>
     <div class="grid2">
       <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
