@@ -54,7 +54,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;backgroun
 .brand svg{width:104px;height:72px;flex:none;overflow:visible;margin-block:-6px}
 /* header mascots: one rubber-hose character per tab; hop in when the tab changes, blink, and wave */
 .brand svg .m{display:none}
-header.top[data-sport="ncaab"] .m-ncaab,header.top[data-sport="ufc"] .m-ufc,header.top[data-sport="cfb"] .m-cfb{display:inline}
+header.top[data-sport="ncaab"] .m-ncaab,header.top[data-sport="ufc"] .m-ufc,header.top[data-sport="cfb"] .m-cfb,header.top[data-sport="nfl"] .m-nfl{display:inline}
 .brand svg .rider,.brand svg .eyes,.brand svg .wave,.brand svg .flag,.brand svg .tails{transform-box:fill-box}
 .brand svg .rider{transform-origin:50% 100%}
 .brand svg .eyes{transform-origin:50% 50%;animation:m-blink 5.5s infinite}
@@ -208,6 +208,7 @@ svg text{font-family:var(--body)}
   .top .wrap{flex-wrap:nowrap;gap:8px;padding-block:7px}
   .wordmark{font-size:13px}.wordmark small{display:none}.brand{gap:8px}.brand svg{width:60px;height:42px;margin-block:-4px}
   .seg button{font-size:10.5px;padding:8px 9px;letter-spacing:.05em}
+  .top .wrap{flex-wrap:wrap;row-gap:6px}.top .seg{width:100%}.top .seg button{flex:1;padding-inline:4px}
   nav.stops{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-block:12px 8px;margin-inline:-16px;padding-inline:16px}
   nav.stops::-webkit-scrollbar{display:none}
   nav.stops button{flex:none;min-height:44px}
@@ -283,6 +284,23 @@ svg text{font-family:var(--body)}
 <path d="M-7 17.5 H17" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
 <circle cx="-3" cy="26" r="3.2" fill="var(--ink)"/><circle cx="13" cy="26" r="3.2" fill="var(--ink)"/>
 <circle cx="-3" cy="26" r="1" fill="var(--sun)"/><circle cx="13" cy="26" r="1" fill="var(--sun)"/></g>
+<g class="m m-nfl"><g class="rider">
+  <g class="arm-l"><path d="M-5 13 C-9 9 -14 4 -13 -4" fill="none" stroke="var(--ink)" stroke-width="2.3" stroke-linecap="round"/><g transform="translate(-13 -6.5) rotate(-15)"><path d="M-2.6 2.6 h5.2 v1.8 h-5.2 Z" fill="#fff" stroke="var(--ink)" stroke-width="1.2" stroke-linejoin="round"/><circle r="3.3" fill="#fff" stroke="var(--ink)" stroke-width="1.5"/><path d="M-1.3 -2.2 v2 M0.3 -2.6 v2.3 M1.9 -2.1 v1.9" stroke="var(--ink)" stroke-width=".75" stroke-linecap="round"/></g></g>
+  <g class="arm-r wave"><path d="M13 13 C17 9 21 3 20 -4" fill="none" stroke="var(--ink)" stroke-width="2.3" stroke-linecap="round"/>
+    <path d="M20 -2 L23 -20" stroke="var(--ink)" stroke-width="1.4" stroke-linecap="round"/>
+    <path class="flag" d="M22.8 -19.6 L33.5 -14.6 L21.6 -11.6 Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M24.4 -16 l1.2 .3 .4 -1.1 .4 1.1 1.2 -.1 -.9 .8 .4 1.1 -1.1 -.6 -1 .7 .3 -1.2 Z" fill="#fff"/><g transform="translate(20 -6.5) rotate(15)"><path d="M-2.6 2.6 h5.2 v1.8 h-5.2 Z" fill="#fff" stroke="var(--ink)" stroke-width="1.2" stroke-linejoin="round"/><circle r="3.3" fill="#fff" stroke="var(--ink)" stroke-width="1.5"/><path d="M-1.3 -2.2 v2 M0.3 -2.6 v2.3 M1.9 -2.1 v1.9" stroke="var(--ink)" stroke-width=".75" stroke-linecap="round"/></g></g>
+  <g transform="rotate(-16 4 4)">
+    <ellipse cx="4" cy="4.5" rx="13" ry="9.6" fill="#6B3A1F" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M-6.4 -1.4 Q-5.4 4.5 -6.4 10.4 M14.4 -1.4 Q13.4 4.5 14.4 10.4" fill="none" stroke="#F3E6D3" stroke-width="1.5"/>
+    <path d="M-0.5 -2.2 H8.5 M0.8 -3.6 v2.8 M3 -3.8 v3.2 M5.2 -3.8 v3.2 M7.4 -3.6 v2.8" stroke="#F3E6D3" stroke-width="1.05" stroke-linecap="round"/>
+  </g>
+  <g transform="rotate(-8 4 4)"><path d="M-0.8 7.2 h3.4 M5.2 7.2 h3.4" stroke="#0F1736" stroke-width="1.5" stroke-linecap="round"/><g class="eyes"><ellipse cx="1" cy="3.2" rx="2.1" ry="3.1" fill="#0F1736"/><path d="M1.5 3.0 L2.9 0.7000000000000002 L3.2 2.3000000000000003 Z" fill="#fff"/><ellipse cx="7" cy="3.2" rx="2.1" ry="3.1" fill="#0F1736"/><path d="M7.5 3.0 L8.9 0.7000000000000002 L9.2 2.3000000000000003 Z" fill="#fff"/></g><path d="M-0.5999999999999996 9.2 Q4.2 16.4 9.0 9.2 Q4.2 11.6 -0.5999999999999996 9.2 Z" fill="#0F1736"/><path d="M1.8000000000000003 12.1 Q4.2 14.6 6.6 12.1 Q4.2 11.299999999999999 1.8000000000000003 12.1 Z" fill="#E8505B"/></g>
+</g><path class="speed" d="M-22 15 h7 M-25 19.5 h9 M-21 24 h6" stroke="var(--track)" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+<path d="M-11 13 H21 L18 24 H-8 Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+<path d="M-7 17.5 H17" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+<circle cx="-3" cy="26" r="3.2" fill="var(--ink)"/><circle cx="13" cy="26" r="3.2" fill="var(--ink)"/>
+<circle cx="-3" cy="26" r="1" fill="var(--sun)"/><circle cx="13" cy="26" r="1" fill="var(--sun)"/></g>
 </g>
 </svg>
     <div class="wordmark"><span>Nothing Can</span><span class="b">Stop Us Now</span><small id="wm-tag">Hoops</small></div>
@@ -291,6 +309,7 @@ svg text{font-family:var(--body)}
     <button id="m-ncaab" role="tab" aria-selected="true" data-model="ncaab">College hoops</button>
     <button id="m-ufc" role="tab" aria-selected="false" data-model="ufc">UFC</button>
     <button id="m-cfb" role="tab" aria-selected="false" data-model="cfb">Football</button>
+    <button id="m-nfl" role="tab" aria-selected="false" data-model="nfl">NFL props</button>
   </div>
 </div></header>
 
@@ -419,6 +438,7 @@ svg text{font-family:var(--body)}
 <div id="ufc" hidden></div>
 
 <div id="cfb" hidden></div>
+<div id="nfl" hidden></div>
 
 <footer>College football picks are our own calls, not model output. Picks are posted for information and entertainment, not betting advice. Backtested and past results don't guarantee future results. 21+. If gambling stops being fun, call 1-800-GAMBLER.</footer>
 </main>
@@ -567,16 +587,16 @@ function lab(root,all,idp,label){
 const VIEWS=["today","live","backtest","how","hood"];let cur="today";const onShow={};
 function show(v,push){cur=v;document.querySelectorAll("nav.stops button").forEach(b=>{const on=b.dataset.view===v;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1;if(on&&push)b.scrollIntoView({block:"nearest",inline:"nearest"})});VIEWS.forEach(x=>$("#v-"+x).hidden=x!==v);
   if(push)history.replaceState(null,"",v==="today"?location.pathname+location.search:"#"+v);if(onShow[v])onShow[v]()}
-const TAG={ncaab:"Hoops",ufc:"Fights",cfb:"Football"};
+const TAG={ncaab:"Hoops",ufc:"Fights",cfb:"Football",nfl:"NFL"};
 function mascot(m){const h=$("header.top");if(h.dataset.sport===m)return;h.dataset.sport=m;$("#wm-tag").textContent=TAG[m];
   if(!matchMedia("(prefers-reduced-motion:reduce)").matches){h.classList.remove("hop");void h.offsetWidth;h.classList.add("hop")}}
-function model(m,push){mascot(m);document.querySelectorAll(".seg button").forEach(b=>{const on=b.dataset.model===m;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1});$("#ncaab").hidden=m!=="ncaab";$("#ufc").hidden=m!=="ufc";$("#cfb").hidden=m!=="cfb";
-  if(push)history.replaceState(null,"",m==="ufc"?"#ufc":m==="cfb"?"#cfb":(cur==="today"?location.pathname+location.search:"#"+cur))}
+function model(m,push){mascot(m);document.querySelectorAll(".seg button").forEach(b=>{const on=b.dataset.model===m;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1});$("#ncaab").hidden=m!=="ncaab";$("#ufc").hidden=m!=="ufc";$("#cfb").hidden=m!=="cfb";$("#nfl").hidden=m!=="nfl";
+  if(push)history.replaceState(null,"",m==="ufc"?"#ufc":m==="cfb"?"#cfb":m==="nfl"?"#nfl":(cur==="today"?location.pathname+location.search:"#"+cur))}
 document.querySelectorAll("nav.stops button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view,true)));
 document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>model(b.dataset.model,true)));
 document.querySelectorAll('[role="tablist"]').forEach(tl=>tl.addEventListener("keydown",e=>{const t=[...tl.querySelectorAll('[role="tab"]')],i=t.indexOf(document.activeElement);if(i<0)return;
   const j=e.key==="ArrowRight"?(i+1)%t.length:e.key==="ArrowLeft"?(i-1+t.length)%t.length:e.key==="Home"?0:e.key==="End"?t.length-1:-1;if(j<0)return;e.preventDefault();t[j].focus();t[j].click()}));
-function route(){const h=(location.hash||"").slice(1);if(h==="ufc"||h.startsWith("ufc-"))model("ufc");else if(h==="cfb"||h.startsWith("cfb-"))model("cfb");else{model("ncaab");show(VIEWS.includes(h)?h:"today")}}
+function route(){const h=(location.hash||"").slice(1);if(h==="ufc"||h.startsWith("ufc-"))model("ufc");else if(h==="cfb"||h.startsWith("cfb-"))model("cfb");else if(h==="nfl"||h.startsWith("nfl-"))model("nfl");else{model("ncaab");show(VIEWS.includes(h)?h:"today")}}
 addEventListener("hashchange",route);route();
 
 const getJSON=u=>fetch(u,{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null);
@@ -613,6 +633,7 @@ getJSON("ncaab_today.json").then(today=>{today=today||{picks:[]};fixT(today.pick
 </script>
 <script src="ufc.js"></script>
 <script src="cfb.js"></script>
+<script src="nfl.js"></script>
 
 <noscript><p style="padding:16px">This site needs JavaScript to show picks and results.</p></noscript>
 </body>
