@@ -179,13 +179,14 @@
 
   const lineB = r => r.mk === "td" ? "Anytime TD" : r.mk === "rec" ? (r.ln <= 2.5 ? "2.5 or less" : r.ln <= 3.5 ? "3.5" : r.ln <= 4.5 ? "4.5" : "5.5+") : (r.ln < 25 ? "Under 25" : r.ln < 45 ? "25-44.5" : r.ln < 60 ? "45-59.5" : "60+");
   const DIMS = {
+    sec: { n: "Section", f: r => r.sec === "td" ? "Anytime TD section" : "Main card", order: ["Main card", "Anytime TD section"] },
     mk: { n: "Market", f: r => MKT[r.mk] || r.mk, order: ["Receptions", "Receiving yards", "Anytime TD"] },
     slate: { n: "Slate", f: r => r.slate, order: ["Sunday day", "Primetime"] },
     pos: { n: "Position", f: r => POS[r.pos] || r.pos, order: ["Wide receivers", "Tight ends", "Running backs"] },
     tier: { n: "Tier", f: r => r.tier ? "Tier " + r.tier : "–", order: ["Tier A", "Tier B", "Tier C"] },
     season: { n: "Season", f: r => String(r.ses) },
     edge: { n: "Edge", f: r => r.e == null ? "–" : r.e < 4 ? "2-4 pts" : r.e < 6 ? "4-6 pts" : r.e < 10 ? "6-10 pts" : "10+ pts", order: ["2-4 pts", "4-6 pts", "6-10 pts", "10+ pts"] },
-    price: { n: "Price", f: r => r.o <= -150 ? "-150 or shorter" : r.o <= -120 ? "-149 to -120" : r.o < 100 ? "-119 to -101" : r.o <= 130 ? "+100 to +130" : "+131 or longer", order: ["-150 or shorter", "-149 to -120", "-119 to -101", "+100 to +130", "+131 or longer"] },
+    price: { n: "Price", f: r => r.o <= -150 ? "-150 or shorter" : r.o <= -120 ? "-149 to -120" : r.o < 100 ? "-119 to -101" : r.o <= 130 ? "+100 to +130" : r.o <= 200 ? "+131 to +200" : r.o <= 300 ? "+201 to +300" : "+301 to +400", order: ["-150 or shorter", "-149 to -120", "-119 to -101", "+100 to +130", "+131 to +200", "+201 to +300", "+301 to +400"] },
     line: { n: "Line", f: lineB, order: ["2.5 or less", "3.5", "4.5", "5.5+", "Under 25", "25-44.5", "45-59.5", "60+", "Anytime TD"] },
     book: { n: "Book", f: r => BOOK[r.bk] || r.bk },
     ha: { n: "Home / away", f: r => String(r.op || "").startsWith("at ") ? "Away" : "Home", order: ["Home", "Away"] },
@@ -193,7 +194,7 @@
     clv: { n: "Vs closing line", f: r => r.clv == null ? "No close" : r.clv > 0 ? "Beat the close" : "Worse than close", order: ["Beat the close", "Worse than close", "No close"] },
     month: { n: "Month", f: r => MON[+r.d.slice(5, 7) - 1], order: ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb"] },
   };
-  const FILTERS = ["mk", "slate", "pos", "tier", "season", "edge", "price", "line", "ha", "phase", "book"];
+  const FILTERS = ["sec", "mk", "slate", "pos", "tier", "season", "edge", "price", "line", "ha", "phase", "book"];
 
   function stats(rows) {
     let w = 0, l = 0, v = 0, u = 0, c = 0, cn = 0, risk = 0;
@@ -369,8 +370,8 @@
 
   <section class="view" data-nview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2023 to 2025</div><h1>The <em>ride</em> so far</h1>
-      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 80 minutes before kickoff (just after inactives), taking only prices from DraftKings, FanDuel and Caesars (every book still counts toward the market's fair price). The card rule is the live one: the 8 biggest edges on the Sunday afternoon slate plus the single best pick in every other game, one pick per player, 1 unit each. Simulated results, not a live record.</p>
-      <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>The card's shape (blend weight, bet sides, card size) was chosen on 2023-24 and checked on 2025, which came in around +9.5% (+10% across 2023-25) taking only DraftKings, FanDuel and Caesars prices. The model is trained on real game-day inactives, but the backtest only gets what a live run knows about 80 minutes before kickoff. Some feature choices also used these seasons, and part of the under edge comes from books leaning overs more each year, so expect less live: roughly <b>+2% to +7%</b>, about +10u to +35u over a 500-pick season, with a real chance of a losing year. The closing line is a weak yardstick for props (it barely moves after inactives), so the live record is what counts.</p></div></div>
+      <p class="lede">Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 80 minutes before kickoff (just after inactives), taking only prices from DraftKings, FanDuel and Caesars (every book still counts toward the market's fair price). The card rule is the live one: the 8 biggest edges on the Sunday afternoon slate plus the single best pick in every other game, one pick per player, 1 unit each. The anytime-TD section is separate: every TD yes with 5+% EV at +400 or shorter. Both are included below; use the Section filter to see either on its own. Simulated results, not a live record.</p>
+      <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p><b>Card:</b> the card's shape (blend weight, bet sides, card size) was chosen on 2023-24 and checked on 2025, which came in around +9.5% (+10% across 2023-25) taking only DraftKings, FanDuel and Caesars prices. The model is trained on real game-day inactives, but the backtest only gets what a live run knows about 80 minutes before kickoff. Some feature choices also used these seasons, and part of the under edge comes from books leaning overs more each year, so expect less live: roughly <b>+2% to +7%</b>, about +10u to +35u over a 500-pick season, with a real chance of a losing year. The closing line is a weak yardstick for props (it barely moves after inactives), so the live record is what counts.</p><p><b>Anytime TD section:</b> 156 bets over 2023-25 at an average of about +240, +45% (2023-24 +55%, 2025 +30%). The model is honest up to +400 and too optimistic past it, so longer shots are skipped. At these odds one bet swings about 2 units and the sample is small: the true rate could be anywhere from flat to +40%. Expect roughly <b>3 TD plays a week</b> with big swings either way.</p></div></div>
     <div id="nfl-bt" class="ufc-views"></div>
   </section>
 
@@ -382,7 +383,7 @@
       <div class="panel stop"><h3>Who's actually playing</h3><p>The biggest lever. Who is active today, each player's rank among active teammates, depth-chart order, and how his share has moved in past games when a teammate sat. When a WR1 or RB1 is out, the next man up gets priced, not averaged.</p></div>
       <div class="panel stop"><h3>Three models</h3><p>Receptions: targets × catch rate and a form-anchored count model, with spread that grows with volume. Yards: a Tweedie mean, a calibrated yards distribution and direct over/under classifiers. TDs: separate rushing and receiving TD models plus a goal-line structural model, so RBs get their carries counted.</p></div>
       <div class="panel stop"><h3>Market blend</h3><p>No model is bet raw. Each is blended with the books' no-vig price on the logit scale, 60% market and 40% model for the card. On their own the models lose to the books on receptions and yards; blended, they beat the books in all three markets.</p></div>
-      <div class="panel stop"><h3>The card</h3><p>Only unders on receptions and yards, plus anytime TD yeses: overs lost money in every season tested. Two-sided markets only. Rank by edge over the market: 8 picks shared across the Sunday afternoon slate (1 PM and 4 PM games), the single best pick in every other game (TNF, SNF, MNF, Saturday, London), one pick per player, at most 2 per game.</p></div>
+      <div class="panel stop"><h3>The card, and the TD section</h3><p>The card: only unders on receptions and yards (overs lost money in every season tested). Two-sided markets only. Rank by edge over the market: 8 picks shared across the Sunday afternoon slate (1 PM and 4 PM games), the single best pick in every other game (TNF, SNF, MNF, Saturday, London), one pick per player, at most 2 per game. Anytime TDs are a separate section with their own record: every TD yes the model prices at 5+% EV, at +400 or shorter, because the model overrates longer shots.</p></div>
       <div class="panel stop"><h3>Posted picks stand</h3><p>Picks post just after inactives (about 80 minutes before kickoff) at whichever of DraftKings, FanDuel or Caesars pays best, and are graded at that price even if the line or the model moves. A player ruled inactive voids the pick, as books do.</p></div>
     </div>
     <div class="grid2">
@@ -480,13 +481,16 @@
       ${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Picks lock about 80 min before each kickoff, just after inactives${today.next_lock_txt ? ` · next lock <b>${esc(today.next_lock_txt)} ET</b>` : ""}</span>${today.lines ? `<span>${today.lines.toLocaleString()} lines priced</span>` : ""}`;
     if (today.week) $("#nfl-kicker").textContent = `${today.season} · Week ${today.week} · receiving props`;
     const picks = (today.picks || []).slice().map(p => ({ ...p, posted: p.locked || today.posted })).sort(bydate);
-    const day = picks.filter(p => p.slate !== "Primetime"), prime = picks.filter(p => p.slate === "Primetime");
+    const tdp = picks.filter(p => p.sec === "td"), cardp = picks.filter(p => p.sec !== "td");
+    const day = cardp.filter(p => p.slate !== "Primetime"), prime = cardp.filter(p => p.slate === "Primetime");
     let html = "";
     if (picks.length) {
-      const by = {}; picks.forEach(r => { const k = r.mk === "td" ? "anytime TD" : r.mk === "rec" ? "receptions under" : "yards under"; by[k] = (by[k] || 0) + 1 });
+      const by = {}; cardp.forEach(r => { const k = r.mk === "td" ? "anytime TD" : r.mk === "rec" ? "receptions under" : "yards under"; by[k] = (by[k] || 0) + 1 });
       const sec = (t, n, rs) => rs.length ? `<div class="slip-ev"><h2>${esc(t)}</h2><span class="note">${esc(n)}</span></div>` + rs.map(betRow).join("") : "";
-      html += `<div class="slip"><div class="slipsum"><span><b>${picks.length}</b>pick${picks.length === 1 ? "" : "s"}</span><span><b>1u</b>each</span><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(k)}`).join(" · ")}</span><button class="ghost" id="nfl-copy">Copy card</button></div>
-        ${sec("Sunday card", `${day.length} of 8 slots · biggest edges across the day slate`, day)}${sec("Primetime & standalone", "the single best pick in each game off the Sunday afternoon slate", prime)}</div>`;
+      html += `<div class="slip"><div class="slipsum"><span><b>${cardp.length}</b>card pick${cardp.length === 1 ? "" : "s"}</span><span><b>1u</b>each</span><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(k)}`).join(" · ")}</span><button class="ghost" id="nfl-copy">Copy card</button></div>
+        ${sec("Sunday card", `${day.length} of 8 slots · biggest edges across the day slate`, day)}${sec("Primetime & standalone", "the single best pick in each game off the Sunday afternoon slate", prime)}</div>
+        <div class="slip"><div class="slipsum"><span><b>${tdp.length}</b>anytime TD${tdp.length === 1 ? "" : "s"}</span><span><b>1u</b>each</span><span>separate from the card · every TD yes with 5+% EV at +400 or shorter</span></div>
+        ${tdp.length ? sec("Anytime TD section", "tracked on its own record · long shots past +400 are skipped, the model overrates them", tdp) : '<p class="note">No TD plays yet this week. They post with each game\'s window.</p>'}</div>`;
     } else {
       html += `<div class="banner"><b>No picks yet</b><span>Most books post receiving props late in the week, and each game's picks lock about 80 minutes before its kickoff, just after inactives.</span></div>`;
     }
@@ -494,7 +498,7 @@
     const cp = $("#nfl-copy"); if (cp) cp.onclick = () => {
       const L = [`NFL receiving props · ${today.season} Week ${today.week} · 1 unit each · take the listed price or better`];
       const add = (t, rs) => { if (!rs.length) return; L.push("", t); rs.forEach((r, i) => { const w = r.p ? minPrice(r.p) : null; L.push(`${i + 1}. ${r.pk} ${r.mk === "td" ? "anytime TD" : r.sd + " " + r.ln + " " + (r.mk === "rec" ? "receptions" : "rec yards")} ${am(r.o)} (${BOOK[r.bk] || r.bk})${w != null ? ` · good to ${am(w)}` : ""} · ${r.gm}`) }) };
-      add("Sunday card", day); add("Primetime", prime); copyText(L.join("\n"), cp, "Copy card") };
+      add("Sunday card", day); add("Primetime", prime); add("Anytime TD section", tdp); copyText(L.join("\n"), cp, "Copy card") };
     const sl = today.slate || [];
     $("#nfl-slate").innerHTML = sl.length ? `<div class="sec-h"><h2>Full slate</h2><span class="note">Model projections for the top pass-catchers in every game (blend-free, before the market)</span></div>` + sl.map(g => gameBlock(g, picks)).join("")
       : `<div class="banner"><b>Quiet</b><span>No games on the schedule this week yet.</span></div>`;
