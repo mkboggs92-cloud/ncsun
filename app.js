@@ -290,7 +290,7 @@
     else if (r.limit) line += `<span class="floor${r.limitGone ? " warn" : ""}">${esc(r.limit)}</span>`;
     if (!r.r && r.e != null) line += `<span>Edge <b style="color:var(--win)">+${r.e.toFixed(1)}</b> pts</span>`;
     if (r.extra) line += `<span>${r.extra}</span>`;
-    const stub = `<span class="px2"><b>${am(r.o)}</b><span>${esc(r.bk)}</span></span>`;
+    const stub = sp.stub ? sp.stub(r) : `<span class="px2"><b>${am(r.o)}</b><span>${esc(r.bk)}</span></span>`;   // a model can show its own number (CFB shows the spread or total)
     const body = opt.compact ? "" : bodyHTML(r, sp);
     const iv = opt.i != null ? ` style="--i:${Math.min(opt.i, 12)}"` : "";
     if (!body) return `<article class="bet ${st}${r.paper ? " paper" : ""}"${iv}><div class="sum"><span class="what">${badge}<b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}</span></div></article>`;

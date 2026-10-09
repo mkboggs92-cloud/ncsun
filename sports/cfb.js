@@ -5,9 +5,13 @@
   const isT = r => r.mk === "Total";
   const graded = r => r.r === "W" || r.r === "L" || r.r === "P";
   // Older seasons (2022-23) were logged as free text, so the text is shown as written. From 2024 the sheet has Away / Home / Line / O/U columns.
-  const pickTxt = r => r.lab ? r.lab : isT(r) ? `${r.ou || "Total"} ${r.tot ?? ""}`.trim() : r.pk || `${r.aw} / ${r.hm}`;
+  // Our side's number. From 2026 Week 6 the sheet's Line is the number for the team we bet (cfb_build.py stores it as pl);
+  // before that it was mostly the home team's number, so it's flipped for road picks.
+  const pickLine = r => isT(r) ? null : r.pl != null ? r.pl : r.ln == null ? null : r.ha === "H" ? r.ln : r.ha === "A" ? (r.ln === 0 ? 0 : -r.ln) : null;
+  const pickTxt = r => r.lab ? r.lab : isT(r) ? `${r.ou || "Total"} ${r.tot ?? ""}`.trim() : r.pk ? `${r.pk} ${lnTxt(pickLine(r))}`.trim() : `${r.aw} / ${r.hm}`;
+  const betNum = r => r.lab ? null : isT(r) ? (r.tot != null ? `${(r.ou || "T")[0]} ${r.tot}` : null) : pickLine(r) != null ? lnTxt(pickLine(r)) : null;
   const gameTxt = r => r.aw && r.hm ? (r.lab ? `${r.aw} vs ${r.hm}` : `${r.aw} at ${r.hm}`) : "";
-  const extraTxt = r => r.lab ? "" : [r.ln != null ? `Line ${lnTxt(r.ln)}` : "", r.tot != null ? `O/U ${r.tot}` : ""].filter(Boolean).join(" · ");
+  const extraTxt = r => r.lab ? "" : isT(r) ? (r.ln != null && r.hm ? `Spread ${r.hm} ${lnTxt(r.ln)}` : "") : (r.tot != null ? `Total ${r.tot}` : "");
   function toRec(r, i) {
     const o = r.o ?? -110;
     return { d: null, season: String(r.s), ord: (r.wn ?? 99) * 1000 + i, ev: gameTxt(r) || r.wk || "", pick: pickTxt(r), detail: [extraTxt(r), r.c].filter(Boolean).join(" · "), mk: isT(r) ? "Total" : "Side", tier: isT(r) ? "Total" : "Side",
@@ -69,13 +73,15 @@
       season: { n: "Season", f: r => String(r.s), desc: true },
       wk: { n: "Week", f: r => r.wk || "?", sort: r => r.wn },
       mkt: { n: "Bet type", f: r => isT(r) ? "Total" : "Side", order: ["Side", "Total"] },
+      dog: { n: "Fav / dog", f: r => isT(r) ? "Total" : pickLine(r) == null ? "Not logged" : pickLine(r) < 0 ? "Favorite" : pickLine(r) > 0 ? "Underdog" : "Pick'em", order: ["Favorite", "Pick'em", "Underdog", "Total", "Not logged"] },
       fav: { n: "Pick", f: r => isT(r) ? (r.ou || "Total") : r.ha === "H" ? "Home side" : r.ha === "A" ? "Road side" : "Side (text log)", order: ["Road side", "Home side", "Side (text log)", "Over", "Under", "Total"] },
       size: { n: "Spread size", f: r => { if (isT(r)) return "Total"; const l = r.ln != null ? Math.abs(r.ln) : r.pl != null ? Math.abs(r.pl) : null; if (l == null) return "Not logged"; return l <= 3 ? "3 or less" : l <= 7 ? "3.5-7" : l <= 14 ? "7.5-14" : "14.5+" }, order: ["3 or less", "3.5-7", "7.5-14", "14.5+", "Total", "Not logged"] },
       phase: { n: "Part of season", f: r => r.wn == null ? "Unknown" : r.wn <= 4 ? "Weeks 0-4" : r.wn <= 9 ? "Weeks 5-9" : r.wn <= 15 ? "Week 10+" : "Bowls / playoff", order: ["Weeks 0-4", "Weeks 5-9", "Week 10+", "Bowls / playoff", "Unknown"] },
     },
-    filters: ["season", "mkt", "fav", "size", "phase"],
+    filters: ["season", "mkt", "dog", "fav", "size", "phase"],
     badge: r => `<span class="tbadge ${r.mk === "Total" ? "gtd" : "ml"}">${esc(r.mk)} · ${esc(r.season)} ${esc(r.raw.wk || "")}</span>`,
-    cells: r => [["Graded at", String(r.o), r.bk], ["Stake", "1u", "every pick"]],
+    stub: r => { const n = betNum(r.raw); return `<span class="px2"><b>${esc(n ?? (r.o > 0 ? "+" + r.o : String(r.o)))}</b><span>${n ? (r.mk === "Total" ? "Total" : "Spread") : esc(r.bk)}</span></span>` },
+    cells: r => [[r.mk === "Total" ? "Total" : "Spread", betNum(r.raw) || "–", r.mk === "Total" ? "the number we bet" : "our side's number"], ["Price", String(r.o), r.bk], ["Stake", "1u", "every pick"]],
     groupKey: r => r.raw.wk || "?",
     groupHead: (r, rs) => { const g = rs.filter(x => x.r), s = NCSUN.stats(g); return `<div class="slip-ev"><h2>${esc(r.raw.wk || "")}</h2><span class="note">${g.length === rs.length && g.length ? `${NCSUN.recTxt(s)} · <b class="${sgn(s.u)}">${fmtU(s.u)}</b>` : `${rs.length - g.length} open · 1 unit each · awaiting results`}</span></div>` },
     async load() {
