@@ -95,7 +95,7 @@
   // ------------------------------------------------------------------ coaster chart (equity curve as the ride track)
   function coaster(el, rows, sp) {
     if (rows.length < 2) { el.innerHTML = '<p class="note">Not enough graded picks to draw the ride yet.</p>'; return }
-    const nar = innerWidth < 600, W = nar ? 360 : 760, H = nar ? 250 : 270, L = nar ? 40 : 50, R = nar ? 12 : 18, T = nar ? 44 : 40, B = nar ? 30 : 34, fs = nar ? 12 : 11, n = rows.length;
+    const nar = innerWidth < 600, W = nar ? 360 : 760, H = nar ? 280 : 310, L = nar ? 40 : 50, R = nar ? 16 : 22, T = nar ? 70 : 76, B = nar ? 30 : 34, fs = nar ? 12 : 11, n = rows.length;
     let c = 0; const ys = rows.map(r => (c += r.pl || 0));
     const ymin = Math.min(0, ...ys), ymax = Math.max(1, ...ys), span = ymax - ymin || 1, lines = nar ? 4 : 7, step = [1, 2, 5, 10, 20, 25, 50, 100, 200].find(x => span / x <= lines) || 500;
     const x = i => L + i / (n - 1) * (W - L - R), y = v => T + (ymax - v) / span * (H - T - B);
@@ -107,14 +107,68 @@
     let ties = ""; if (!nar) for (let i = 1; i < pts.length; i += 2) { const a = pts[i - 1], b = pts[i]; const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1, nx = -dy / len * 6, ny = dx / len * 6; ties += `<line x1="${(b[0] + nx).toFixed(1)}" y1="${(b[1] + ny).toFixed(1)}" x2="${(b[0] - nx).toFixed(1)}" y2="${(b[1] - ny).toFixed(1)}" stroke="var(--track)" stroke-width="1.6" opacity=".5"/>` }
     let ddm = ""; if (dd >= 3) { const x0 = x(di0), x1 = x(di1), y0 = y(ys[di0]), y1 = y(ys[di1]), lx = Math.min(Math.max((x0 + x1) / 2, L + 60), W - R - 60);
       ddm = `<g aria-hidden="true"><line x1="${x0}" x2="${x1}" y1="${y0}" y2="${y0}" stroke="var(--loss)" stroke-dasharray="3 3"/><line x1="${x1}" x2="${x1}" y1="${y0}" y2="${y1}" stroke="var(--loss)" stroke-width="2"/><circle cx="${x1}" cy="${y1}" r="3.5" fill="var(--loss)"/><text x="${lx}" y="${Math.min(H - B - 6, y1 + 18)}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="var(--loss)">Worst drawdown −${dd.toFixed(1)}u</text></g>` }
-    const end = pts[pts.length - 1], pre = pts[Math.max(0, pts.length - 3)], ang = Math.atan2(end[1] - pre[1], end[0] - pre[0]) * 180 / Math.PI, last = ys[n - 1], base = y(Math.max(ymin, 0));
-    const rider = (sp && sp.car) || '<circle cx="-12" cy="-19" r="5.5" fill="var(--ball)" stroke="var(--ink)" stroke-width="1.6"/>';
-    el.innerHTML = `<svg class="ride" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}; worst drawdown ${dd.toFixed(1)} units">${g}${s}
-     <path class="area" d="${path} L${end[0]} ${base} L${pts[0][0]} ${base} Z" fill="var(--cobalt)"/>
-     <g class="ties">${ties}</g><path class="track" d="${path}" fill="none" stroke="var(--track)" stroke-width="${nar ? 2.6 : 3.2}" stroke-linejoin="round"/><g class="ddm">${ddm}</g>
-     <g class="car" transform="translate(${end[0].toFixed(1)} ${end[1].toFixed(1)}) rotate(${ang.toFixed(1)})"><rect x="-24" y="-14" width="24" height="10" rx="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/><circle cx="-19" cy="-2" r="2.6" fill="var(--ink)"/><circle cx="-5" cy="-2" r="2.6" fill="var(--ink)"/>${rider}</g>
-     <text class="endlbl" x="${(end[0] - 8).toFixed(1)}" y="${Math.max(16, end[1] - 30).toFixed(1)}" text-anchor="end" font-size="${nar ? 14 : 15}" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>`;
-    const tr = el.querySelector("path.track"); if (tr && tr.getTotalLength) tr.style.setProperty("--len", tr.getTotalLength().toFixed(0));
+    const end = pts[pts.length - 1], last = ys[n - 1], base = y(Math.max(ymin, 0)), cid = "clip" + Math.random().toString(36).slice(2, 8);
+    const sc = nar ? 0.68 : 0.78, mid = sp ? sp.id : (NCSUN.homeMascot || "ncaab");
+    const bets = n <= 120 ? rows.map((r, i) => `<circle class="bt ${r.r === "W" ? "w" : r.r === "L" ? "l" : "p"}" cx="${x(i).toFixed(1)}" cy="${y(ys[i]).toFixed(1)}" r="${nar ? 3.2 : 4}"><title>${esc(r.pick)} · ${r.r} ${fmtU(r.pl || 0)}</title></circle>`).join("") : "";
+    el.innerHTML = `<div class="ridewrap"><svg class="ride" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}; worst drawdown ${dd.toFixed(1)} units">${g}${s}
+     <defs><clipPath id="${cid}"><rect class="reveal" x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
+     <g clip-path="url(#${cid})"><path class="area" d="${path} L${end[0]} ${base} L${pts[0][0]} ${base} Z" fill="var(--cobalt)" opacity=".10"/>
+     <g class="ties">${ties}</g><path class="track" d="${path}" fill="none" stroke="var(--track)" stroke-width="${nar ? 2.6 : 3.2}" stroke-linejoin="round"/><g class="bets">${bets}</g></g>
+     <g class="ddm">${ddm}</g>
+     <g class="car">${mascotSVG(mid)}</g>
+     <g class="lbl"><rect rx="6" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.5"/><text class="run" text-anchor="middle" font-size="${nar ? 12 : 13}" font-weight="800" fill="var(--ink)"></text></g>
+     <g class="fx"></g>
+     <text class="endlbl" x="${(end[0] - 8).toFixed(1)}" y="${Math.max(16, end[1] - (nar ? 40 : 46)).toFixed(1)}" text-anchor="end" font-size="${nar ? 15 : 17}" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>
+     <button class="ghost replay" type="button" aria-label="Ride again">Ride again</button></div>`;
+    rideAnim(el, { W, H, L, R, n, ys, x, y, sc, last, trough: dd >= 3 ? x(di1) : null, end });
+  }
+  // the ride mascot: the header's rubber-hose character for this ride, cloned into the chart
+  function mascotSVG(id) {
+    const m = document.querySelector(`header svg .m-${id}`) || document.querySelector("header svg .m-ncaab");
+    return m ? m.outerHTML : '<rect x="-12" y="-16" width="34" height="12" rx="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/><circle cx="-3" cy="-2" r="3" fill="var(--ink)"/><circle cx="13" cy="-2" r="3" fill="var(--ink)"/>';
+  }
+  // drive the car along the track: the track is laid down just ahead of it, the counter rides above it,
+  // bets pop as it passes them, the drawdown marker appears at the trough, and the finish gets a burst
+  function rideAnim(el, o) {
+    const svg = el.querySelector("svg.ride"), track = svg.querySelector("path.track"), reveal = svg.querySelector(".reveal"), car = svg.querySelector(".car"), lbl = svg.querySelector(".lbl"), run = lbl.querySelector("text"), box = lbl.querySelector("rect"), fx = svg.querySelector(".fx"), ddm = svg.querySelector(".ddm"), bts = [...svg.querySelectorAll(".bt")], btn = el.querySelector(".replay");
+    const Ltot = track.getTotalLength ? track.getTotalLength() : 0, span = o.W - o.L - o.R;
+    let raf = 0, sPos = 0, tPrev = 0, ddShown = false, btI = 0;
+    const place = (s) => {
+      const p = track.getPointAtLength(s), a = track.getPointAtLength(Math.max(0, s - 3)), b = track.getPointAtLength(Math.min(Ltot, s + 3));
+      const ang = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+      car.setAttribute("transform", `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${ang.toFixed(1)}) scale(${o.sc}) translate(-5 -29)`);
+      reveal.setAttribute("width", (p.x + 6).toFixed(1));
+      const i = Math.max(0, Math.min(o.n - 1, Math.round((p.x - o.L) / span * (o.n - 1)))), v = o.ys[i], txt = fmtU(v);
+      run.textContent = txt; run.setAttribute("fill", v >= 0 ? "var(--win)" : "var(--loss)");
+      const lx = Math.min(o.W - 34, Math.max(34, p.x)), ly = Math.max(14, p.y - 44 * o.sc - 14), w = txt.length * 7.6 + 12;
+      run.setAttribute("x", lx); run.setAttribute("y", ly + 4); box.setAttribute("x", lx - w / 2); box.setAttribute("y", ly - 9); box.setAttribute("width", w); box.setAttribute("height", 18);
+      while (btI < bts.length && +bts[btI].getAttribute("cx") <= p.x + 0.5) bts[btI++].classList.add("on");
+      if (!ddShown && o.trough != null && p.x >= o.trough - 0.5) { ddShown = true; ddm.classList.add("on") }
+      return { p, ang };
+    };
+    const finish = () => { cancelAnimationFrame(raf); sPos = Ltot; const { p } = place(Ltot); bts.forEach(c => c.classList.add("on")); ddm.classList.add("on"); svg.classList.add("done"); lbl.style.opacity = 0; burst(p) };
+    const burst = p => {
+      if (reduced()) return; fx.innerHTML = "";
+      if (o.last > 0) { const cols = ["var(--coral)", "var(--sun)", "var(--cobalt)", "var(--win)", "#fff"];
+        for (let i = 0; i < 22; i++) { const a = -Math.PI * (0.15 + Math.random() * 0.7), d = 40 + Math.random() * 70; fx.insertAdjacentHTML("beforeend", `<rect x="${(p.x - 3).toFixed(1)}" y="${(p.y - 22).toFixed(1)}" width="6" height="${3 + Math.random() * 5 | 0}" fill="${cols[i % cols.length]}" style="--dx:${(Math.cos(a) * d).toFixed(0)}px;--dy:${(Math.sin(a) * d + 60).toFixed(0)}px;animation-delay:${(Math.random() * 120) | 0}ms"/>`) } }
+      else for (let i = 0; i < 7; i++) { const d = 14 + Math.random() * 26; fx.insertAdjacentHTML("beforeend", `<circle cx="${(p.x - 10).toFixed(1)}" cy="${(p.y - 4).toFixed(1)}" r="${2 + Math.random() * 3 | 0}" fill="var(--ink2)" opacity=".5" style="--dx:${(-d - 10).toFixed(0)}px;--dy:${(-Math.random() * 16).toFixed(0)}px"/>`) }
+      setTimeout(() => fx.innerHTML = "", 1600);
+    };
+    const reset = () => { cancelAnimationFrame(raf); sPos = 0; tPrev = 0; ddShown = false; btI = 0; bts.forEach(c => c.classList.remove("on")); ddm.classList.remove("on"); svg.classList.remove("done"); lbl.style.opacity = 1; fx.innerHTML = ""; place(0) };
+    const dur = Math.min(5200, 2600 + o.n * 6);   // longer records get a slightly longer ride
+    const step = t => {
+      if (!tPrev) tPrev = t; const dt = Math.min(48, t - tPrev); tPrev = t;
+      const a = track.getPointAtLength(Math.max(0, sPos - 2)), b = track.getPointAtLength(Math.min(Ltot, sPos + 2)), slope = (b.y - a.y) / (Math.hypot(b.x - a.x, b.y - a.y) || 1);
+      const k = slope > 0 ? 1 + slope * 0.9 : 1 + slope * 0.45;   // y grows downward: downhill (losing) runs fast, climbs grind
+      sPos += Ltot / dur * dt * k;
+      if (sPos >= Ltot) { finish(); return }
+      place(sPos); raf = requestAnimationFrame(step);
+    };
+    const start = () => { reset(); if (reduced() || !Ltot) { finish(); return } raf = requestAnimationFrame(step) };
+    btn.onclick = start;
+    el.rideStart = start;
+    reset(); lbl.style.opacity = 0;
+    if ("IntersectionObserver" in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); setTimeout(start, 120) } }, { threshold: 0.35 }); io.observe(svg) } else start();
   }
   // sparkline: cumulative units over a run of graded picks (home tiles, the trend strip)
   function spark(rows, w = 150, h = 40) {
