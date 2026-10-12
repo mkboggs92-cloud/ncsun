@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-12 09:01",
+ "updated": "2026-10-12 17:01",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -62,8 +62,43 @@
    "event": "UFC Fight Night: Buckley vs. Malott",
    "date": "2026-10-17",
    "cap": 50000,
-   "salaries": "pending",
-   "lineups": [],
+   "salaries": "live",
+   "lineups": [
+    {
+     "rank": 1,
+     "label": "Best lineup",
+     "ids": [
+      "8f4528c10bd34fab",
+      "51e2f44a8dbf6984",
+      "d6c0cdd7e467c440",
+      "dd6103dd7127db1d",
+      "84512339473dd300",
+      "a9e260472d321361"
+     ],
+     "salary": 50000,
+     "proj": 425.2,
+     "p10": 304.1,
+     "p90": 546.3,
+     "note": "Highest projected total under the $50,000 cap, at most one fighter per fight."
+    },
+    {
+     "rank": 2,
+     "label": "Second lineup",
+     "ids": [
+      "51e2f44a8dbf6984",
+      "d6c0cdd7e467c440",
+      "dd6103dd7127db1d",
+      "91cd52cb92dfdd52",
+      "84512339473dd300",
+      "04c8b08b16a5b99e"
+     ],
+     "salary": 50000,
+     "proj": 415.4,
+     "p10": 292.8,
+     "p90": 538.0,
+     "note": "Best projected total that differs from the first lineup by at least 2 fighters."
+    }
+   ],
    "pool": [
     {
      "id": "91cd52cb92dfdd52",
@@ -90,7 +125,12 @@
      "pts_loss": 24.6,
      "ml": -210,
      "debut": true,
-     "in": []
+     "salary": 8600,
+     "dk_id": "44476618",
+     "value": 8.16,
+     "in": [
+      2
+     ]
     },
     {
      "id": "0e46690e55a8df75",
@@ -117,6 +157,9 @@
      "pts_loss": 19.7,
      "ml": 162,
      "debut": true,
+     "salary": 7600,
+     "dk_id": "44476619",
+     "value": 5.71,
      "in": []
     },
     {
@@ -144,6 +187,9 @@
      "pts_loss": 19.5,
      "ml": -113,
      "debut": false,
+     "salary": 8200,
+     "dk_id": "44476621",
+     "value": 6.38,
      "in": []
     },
     {
@@ -171,7 +217,13 @@
      "pts_loss": 26.6,
      "ml": -113,
      "debut": false,
-     "in": []
+     "salary": 8000,
+     "dk_id": "44476620",
+     "value": 7.75,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "e872e9a9a902c045",
@@ -198,6 +250,9 @@
      "pts_loss": 24.0,
      "ml": -310,
      "debut": true,
+     "salary": 9000,
+     "dk_id": "44476630",
+     "value": 8.07,
      "in": []
     },
     {
@@ -225,6 +280,9 @@
      "pts_loss": 27.0,
      "ml": 230,
      "debut": true,
+     "salary": 7200,
+     "dk_id": "44476631",
+     "value": 5.97,
      "in": []
     },
     {
@@ -252,6 +310,9 @@
      "pts_loss": 18.0,
      "ml": -120,
      "debut": true,
+     "salary": 8300,
+     "dk_id": "44476629",
+     "value": 7.63,
      "in": []
     },
     {
@@ -279,6 +340,9 @@
      "pts_loss": 17.4,
      "ml": -106,
      "debut": true,
+     "salary": 7900,
+     "dk_id": "44476628",
+     "value": 6.39,
      "in": []
     },
     {
@@ -306,6 +370,9 @@
      "pts_loss": 16.7,
      "ml": 420,
      "debut": true,
+     "salary": 6700,
+     "dk_id": "44476627",
+     "value": 4.69,
      "in": []
     },
     {
@@ -333,6 +400,9 @@
      "pts_loss": 17.9,
      "ml": -650,
      "debut": true,
+     "salary": 9500,
+     "dk_id": "44476626",
+     "value": 8.61,
      "in": []
     },
     {
@@ -360,7 +430,12 @@
      "pts_loss": 25.5,
      "ml": 196,
      "debut": false,
-     "in": []
+     "salary": 7400,
+     "dk_id": "44476614",
+     "value": 6.27,
+     "in": [
+      2
+     ]
     },
     {
      "id": "25f9a5f3e8a52618",
@@ -387,6 +462,9 @@
      "pts_loss": 18.9,
      "ml": -260,
      "debut": false,
+     "salary": 8800,
+     "dk_id": "44476615",
+     "value": 7.55,
      "in": []
     },
     {
@@ -414,7 +492,12 @@
      "pts_loss": 24.0,
      "ml": -310,
      "debut": false,
-     "in": []
+     "salary": 9100,
+     "dk_id": "44476608",
+     "value": 9.19,
+     "in": [
+      1
+     ]
     },
     {
      "id": "583ee11abddfc581",
@@ -441,6 +524,9 @@
      "pts_loss": 19.2,
      "ml": 230,
      "debut": false,
+     "salary": 7100,
+     "dk_id": "44476609",
+     "value": 5.48,
      "in": []
     },
     {
@@ -468,7 +554,13 @@
      "pts_loss": 28.9,
      "ml": -295,
      "debut": false,
-     "in": []
+     "salary": 8900,
+     "dk_id": "44476616",
+     "value": 9.27,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "af9efbfd63d39734",
@@ -495,6 +587,9 @@
      "pts_loss": 23.0,
      "ml": 220,
      "debut": false,
+     "salary": 7300,
+     "dk_id": "44476617",
+     "value": 4.93,
      "in": []
     },
     {
@@ -522,6 +617,9 @@
      "pts_loss": 21.2,
      "ml": -156,
      "debut": true,
+     "salary": 8500,
+     "dk_id": "44476622",
+     "value": 7.07,
      "in": []
     },
     {
@@ -549,6 +647,9 @@
      "pts_loss": 22.8,
      "ml": 122,
      "debut": true,
+     "salary": 7700,
+     "dk_id": "44476623",
+     "value": 6.6,
      "in": []
     },
     {
@@ -576,6 +677,9 @@
      "pts_loss": 18.0,
      "ml": 250,
      "debut": true,
+     "salary": 7000,
+     "dk_id": "44476625",
+     "value": 5.73,
      "in": []
     },
     {
@@ -603,6 +707,9 @@
      "pts_loss": 20.9,
      "ml": -340,
      "debut": true,
+     "salary": 9200,
+     "dk_id": "44476624",
+     "value": 7.92,
      "in": []
     },
     {
@@ -630,6 +737,9 @@
      "pts_loss": 25.0,
      "ml": -340,
      "debut": false,
+     "salary": 9300,
+     "dk_id": "44476611",
+     "value": 7.89,
      "in": []
     },
     {
@@ -657,7 +767,12 @@
      "pts_loss": 30.8,
      "ml": 250,
      "debut": false,
-     "in": []
+     "salary": 6900,
+     "dk_id": "44476610",
+     "value": 6.2,
+     "in": [
+      1
+     ]
     },
     {
      "id": "b9437600497350f3",
@@ -667,23 +782,26 @@
      "date": "2026-10-17",
      "event": "UFC Fight Night: Buckley vs. Malott",
      "rounds": 5,
-     "proj": 54.1,
-     "p10": 3.9,
-     "p90": 105.7,
-     "p_win": 0.468,
-     "p_ko": 0.274,
+     "proj": 54.8,
+     "p10": 4.0,
+     "p90": 106.1,
+     "p_win": 0.478,
+     "p_ko": 0.279,
      "p_sub": 0.019,
-     "p_dec": 0.176,
-     "p_r1": 0.102,
+     "p_dec": 0.179,
+     "p_r1": 0.104,
      "mins": 14.7,
-     "sig": 45.7,
+     "sig": 45.8,
      "td": 1.06,
      "ctrl": 1.6,
      "kd": 0.26,
      "pts_win": 93.8,
      "pts_loss": 19.2,
-     "ml": 102,
+     "ml": -102,
      "debut": false,
+     "salary": 7800,
+     "dk_id": "44476606",
+     "value": 7.03,
      "in": []
     },
     {
@@ -694,24 +812,30 @@
      "date": "2026-10-17",
      "event": "UFC Fight Night: Buckley vs. Malott",
      "rounds": 5,
-     "proj": 75.2,
-     "p10": 10.7,
-     "p90": 125.8,
-     "p_win": 0.532,
-     "p_ko": 0.326,
-     "p_sub": 0.05,
-     "p_dec": 0.156,
-     "p_r1": 0.131,
+     "proj": 74.5,
+     "p10": 10.4,
+     "p90": 125.2,
+     "p_win": 0.522,
+     "p_ko": 0.32,
+     "p_sub": 0.049,
+     "p_dec": 0.154,
+     "p_r1": 0.129,
      "mins": 14.7,
      "sig": 50.5,
      "td": 1.44,
-     "ctrl": 3.3,
+     "ctrl": 3.4,
      "kd": 0.46,
      "pts_win": 110.7,
      "pts_loss": 35.0,
-     "ml": -130,
+     "ml": -125,
      "debut": false,
-     "in": []
+     "salary": 8400,
+     "dk_id": "44476607",
+     "value": 8.87,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "8e9eb3fc86db0f7d",
@@ -721,14 +845,14 @@
      "date": "2026-10-17",
      "event": "UFC Fight Night: Buckley vs. Malott",
      "rounds": 3,
-     "proj": 42.4,
-     "p10": 3.9,
-     "p90": 101.7,
-     "p_win": 0.263,
-     "p_ko": 0.16,
+     "proj": 43.3,
+     "p10": 4.0,
+     "p90": 102.7,
+     "p_win": 0.274,
+     "p_ko": 0.167,
      "p_sub": 0.01,
-     "p_dec": 0.093,
-     "p_r1": 0.091,
+     "p_dec": 0.097,
+     "p_r1": 0.095,
      "mins": 8.9,
      "sig": 35.8,
      "td": 0.69,
@@ -736,8 +860,11 @@
      "kd": 0.39,
      "pts_win": 99.1,
      "pts_loss": 22.1,
-     "ml": 190,
+     "ml": 180,
      "debut": false,
+     "salary": 7500,
+     "dk_id": "44476613",
+     "value": 5.77,
      "in": []
     },
     {
@@ -748,24 +875,30 @@
      "date": "2026-10-17",
      "event": "UFC Fight Night: Buckley vs. Malott",
      "rounds": 3,
-     "proj": 80.7,
-     "p10": 16.1,
-     "p90": 118.3,
-     "p_win": 0.737,
-     "p_ko": 0.283,
-     "p_sub": 0.207,
-     "p_dec": 0.247,
-     "p_r1": 0.263,
+     "proj": 79.8,
+     "p10": 14.9,
+     "p90": 118.1,
+     "p_win": 0.726,
+     "p_ko": 0.279,
+     "p_sub": 0.204,
+     "p_dec": 0.243,
+     "p_r1": 0.259,
      "mins": 8.9,
-     "sig": 39.7,
+     "sig": 39.8,
      "td": 0.8,
      "ctrl": 1.8,
      "kd": 0.36,
      "pts_win": 101.0,
      "pts_loss": 23.9,
-     "ml": -250,
+     "ml": -235,
      "debut": false,
-     "in": []
+     "salary": 8700,
+     "dk_id": "44476612",
+     "value": 9.17,
+     "in": [
+      1,
+      2
+     ]
     }
    ]
   },
