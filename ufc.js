@@ -311,6 +311,9 @@
     const grp = (f) => { const x = g.filter(f); if (!x.length) return null; const c = x.map(r => r.clv); const m = c.reduce((a, b) => a + b, 0) / c.length;
       const sd = Math.sqrt(c.reduce((a, b) => a + (b - m) * (b - m), 0) / Math.max(1, c.length - 1)); return { n: x.length, m, beat: x.filter(r => r.clv > 0).length, se: sd / Math.sqrt(c.length) } };
     const all = grp(() => true), ml = grp(r => (r.tier || r.mk) === "ML"), pr = grp(r => (r.tier || r.mk) !== "ML");
+    // props: price x close-fair CLV starts ~-10% from the vig on longshot props, so line movement (closing fair minus
+    // fair when we bet, in points) is the honest read there (review 3)
+    const pm = g.filter(r => (r.tier || r.mk) !== "ML" && r.mv != null), pmv = pm.length ? pm.reduce((a, r) => a + r.mv, 0) / pm.length : null;
     if (!all) { el.innerHTML = `<div class="lab-head"><h2>Beating the close</h2><span class="note">closing lines appear after each card is graded</span></div>`; return; }
     const tile = (lbl, s) => !s ? "" : `<div><small>${lbl}</small><b class="${s.m >= 0 ? "pos" : "neg"}">${clvTxt(s.m)}</b><span>${s.beat} of ${s.n} beat the close${s.n >= 10 ? ` · ±${(100 * 1.96 * s.se).toFixed(1)}%` : ""}</span></div>`;
     const z = all.se > 0 ? all.m / all.se : 0, verdict = all.n < 30 ? "Too early to call: about 60 moneyline picks at +2–3% CLV are needed before this means much."
@@ -319,9 +322,9 @@
     const bars = last.map((r, i) => { const h = Math.abs(r.clv) / mx * (H / 2 - 4); const y = r.clv > 0 ? H / 2 - h : H / 2;
       return `<rect x="${(i * bw + bw * 0.15).toFixed(2)}" y="${y.toFixed(2)}" width="${(bw * 0.7).toFixed(2)}" height="${Math.max(h, 1).toFixed(2)}" rx="1" fill="${r.clv > 0 ? "var(--win)" : "var(--loss)"}"><title>${esc(r.lab || r.pk)} ${clvTxt(r.clv)}</title></rect>` }).join("");
     el.innerHTML = `<div class="lab-head"><h2>Beating the close</h2><span class="note">price taken × fair closing chance − 1 · the edge that shows before results do</span></div>
-      <div class="kpis">${tile("All picks", all)}${tile("Moneylines", ml)}${tile("Props", pr)}</div>
+      <div class="kpis">${tile("All picks", all)}${tile("Moneylines", ml)}${tile("Props", pr)}${pmv == null ? "" : `<div><small>Props line move</small><b class="${pmv >= 0 ? "pos" : "neg"}">${pmv >= 0 ? "+" : "−"}${Math.abs(pmv).toFixed(1)} pts</b><span>${pm.filter(r => r.mv > 0).length} of ${pm.length} moved our way</span></div>`}</div>
       ${bars ? `<div class="clvbars"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" width="100%" height="56"><line x1="0" y1="${H / 2}" x2="${W}" y2="${H / 2}" stroke="var(--line)" stroke-width="1"/>${bars}</svg><span class="note">each bar is one pick, oldest to newest · above the line = beat the close</span></div>` : ""}
-      <p class="note">${verdict} Moneylines are measured against the de-vigged BestFightOdds close; props against the last pre-fight snapshot of every book. Closing-line value is the best early read on whether a betting edge is real.</p>`;
+      <p class="note">${verdict} Moneylines are measured against the de-vigged BestFightOdds close; props against the last pre-fight snapshot of every book. Closing-line value is the best early read on whether a betting edge is real. For props, judge by line move: their CLV starts around −10% from the book's margin alone, even when the bet is good.</p>`;
   }
 
   function kpis(el, s, label) {
@@ -746,9 +749,9 @@
     const upd = today.updated ? new Date(today.updated.replace(" ", "T")) : null;
     const hrs = upd ? (Date.now() - upd.getTime()) / 3.6e6 : null;
     const fails = status ? Object.entries(status).filter(([k, v]) => v && v.ok === false).map(([k]) => k) : [];
-    const color = hrs == null || hrs > 36 || fails.length ? "var(--loss)" : "var(--win)";
+    const color = hrs == null || hrs > 18 || fails.length ? "var(--loss)" : "var(--win)";
     $("#ufc-status").innerHTML = `<span><span class="dot" style="background:${color}"></span>Prices updated <b>${upd ? upd.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "not yet"}</b></span>
-      ${hrs != null && hrs > 36 ? `<span><b>Stale:</b> the laptop run hasn't reported in ${Math.round(hrs)} hours</span>` : ""}${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Runs 9 AM and 5 PM ET</span>`;
+      ${hrs != null && hrs > 18 ? `<span><b>Stale:</b> the laptop run hasn't reported in ${Math.round(hrs)} hours</span>` : ""}${fails.length ? `<span><b>Last run had a problem:</b> ${esc(fails.join(", "))}</span>` : ""}<span>Runs 9 AM and 5 PM ET</span>`;
     const picks = (today.picks || []).filter(r => !isWithdrawn(r)).slice().sort(bydate);
     const openPaper = (paper || []).filter(r => !r.r && !isWithdrawn(r)).sort(bydate);
     const evs = (today.events || []).slice().sort(bydate);
