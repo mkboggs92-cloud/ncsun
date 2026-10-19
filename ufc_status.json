@@ -1,19 +1,19 @@
 {
  "update": {
   "ok": true,
-  "at": "2026-10-12 06:11",
+  "at": "2026-10-19 06:11",
   "note": ""
  },
- "updated": "2026-10-18 17:01",
+ "updated": "2026-10-19 06:26",
  "train": {
   "ok": true,
-  "at": "2026-10-12 06:19",
+  "at": "2026-10-19 06:19",
   "note": ""
  },
  "predict": {
-  "ok": true,
-  "at": "2026-10-18 17:00",
-  "note": ""
+  "ok": false,
+  "at": "2026-10-19 06:26",
+  "note": "RuntimeError: no live UFC lines on BestFightOdds"
  },
  "lock": {
   "ok": true,
@@ -32,7 +32,7 @@
  },
  "props_train": {
   "ok": true,
-  "at": "2026-10-12 06:25",
+  "at": "2026-10-19 06:26",
   "note": ""
  }
 }
