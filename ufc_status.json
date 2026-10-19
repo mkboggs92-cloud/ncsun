@@ -1,23 +1,23 @@
 {
  "update": {
   "ok": true,
-  "at": "2026-10-19 13:09",
+  "at": "2026-10-19 14:37",
   "note": ""
  },
- "updated": "2026-10-19 13:26",
+ "updated": "2026-10-19 14:56",
  "train": {
   "ok": true,
-  "at": "2026-10-19 13:18",
+  "at": "2026-10-19 14:47",
   "note": ""
  },
  "predict": {
   "ok": true,
-  "at": "2026-10-19 13:25",
+  "at": "2026-10-19 14:55",
   "note": ""
  },
  "lock": {
   "ok": true,
-  "at": "2026-10-19 13:25",
+  "at": "2026-10-19 14:55",
   "note": ""
  },
  "grade_export": {
@@ -32,18 +32,18 @@
  },
  "props_train": {
   "ok": true,
-  "at": "2026-10-19 13:24",
+  "at": "2026-10-19 14:54",
   "note": ""
  },
  "grade": {
   "ok": true,
-  "at": "2026-10-19 13:25",
+  "at": "2026-10-19 14:55",
   "note": ""
  },
  "health": {
-  "ok": false,
-  "at": "2026-10-19 13:26",
-  "note": "dob_parse: 166 DOBs lost to a mixed date format in fighters.csv"
+  "ok": true,
+  "at": "2026-10-19 14:56",
+  "note": ""
  },
  "publish": {
   "ok": true,
