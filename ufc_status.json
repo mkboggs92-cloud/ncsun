@@ -22,7 +22,7 @@
  },
  "grade_export": {
   "ok": true,
-  "at": "2026-10-19 11:05",
+  "at": "2026-10-19 13:26",
   "note": ""
  },
  "results": {
@@ -44,5 +44,10 @@
   "ok": false,
   "at": "2026-10-19 13:26",
   "note": "dob_parse: 166 DOBs lost to a mixed date format in fighters.csv"
+ },
+ "publish": {
+  "ok": true,
+  "at": "2026-10-19 13:26",
+  "note": ""
  }
 }

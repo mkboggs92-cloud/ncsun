@@ -239,11 +239,15 @@
   const fair = p => { if (!p) return null; const d = 1 / p; return d >= 2 ? Math.round((d - 1) * 100) : Math.round(-100 / (d - 1)) };
   // worst price that still qualifies: moneylines need EV >= 5% (decimal >= 1.05 / p), props 5 pts of edge
   const minPrice = (p, bar) => { if (bar == null) { const d = 1.05 / p; return d >= 2 ? Math.round((d - 1) * 100) : Math.round(-100 / (d - 1)) } return fair(p - bar) };
+  // open picks carry today's model probability (pc): the worse of posted and current decides the floor, and a pick that
+  // fails at today's model is shown as record only (review 5: old-rule picks were priced by a model since fixed)
+  const pNow = r => r.pc != null && r.p != null ? Math.min(r.p, r.pc) : (r.pc ?? r.p);
+  const failsNow = r => { if (r.pc == null || !r.dec) return false; return isProp(r) ? r.pc - 1 / r.dec < 0.05 : r.pc * r.dec - 1 < 0.05 };
   const dateTxt = d => { const x = new Date(d + "T12:00:00"); return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][x.getDay()] + ", " + MON[x.getMonth()] + " " + x.getDate() };
   const daysTo = d => { const t = new Date(); t.setHours(12, 0, 0, 0); return Math.round((new Date(d + "T12:00:00") - t) / 864e5) };
   const whenTxt = d => { const n = daysTo(d); return n < 0 ? "" : n === 0 ? "tonight" : n === 1 ? "tomorrow" : `in ${n} days` };
   const addDays = (d, k) => { const x = new Date(d + "T12:00:00"); x.setDate(x.getDate() + k); return x.toISOString().slice(0, 10) };
-  const cap = s => String(s || "").replace(/\b\w/g, c => c.toUpperCase());
+  const cap = s => String(s || "").replace(/(^|[\s-])\w/g, c => c.toUpperCase());
   const LIGHT = ["flyweight", "bantamweight", "featherweight", "women's strawweight", "women's flyweight", "women's bantamweight", "women's featherweight"];
   const pct0 = v => v == null ? "–" : Math.round(v * 100) + "%";
   const pts = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(1);
@@ -260,7 +264,7 @@
     season: { n: "Season", f: r => r.d.slice(0, 4) },
     side: { n: "Favorite / dog", f: r => r.dec < 2 ? "Favorite" : "Underdog", order: ["Favorite", "Underdog"] },
     price: { n: "Price", f: r => r.o <= -300 ? "-300 or shorter" : r.o <= -200 ? "-299 to -200" : r.o <= -140 ? "-199 to -140" : r.o < 100 ? "-139 to -101" : r.o <= 150 ? "+100 to +150" : r.o <= 400 ? "+151 to +400" : "+401 or longer", order: ["-300 or shorter", "-299 to -200", "-199 to -140", "-139 to -101", "+100 to +150", "+151 to +400", "+401 or longer"] },
-    edge: { n: "Edge", f: r => r.e < 4 ? "3-4 pts" : r.e < 6 ? "4-6 pts" : r.e < 9 ? "6-9 pts" : "9+ pts", order: ["3-4 pts", "4-6 pts", "6-9 pts", "9+ pts"] },
+    edge: { n: "Edge", f: r => r.e < 4 ? "<4 pts" : r.e < 6 ? "4-6 pts" : r.e < 9 ? "6-9 pts" : "9+ pts", order: ["<4 pts", "4-6 pts", "6-9 pts", "9+ pts"] },
     gender: { n: "Division", f: r => String(r.div || "").startsWith("women") ? "Women's" : "Men's", order: ["Men's", "Women's"] },
     weight: { n: "Weight group", f: r => { const d = String(r.div || ""); return d.includes("heavy") ? "Light heavy + heavy" : (d.includes("middle") || d.includes("welter")) ? "Welter + middle" : d.includes("light") ? "Lightweight" : LIGHT.includes(d) ? "Fly to feather" : "Catchweight" }, order: ["Fly to feather", "Lightweight", "Welter + middle", "Light heavy + heavy", "Catchweight"] },
     div: { n: "Weight class", f: r => cap(r.div || "Unknown") },
@@ -268,14 +272,15 @@
     exp: { n: "UFC experience", f: r => r.nf <= 2 ? "Least-experienced has 1-2 UFC fights" : r.nf <= 5 ? "3-5 fights" : "6+ fights", order: ["Least-experienced has 1-2 UFC fights", "3-5 fights", "6+ fights"] },
     ending: { n: "How it ended", f: r => ({ KO: "KO/TKO", SUB: "Submission", DEC: "Decision" }[r.mth] || "Other"), order: ["KO/TKO", "Submission", "Decision", "Other"] },
     book: { n: "Book", f: r => BOOK[r.bk] || r.bk },
+    rules: { n: "Rule set", f: r => r.rv ? (r.rv >= "2026-10-19" ? "Current (Oct 19)" : "Before Oct 19") : "Backtest" },
     clv: { n: "Vs closing line", f: r => r.clv == null ? "No close" : r.clv > 0 ? "Beat the close" : "Worse than close", order: ["Beat the close", "Worse than close", "No close"] },
     month: { n: "Month", f: r => MON[+r.d.slice(5, 7) - 1], order: MON },
   };
-  const FILTERS = ["tier", "season", "side", "price", "edge", "gender", "weight", "rounds", "exp", "ending", "book"];
+  const FILTERS = ["tier", "season", "side", "price", "edge", "gender", "weight", "rounds", "exp", "ending", "book", "rules"];
 
   function stats(rows) {
     let w = 0, l = 0, v = 0, u = 0, c = 0, cn = 0, risk = 0;
-    for (const r of rows) { if (r.r === "W") w++; else if (r.r === "L") l++; else v++; u += r.u || 0; if (r.r === "W" || r.r === "L") risk += r.su || 1; if (r.clv != null) { c += r.clv; cn++ } }
+    for (const r of rows) { if (r.r === "W") w++; else if (r.r === "L") l++; else v++; u += r.u || 0; if (r.r === "W" || r.r === "L") risk += r.su || 1; if (r.clv != null && !isProp(r)) { c += r.clv; cn++ } }   // CLV on moneylines only (prop CLV starts ~-10% from the vig)
     const n = w + l; return { n, w, l, v, wp: n ? w / n : 0, u, roi: risk ? u / risk : 0, clv: cn ? c / cn : null };
   }
   const clvTxt = c => c == null ? "–" : (c > 0 ? "+" : "") + (c * 100).toFixed(1) + "%";
@@ -334,7 +339,7 @@
   function kpis(el, s, label) {
     el.innerHTML = `<div><small>Bets</small><b>${s.n.toLocaleString()}</b><span>${label}</span></div><div><small>Record</small><b>${s.w}-${s.l}</b><span>${pct(s.wp)} win rate${s.v ? ` · ${s.v} void` : ""}</span></div>
      <div><small>Units</small><b class="${s.u >= 0 ? "pos" : "neg"}">${fmtU(s.u)}</b><span>${s.u >= 0 ? "+" : "−"}$${Math.abs(Math.round(s.u * 100)).toLocaleString()} at $100/unit</span></div>
-     <div><small>ROI</small><b class="${s.roi >= 0 ? "pos" : "neg"}">${s.roi >= 0 ? "+" : ""}${(s.roi * 100).toFixed(1)}%</b><span>per unit risked</span></div><div><small>Vs close</small><b>${clvTxt(s.clv)}</b><span>avg price edge</span></div>`;
+     <div><small>ROI</small><b class="${s.roi >= 0 ? "pos" : "neg"}">${s.roi >= 0 ? "+" : ""}${(s.roi * 100).toFixed(1)}%</b><span>per unit risked</span></div><div><small>Vs close</small><b>${clvTxt(s.clv)}</b><span>moneylines, avg price edge</span></div>`;
   }
 
   function lab(el, all, idp, label) {
@@ -416,24 +421,25 @@
   // where the pick can be bet right now (moneylines only; the card file has FD/DK/CZR prices per fighter)
   function booksNow(r, side) {
     if (!side || isProp(r)) return null;
-    const worst = r.p ? minPrice(r.p, barOf(r)) : null, wd = toDec(worst);
+    const worst = pNow(r) ? minPrice(pNow(r), barOf(r)) : null, wd = toDec(worst);
     const cells = BK3.map(([k, f]) => { const o = side[f]; const ok = o != null && (wd == null || toDec(o) >= wd - 1e-9); return { k, o, ok } });
     const live = cells.filter(c => c.o != null), good = live.filter(c => c.ok).sort((a, b) => toDec(b.o) - toDec(a.o));
     return { cells, best: good[0] || null, gone: live.length > 0 && !good.length, worst };
   }
   // DraftKings public splits (information only; being collected to test later)
   const pubTxt = (u, full) => !u ? "" : full
-    ? `DraftKings public on this side: <b>${u.bets}%</b> of bets · <b>${u.handle}%</b> of money${u.handle - u.bets >= 15 ? " (bigger bettors on it)" : u.bets - u.handle >= 15 ? " (mostly small bets)" : ""} <span class="note">as of ${esc(u.at)} UTC</span>`
+    ? `DraftKings public on this fighter's moneyline: <b>${u.bets}%</b> of bets · <b>${u.handle}%</b> of money${u.handle - u.bets >= 15 ? " (bigger bettors on it)" : u.bets - u.handle >= 15 ? " (mostly small bets)" : ""} <span class="note">as of ${esc(u.at)} UTC</span>`
     : `DK ${u.bets}% bets · ${u.handle}% $`;
   function betRow(r, paper, side) {
-    const t = tierOf(r), worst = r.p ? minPrice(r.p, barOf(r)) : null, bn = paper ? null : booksNow(r, side);
+    const t = tierOf(r), worst = paper || !pNow(r) ? null : minPrice(pNow(r), barOf(r)), bn = paper ? null : booksNow(r, side), dead = !paper && failsNow(r);
     const badge = paper ? `<span class="tbadge paper">Paper · ${esc(TIER[t] || MK[r.mk] || t)}</span>` : `<span class="tbadge ${BADGE[t] || ""}">${esc(TIER[t] || t)}</span>`;
     const sub = `${isProp(r) ? esc(r.op) : "vs " + esc(r.op)}${r.div ? " · " + esc(cap(r.div)) : ""}`;
     let line = "";
     if (paper) line = `<span>Paper only: logged and graded, never staked</span>`;
     else {
       if (r.old_rules) line += `<span class="floor warn">Posted under the earlier rules${r.rv ? ` (${esc(r.rv)})` : ""} · kept on the record, may not qualify today</span>`;
-      if (bn && bn.gone) line += `<span class="floor warn">Price moved past ${am(bn.worst)} everywhere · pick stands at ${am(r.o)}</span>`;
+      if (dead) line += `<span class="floor warn">Record only: not a bet at today's model (${pct0(r.pc)} now vs ${pct0(r.p)} when posted)</span>`;
+      else if (bn && bn.gone) line += `<span class="floor warn">Price moved past ${am(bn.worst)} everywhere · pick stands at ${am(r.o)}</span>`;
       else if (worst != null) line += `<span class="floor">Take ${am(worst)} or better</span>`;
       if (r.e != null) line += `<span>Edge <b style="color:var(--win)">+${r.e.toFixed(1)}</b> pts</span>`;
       if (bn && bn.best && bn.best.k !== r.bk && toDec(bn.best.o) > toDec(r.o) + 1e-9) line += `<span>Best now <b style="color:var(--ink)">${esc(BOOK[bn.best.k])} ${am(bn.best.o)}</b></span>`;
@@ -445,7 +451,7 @@
       <span class="line">${line}<span class="tog"><span class="t1">Details</span><span class="t2">Hide</span></span></span>
     </summary><div class="body">
       <div class="pricegrid"><div><small>Bet at</small><b>${am(r.o)}</b><span>${esc(BOOK[r.bk] || r.bk)}</span></div>
-        <div><small>Fair</small><b>${r.p ? am(fair(r.p)) : "–"}</b><span>${r.p ? pct0(r.p) + " to win" : "not priced"}</span></div>
+        <div><small>Fair</small><b>${pNow(r) ? am(fair(pNow(r))) : "–"}</b><span>${pNow(r) ? pct0(pNow(r)) + " to win" + (r.pc != null && Math.abs(r.pc - r.p) > 0.005 ? ` (${pct0(r.p)} when posted)` : "") : "not priced"}</span></div>
         <div><small>Edge</small><b class="${(r.e || 0) > 0 ? "pos" : ""}">${r.e != null ? (r.e > 0 ? "+" : "") + r.e.toFixed(1) : "–"}</b><span>${r.e != null && r.dec ? `pts over ${pct0(1 / r.dec)}` : ""}</span></div>
         <div><small>Market</small><b>${r.m != null ? am(fair(r.m)) : "–"}</b><span>${r.m != null ? pct0(r.m) + " fair" : "no fair line"}</span></div>
         <div><small>Worst price</small><b>${worst != null ? am(worst) : "–"}</b><span>still a bet</span></div></div>
@@ -559,7 +565,7 @@
             ${live ? `<label class="f">Salary<select id="dfs-sal">${SAL.map(x => `<option value="${x[0]}" ${x[0] === sal ? "selected" : ""}>${x[1]}</option>`).join("")}</select></label>` : ""}
             ${lus.length ? `<button class="ghost toggle" id="dfs-in" aria-pressed="${onlyIn}">In a lineup</button>` : ""}</div>
           <div class="tbl" id="dfs-pool">${poolRows(s)}</div>
-          <p class="note">${live ? "Value is projected points per $1,000 of salary; the five best are green. " : ""}Range is the 10th to 90th percentile. Finish is his chance to win by KO or submission. ML is the DraftKings moneyline where posted.</p></div>
+          <p class="note">${live ? "Value is projected points per $1,000 of salary; the five best are green. " : ""}Range is the 10th to 90th percentile. Finish is his chance to win by KO or submission. ML is the best moneyline at FanDuel, DraftKings or Caesars.</p></div>
         ${explain(s)}<p class="note">Projections updated ${esc(data.updated || "–")} ET. For entertainment; DFS contests are games of skill with real money at risk.</p>`;
       const pool = el.querySelector("#dfs-pool"), redraw = () => pool.innerHTML = poolRows(s);
       el.querySelector("#dfs-q").addEventListener("input", e => { q = e.target.value; redraw() });
@@ -782,12 +788,12 @@
     $("#ufc-picks").innerHTML = html;
     const cp = $("#ufc-copy"); if (cp) cp.onclick = () => {
       const L = ["UFC picks · 1 unit each · take the listed price or better"];
-      groups.forEach((g, k) => { const [d, ev] = k.split("|"); L.push("", `${ev} · ${dateTxt(d)}`); g.forEach((r, i) => { const w = r.p ? minPrice(r.p, barOf(r)) : null; L.push(`${i + 1}. ${r.lab || r.pk}${isProp(r) ? "" : " ML"} ${am(r.o)} (${BOOK[r.bk] || r.bk})${w != null ? ` · good to ${am(w)}` : ""}${isProp(r) ? ` · ${r.op}` : ` · vs ${r.op}`}`) }) });
+      groups.forEach((g, k) => { const [d, ev] = k.split("|"); L.push("", `${ev} · ${dateTxt(d)}`); g.filter(r => !failsNow(r)).forEach((r, i) => { const w = pNow(r) ? minPrice(pNow(r), barOf(r)) : null; L.push(`${i + 1}. ${r.lab || r.pk}${isProp(r) ? "" : " ML"} ${am(r.o)} (${BOOK[r.bk] || r.bk})${w != null ? ` · good to ${am(w)}` : ""}${isProp(r) ? ` · ${r.op}` : ` · vs ${r.op}`}`) }) });
       copyText(L.join("\n"), cp, "Copy bets") };
     // full card: one collapsible per event
     $("#ufc-cards").innerHTML = evs.length ? `<div class="sec-h"><h2>Full card</h2><span class="note">Every fight with a line: prices, model chances, method splits, what the model weighs</span></div>` + evs.map(e => { const np = picks.filter(p => p.d === e.d).length;
       return `<details class="more"><summary>${esc(e.ev)}<span>${esc(dateTxt(e.d))} · ${e.fights.length} fight${e.fights.length === 1 ? "" : "s"} with a line${np ? ` · ${np} pick${np > 1 ? "s" : ""}` : ""}</span></summary><div class="inner"><div class="fightcard">${e.fights.map(fightRow).join("")}</div></div></details>` }).join("")
-      + `<div class="legend"><span><i style="background:var(--cobalt)"></i>Red corner</span><span><i style="background:var(--coral)"></i>Blue corner</span><span><span class="tick"></span>Market's fair chance</span><span>Bars are the model blended with the market. "Fair" is the break-even price at that chance. Method splits are model-only, for reference. Highlighted fights have a pick.</span></div>`
+      + `<div class="legend"><span><i style="background:var(--cobalt)"></i>Red corner</span><span><i style="background:var(--coral)"></i>Blue corner</span><span><span class="tick"></span>Market's fair chance</span><span>Bars are the model blended with the market. "Fair" is the break-even price at that chance. Method splits are the model's, for reference; the distance and decision chances on bets are blended with the market and adjusted for the current finish rate, each separately, so they need not add up. Highlighted fights have a pick.</span></div>`
       : `<div class="banner"><b>Quiet</b><span>No UFC lines are posted for the next 45 days yet.</span></div>`;
     // DFS teaser
     getDFS().then(d => { const sl = ((d && d.slates) || []).filter(s => s && s.pool && s.pool.length && daysTo(s.date) >= 0).sort((a, b) => a.date < b.date ? -1 : 1)[0]; if (!sl) return;
