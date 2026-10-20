@@ -242,7 +242,7 @@
   // open picks carry today's model probability (pc): the worse of posted and current decides the floor, and a pick that
   // fails at today's model is shown as record only (review 5: old-rule picks were priced by a model since fixed)
   const pNow = r => r.pc != null && r.p != null ? Math.min(r.p, r.pc) : (r.pc ?? r.p);
-  const failsNow = r => { if (r.pc == null || !r.dec) return false; return isProp(r) ? r.pc - 1 / r.dec < 0.05 : r.pc * r.dec - 1 < 0.05 };
+  const failsNow = r => { if (r.ck === "block") return true; if (r.pc == null || !r.dec) return false; return isProp(r) ? r.pc - 1 / r.dec < 0.05 : r.pc * r.dec - 1 < 0.05 };
   const dateTxt = d => { const x = new Date(d + "T12:00:00"); return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][x.getDay()] + ", " + MON[x.getMonth()] + " " + x.getDate() };
   const daysTo = d => { const t = new Date(); t.setHours(12, 0, 0, 0); return Math.round((new Date(d + "T12:00:00") - t) / 864e5) };
   const whenTxt = d => { const n = daysTo(d); return n < 0 ? "" : n === 0 ? "tonight" : n === 1 ? "tomorrow" : `in ${n} days` };
@@ -438,7 +438,8 @@
     if (paper) line = `<span>Paper only: logged and graded, never staked</span>`;
     else {
       if (r.old_rules) line += `<span class="floor warn">Posted under the earlier rules${r.rv ? ` (${esc(r.rv)})` : ""} · kept on the record, may not qualify today</span>`;
-      if (dead) line += `<span class="floor warn">Record only: not a bet at today's model (${pct0(r.pc)} now vs ${pct0(r.p)} when posted)</span>`;
+      if (r.ck === "block" || r.ck === "caution") line += `<span class="floor warn">${r.ck === "block" ? "Check before betting" : "Heads up"}: ${esc(r.cn || "news flagged by the pre-bet check")}</span>`;
+      if (dead && r.ck !== "block") line += `<span class="floor warn">Record only: not a bet at today's model (${pct0(r.pc)} now vs ${pct0(r.p)} when posted)</span>`;
       else if (bn && bn.gone) line += `<span class="floor warn">Price moved past ${am(bn.worst)} everywhere · pick stands at ${am(r.o)}</span>`;
       else if (worst != null) line += `<span class="floor">Take ${am(worst)} or better</span>`;
       if (r.e != null) line += `<span>Edge <b style="color:var(--win)">+${r.e.toFixed(1)}</b> pts</span>`;
