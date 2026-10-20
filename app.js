@@ -79,7 +79,7 @@
   // ------------------------------------------------------------------ stats, grouping
   function stats(rows) {
     let w = 0, l = 0, p = 0, v = 0, u = 0, risk = 0, c = 0, cn = 0;
-    for (const r of rows) { if (r.r === "W") w++; else if (r.r === "L") l++; else if (r.r === "P") p++; else v++; u += r.pl || 0; if (r.r === "W" || r.r === "L") risk += r.stake || 1; if (r.clv != null) { c += r.clv; cn++ } }
+    for (const r of rows) { if (r.r === "W") w++; else if (r.r === "L") l++; else if (r.r === "P") p++; else v++; u += r.pl || 0; if (r.r === "W" || r.r === "L") risk += r.stake ?? 1; if (r.clv != null) { c += r.clv; cn++ } }
     const n = w + l; return { n, w, l, p, v, wp: n ? w / n : 0, u, roi: risk ? u / risk : 0, clv: cn ? c / cn : null };
   }
   const recTxt = s => `${s.w}-${s.l}${s.p ? "-" + s.p : ""}`;
@@ -392,7 +392,7 @@
       const draw = () => {
         if (picks.length) {
           const open = picks.filter(r => !r.r), gr = picks.filter(r => r.r), s = stats(gr);
-          const sum = `<div class="slipsum"><span><b>${open.length}</b>${plural(open.length, "open pick")}</span><span><b>1u</b>each</span>${gr.length ? `<span>${gr.length} graded · ${recTxt(s)}, <b class="${sgn(s.u)}" style="font:inherit">${fmtU(s.u)}</b></span>` : ""}${meta.summary ? `<span>${esc(meta.summary)}</span>` : ""}</div>`;
+          const sum = `<div class="slipsum"><span><b>${open.length}</b>${plural(open.length, "open pick")}</span>${meta.stake && meta.stake !== "1u each" ? "" : "<span><b>1u</b>each</span>"}${gr.length ? `<span>${gr.length} graded · ${recTxt(s)}, <b class="${sgn(s.u)}" style="font:inherit">${fmtU(s.u)}</b></span>` : ""}${meta.summary ? `<span>${esc(meta.summary)}</span>` : ""}</div>`;
           const note = !open.length ? `<div class="banner" style="margin-bottom:14px"><b>${esc(meta.emptyHead || "No open picks")}</b><span>${meta.empty || "Nothing open right now."}${gr.length ? " Here's how the last card went." : ""}</span></div>` : "";
           $("[data-picks]", el).innerHTML = note + sum + cardList(picks, by, sp);
           ctl.hidden = false;
@@ -400,7 +400,7 @@
         tog.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.by === by));
       };
       tog.onclick = e => { const b = e.target.closest("button"); if (!b) return; by = b.dataset.by; draw() };
-      $("[data-copy]", el).onclick = e => copyText(copyLines(picks.filter(r => !r.r), sp, `${sp.name} · ${meta.copyTitle || "picks"} · 1 unit each · take the listed price or better`), e.target, "Copy card");
+      $("[data-copy]", el).onclick = e => copyText(copyLines(picks.filter(r => !r.r), sp, `${sp.name} · ${meta.copyTitle || "picks"} · ${meta.stake && meta.stake !== "1u each" ? meta.stake : "1 unit each"} · take the listed price or better`), e.target, "Copy card");
       draw(); sp.redrawCard = draw;
       if (sp.afterCard) sp.afterCard($("[data-after]", el), d);
     });
