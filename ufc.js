@@ -441,7 +441,8 @@
     else {
       if (r.old_rules) line += `<span class="floor warn">Posted under the earlier rules${r.rv ? ` (${esc(r.rv)})` : ""} · kept on the record, may not qualify today</span>`;
       if (r.ck === "block" || r.ck === "caution") line += `<span class="floor warn">${r.ck === "block" ? "Check before betting" : "Heads up"}: ${esc(r.cn || "news flagged by the pre-bet check")}</span>`;
-      if (dead && r.ck !== "block" && r.pc == null) line += `<span class="floor warn">Not priced today: check that the fight is still on</span>`;
+      if (dead && r.d && daysTo(r.d) < 0) line += `<span class="floor">Card under way or finished: awaiting the result</span>`;
+      else if (dead && r.ck !== "block" && r.pc == null) line += `<span class="floor warn">Not priced today: check that the fight is still on</span>`;
       else if (dead && r.ck !== "block") line += `<span class="floor warn">Record only: not a bet at today's model (${pct0(r.pc)} now vs ${pct0(r.p)} when posted)</span>`;
       else if (bn && bn.gone) line += `<span class="floor warn">Price moved past ${am(bn.worst)} everywhere · pick stands at ${am(r.o)}</span>`;
       else if (worst != null) line += `<span class="floor">Take ${am(worst)} or better</span>`;
