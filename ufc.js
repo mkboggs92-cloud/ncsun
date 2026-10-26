@@ -1,7 +1,8 @@
 /* UFC tab for "Nothing Can Stop Us Now". Self-contained: mounts into #ufc, reuses the page's design tokens and
    classes, and reads ufc_today.json, ufc_live.json, ufc_backtest.json, ufc_status.json, ufc_paper.json and
    ufc_dfs.json published beside the page. Those files are rewritten by the UFC model's daily run; this script never changes.
-   Every bet is 1 unit. Posted picks stand. Live books: FanDuel, DraftKings, Caesars. */
+   Stakes: 1 unit, except KO-fade decision props at 0.5 unit (rule 2026-10-26); goes-the-distance is paper only while
+   the finish surge lasts. Posted picks stand. Live books: FanDuel, DraftKings, Caesars. */
 (function () {
   const root = document.getElementById("ufc");
   if (!root) return;
@@ -194,6 +195,10 @@
 #ufc .rules td{white-space:normal}
 #ufc .grid2>.prose{align-content:start}
 #ufc .toggle[aria-pressed="true"]{background:var(--ink);color:var(--sky)}
+#ufc .trip td{white-space:normal}
+#ufc .trip .st{display:inline-flex;align-items:center;gap:6px;font:800 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+#ufc .trip .st i{display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px solid var(--ink)}
+#ufc .trip .st.g i{background:var(--win)} #ufc .trip .st.a i{background:var(--sun)} #ufc .trip .st.r i{background:var(--loss)}
 
 @media (max-width:640px){
   #ufc .fight{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 10px;padding:14px 0}
@@ -230,7 +235,18 @@
   const toDec = o => o == null ? null : (o > 0 ? 1 + o / 100 : 1 + 100 / -o);
   const BOOK = { FD: "FanDuel", DK: "DraftKings", CZR: "Caesars", MGM: "BetMGM", DraftKings: "DraftKings", Caesars: "Caesars", BetRivers: "BetRivers", best: "Best book" };
   const MK = { ML: "Moneyline", GTD: "Goes the distance", A_DEC: "Wins by decision", B_DEC: "Wins by decision", "O2.5": "Over 2.5 rounds", "O4.5": "Over 4.5 rounds", A_SUB: "Wins by submission", B_SUB: "Wins by submission" };
-  const TIER = { ML: "Moneyline", DEC_A: "Decision · KO fade", DEC_B: "Decision", A_DEC: "Decision", B_DEC: "Decision", GTD: "Goes the distance", "O4.5": "Over 4.5 rounds", A_SUB: "Submission", B_SUB: "Submission" };
+  const TIER = { ML: "Moneyline", DEC_A: "Decision · KO fade", DEC_B: "Decision", A_DEC: "Decision", B_DEC: "Decision", GTD: "Goes the distance", "O4.5": "Over 4.5 rounds", A_SUB: "Submission", B_SUB: "Submission",
+    PAPER_GTD: "Goes the distance · paused during the finish surge", PAPER_DEC_B: "Decision · not a KO fade",
+    // prop model v2 (shadow, paper only; rows before the Oct 26 review fix carry their market as the tier)
+    V2_GTD: "Prop model v2 · goes the distance", V2_DEC_A: "Prop model v2 · decision, KO fade", V2_DEC_B: "Prop model v2 · decision",
+    V2_A_DEC: "Prop model v2 · decision", V2_B_DEC: "Prop model v2 · decision" };
+  const isV2 = r => String(r.mk || "").startsWith("V2_");
+  // stake of a row in units (KO-fade decisions 0.5u since Oct 26; older rows carry their own su)
+  const suOf = r => r.su != null ? r.su : 1;
+  const suTxt = v => (+v).toFixed(v % 1 ? 1 : 0) + (v > 1 ? " units" : " unit");
+  // paper GTD: goes-the-distance picks logged while the finish-rate gate holds (trailing-100 finish rate >= 55% and
+  // league state >= 0.15); older paper rows have tier "GTD", newer ones "PAPER_GTD"
+  const paperTier = r => (r.mk === "GTD" ? "PAPER_GTD" : r.tier && String(r.tier).startsWith("PAPER_") ? r.tier : tierOf(r));
   const tierOf = r => r.tier || ((r.mk || "ML") === "ML" ? "ML" : r.mk);
   const barOf = r => tierOf(r) === "ML" ? null : 0.05;      // props: 5 pts for every tier (Oct 19); ML: EV rule
   const isProp = r => (r.mk || "ML") !== "ML";
@@ -325,6 +341,10 @@
     if (!all) { el.innerHTML = `<div class="lab-head"><h2>Beating the close</h2><span class="note">closing lines appear after each card is graded</span></div>`; return; }
     const tile = (lbl, s) => !s ? "" : `<div><small>${lbl}</small><b class="${s.m >= 0 ? "pos" : "neg"}">${clvTxt(s.m)}</b><span>${s.beat} of ${s.n} beat the close${s.n >= 10 ? ` · ±${(100 * 1.96 * s.se).toFixed(1)}%` : ""}</span></div>`;
     const sh = g.filter(r => (r.tier || r.mk) === "ML" && r.cs != null), shm = sh.length ? sh.reduce((a, r) => a + r.cs, 0) / sh.length : null;
+    // same-book close (cb): our price against the closing line of the book we bet at (Oct 26 review: the honest prop read)
+    const sbTile = (lbl, x) => { if (!x.length) return ""; const m = x.reduce((a, r) => a + r.cb, 0) / x.length;
+      return `<div><small>${lbl}</small><b class="${m >= 0 ? "pos" : "neg"}">${clvTxt(m)}</b><span>${x.filter(r => r.cb > 0).length} of ${x.length} beat their book's close</span></div>` };
+    const sbML = rows.filter(r => !isProp(r) && r.cb != null), sbP = rows.filter(r => isProp(r) && r.cb != null);
     // verdict on moneylines only: prop CLV starts around -10% from the book's margin even on good bets
     const V = ml || { n: 0, m: 0, se: 0 };
     const z = V.se > 0 ? V.m / V.se : 0, verdict = V.n < 30 ? `Too early to call: about 85 moneyline picks are needed to tell +3% CLV from zero (${V.n} so far).`
@@ -333,9 +353,42 @@
     const bars = last.map((r, i) => { const h = Math.abs(r.clv) / mx * (H / 2 - 4); const y = r.clv > 0 ? H / 2 - h : H / 2;
       return `<rect x="${(i * bw + bw * 0.15).toFixed(2)}" y="${y.toFixed(2)}" width="${(bw * 0.7).toFixed(2)}" height="${Math.max(h, 1).toFixed(2)}" rx="1" fill="${r.clv > 0 ? "var(--win)" : "var(--loss)"}"><title>${esc(r.lab || r.pk)} ${clvTxt(r.clv)}</title></rect>` }).join("");
     el.innerHTML = `<div class="lab-head"><h2>Beating the close</h2><span class="note">price taken × fair closing chance − 1 · the edge that shows before results do</span></div>
-      <div class="kpis">${tile("All picks", all)}${tile("Moneylines", ml)}${shm == null ? "" : `<div><small>Moneylines vs Pinnacle</small><b class="${shm >= 0 ? "pos" : "neg"}">${clvTxt(shm)}</b><span>${sh.filter(r => r.cs > 0).length} of ${sh.length} beat the sharp close</span></div>`}${tile("Props", pr)}${pmv == null ? "" : `<div><small>Props line move</small><b class="${pmv >= 0 ? "pos" : "neg"}">${pmv >= 0 ? "+" : "−"}${Math.abs(pmv).toFixed(1)} pts</b><span>${pm.filter(r => r.mv > 0).length} of ${pm.length} moved our way</span></div>`}</div>
+      <div class="kpis">${tile("All picks", all)}${tile("Moneylines", ml)}${shm == null ? "" : `<div><small>Moneylines vs Pinnacle</small><b class="${shm >= 0 ? "pos" : "neg"}">${clvTxt(shm)}</b><span>${sh.filter(r => r.cs > 0).length} of ${sh.length} beat the sharp close</span></div>`}${tile("Props", pr)}${pmv == null ? "" : `<div><small>Props line move</small><b class="${pmv >= 0 ? "pos" : "neg"}">${pmv >= 0 ? "+" : "−"}${Math.abs(pmv).toFixed(1)} pts</b><span>${pm.filter(r => r.mv > 0).length} of ${pm.length} moved our way</span></div>`}${sbTile("Moneylines vs own book", sbML)}${sbTile("Props vs own book", sbP)}</div>
       ${bars ? `<div class="clvbars"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" width="100%" height="56"><line x1="0" y1="${H / 2}" x2="${W}" y2="${H / 2}" stroke="var(--line)" stroke-width="1"/>${bars}</svg><span class="note">each bar is one pick, oldest to newest · above the line = beat the close</span></div>` : ""}
-      <p class="note">${verdict} Moneylines are measured against the de-vigged BestFightOdds close; props against the last pre-fight snapshot of every book. Closing-line value is the best early read on whether a betting edge is real. For props, judge by line move: their CLV starts around −10% from the book's margin alone, even when the bet is good.</p>`;
+      <p class="note">${verdict} Moneylines are measured against the de-vigged BestFightOdds close; props against the last pre-fight snapshot of every book. "Own book" compares the price taken with the close at the same book (de-vigged where it quotes both sides or all six method props; otherwise price against closing price, which flatters by about half the book's margin). Closing-line value is the best early read on whether a betting edge is real. For props, judge by line move: their CLV starts around −10% from the book's margin alone, even when the bet is good.</p>`;
+  }
+
+  // Tripwires (Oct 26 review). Only bets posted under the rules of Oct 19 or later count. Green = fine or too early to
+  // tell, amber = review the model, red = pause betting that market. Computed from ufc_live.json (clv, mv, u, rv).
+  const TRIP_FROM = "2026-10-19";
+  function tripPanel(el, rows) {
+    const g = rows.filter(r => r.rv && r.rv >= TRIP_FROM && (r.r === "W" || r.r === "L")).sort(bydate);
+    const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+    const ml = g.filter(r => !isProp(r)), mlc = ml.filter(r => r.clv != null), pm = g.filter(r => isProp(r) && r.mv != null);
+    const c = avg(mlc.map(r => r.clv)), nC = mlc.length, nML = ml.length, uML = ml.reduce((a, r) => a + (r.u || 0), 0);
+    const mv = avg(pm.map(r => r.mv)), nP = pm.length;
+    let cum = 0, pk = 0, dd = 0; g.forEach(r => { cum += r.u || 0; pk = Math.max(pk, cum); dd = Math.max(dd, pk - cum) });
+    const T = [];
+    { let s = "g", why = nC < 20 ? `too early to call (${nC} of 20 bets)` : "average CLV is zero or better";
+      if (nC >= 40 && c < 0) { s = "r"; why = "average CLV below zero after 40+ bets" }
+      else if (nC >= 20 && c < -0.01) { s = "r"; why = "average CLV below −1% after 20+ bets" }
+      else if (nC >= 20 && c < 0) { s = "a"; why = "average CLV below zero after 20+ bets" }
+      T.push(["Moneyline CLV", c == null ? "–" : clvTxt(c), nC, s, why, "Review below 0 after 20 bets. Pause below 0 after 40, or below −1% after 20."]) }
+    { const q = Math.sqrt(nML), rl = -1.15 * q, pl = -1.65 * q; let s = "g", why = nML ? `inside the normal range (review line ${rl.toFixed(1)}u)` : "no graded moneylines yet";
+      if (nML && uML < pl && c != null && c <= 0) { s = "r"; why = `below ${pl.toFixed(1)}u with CLV not positive` }
+      else if (nML && uML < rl) { s = "a"; why = `below the review line of ${rl.toFixed(1)}u` }
+      T.push(["Moneyline units", nML ? fmtU(uML) : "–", nML, s, why, "Review below −1.15 × √bets units. Pause below −1.65 × √bets units when CLV is 0 or worse."]) }
+    { let s = "g", why = nP < 15 ? `too early to call (${nP} of 15 bets)` : "closing fair lines moved our way on average";
+      if (nP >= 30 && mv <= 0) { s = "r"; why = "fair line didn't move our way after 30+ bets" }
+      else if (nP >= 15 && mv <= 0) { s = "a"; why = "fair line didn't move our way after 15+ bets" }
+      T.push(["Props line move", mv == null ? "–" : `${mv > 0 ? "+" : mv < 0 ? "−" : ""}${Math.abs(mv).toFixed(1)} pts`, nP, s, why, "Closing fair minus fair when posted. Review at 0 or worse after 15 bets, pause after 30."]) }
+    { const s = dd >= 25 ? "r" : dd >= 15 ? "a" : "g";
+      T.push(["Drawdown", dd ? `−${dd.toFixed(1)}u` : "0u", g.length, s, s === "g" ? "below 15 units from the peak" : `${dd.toFixed(1)} units below the peak`, "Review at 15 units below the peak, pause at 25."]) }
+    const LBL = { g: "OK", a: "Review", r: "Pause" }, worst = T.some(t => t[3] === "r") ? "r" : T.some(t => t[3] === "a") ? "a" : "g";
+    el.innerHTML = `<div class="lab-head"><h2>Tripwires</h2><span class="note">bets posted under the Oct 19 rules or later · ${g.length} graded · overall <span class="trip"><span class="st ${worst}"><i></i>${LBL[worst]}</span></span></span></div>
+      <div class="tbl trip"><table><thead><tr><th class="l">Check</th><th>Now</th><th>Bets</th><th class="l">Status</th><th class="l">Rule</th></tr></thead><tbody>
+      ${T.map(([n, v, k, s, why, rule]) => `<tr><td class="l"><b>${esc(n)}</b></td><td class="mono">${esc(v)}</td><td>${k}</td><td class="l"><span class="st ${s}" title="${esc(why)}"><i></i>${LBL[s]}</span><br><span class="note">${esc(why)}</span></td><td class="l"><span class="note">${esc(rule)}</span></td></tr>`).join("")}</tbody></table></div>
+      <p class="note">Set before the results come in, so a bad run can't talk us into or out of anything. Amber means look for a cause; red means stop betting that market until it's understood.</p>`;
   }
 
   function kpis(el, s, label) {
@@ -434,10 +487,10 @@
     : `DK ${u.bets}% bets · ${u.handle}% $`;
   function betRow(r, paper, side) {
     const t = tierOf(r), worst = paper || !pNow(r) ? null : minPrice(pNow(r), barOf(r)), bn = paper ? null : booksNow(r, side), dead = !paper && failsNow(r);
-    const badge = paper ? `<span class="tbadge paper">Paper · ${esc(TIER[t] || MK[r.mk] || t)}</span>` : `<span class="tbadge ${BADGE[t] || ""}">${esc(TIER[t] || t)}</span>`;
+    const badge = paper ? `<span class="tbadge paper">Paper · ${esc(TIER[paperTier(r)] || MK[r.mk] || t)}</span>` : `<span class="tbadge ${BADGE[t] || ""}">${esc(TIER[t] || t)}</span>${suOf(r) !== 1 ? `<span class="tbadge">${esc(suTxt(suOf(r)))}</span>` : ""}`;
     const sub = `${isProp(r) ? esc(r.op) : "vs " + esc(r.op)}${r.div ? " · " + esc(cap(r.div)) : ""}`;
     let line = "";
-    if (paper) line = `<span>Paper only: logged and graded, never staked</span>`;
+    if (paper) line = `<span>Paper only: logged and graded, never staked${paperTier(r) === "PAPER_GTD" ? " · goes-the-distance bets are paused while fights finish far more often than usual" : ""}</span>`;
     else {
       if (r.old_rules) line += `<span class="floor warn">Posted under the earlier rules${r.rv ? ` (${esc(r.rv)})` : ""} · kept on the record, may not qualify today</span>`;
       if (r.ck === "block" || r.ck === "caution") line += `<span class="floor warn">${r.ck === "block" ? "Check before betting" : "Heads up"}: ${esc(r.cn || "news flagged by the pre-bet check")}</span>`;
@@ -461,7 +514,7 @@
         <div><small>Market</small><b>${r.m != null ? am(fair(r.m)) : "–"}</b><span>${r.m != null ? pct0(r.m) + " fair" : "no fair line"}</span></div>
         <div><small>Worst price</small><b>${worst != null ? am(worst) : "–"}</b><span>still a bet</span></div></div>
       ${r.pub ? `<p class="pubsplit">${pubTxt(r.pub, true)}</p>` : ""}${nowHTML}${whyChart(r.why, r)}
-      <p class="note">${esc(dateTxt(r.d))}${r.ev ? " · " + esc(r.ev) : ""}${r.posted ? ` · posted ${esc(r.posted)} ET` : ""}${paper ? "" : " · 1 unit · posted picks stand and are graded at this price, even if the line moves"}</p></div></details>`;
+      <p class="note">${esc(dateTxt(r.d))}${r.ev ? " · " + esc(r.ev) : ""}${r.posted ? ` · posted ${esc(r.posted)} ET` : ""}${paper ? "" : ` · ${esc(suTxt(suOf(r)))} · posted picks stand and are graded at this price, even if the line moves`}</p></div></details>`;
   }
 
   // ---------------------------------------------------------------- fight rows
@@ -487,7 +540,7 @@
   function byCard(el, rows) {
     const g = new Map(); rows.forEach(r => { const k = r.d + "|" + (r.ev || "UFC"); if (!g.has(k)) g.set(k, []); g.get(k).push(r) });
     const ks = [...g.keys()].sort().reverse(), tot = stats(rows);
-    el.innerHTML = `<div class="lab-head"><h2>Card by card</h2><span class="note">1 unit a bet, graded at the posted price</span></div>
+    el.innerHTML = `<div class="lab-head"><h2>Card by card</h2><span class="note">1 unit a bet (KO-fade decisions 0.5 unit from Oct 26), graded at the posted price</span></div>
       <div class="tbl"><table class="cards-tbl"><thead><tr><th class="l">Card</th><th>Bets</th><th>W-L</th><th>Units</th></tr></thead><tbody>
       ${ks.map(k => { const [d, ev] = k.split("|"), s = stats(g.get(k)); return `<tr><td class="l" style="white-space:normal"><b>${esc(ev)}</b><br><span class="note">${esc(dateTxt(d))} · ${g.get(k).map(r => esc(tierOf(r) === "GTD" ? "Distance" : short(String(r.pk).replace(/ by (decision|submission|ko\/tko)$/i, "")) + (isProp(r) ? " dec" : " ML")) + " " + (r.r === "W" ? "W" : r.r === "L" ? "L" : "void")).join(", ")}</span></td><td>${s.n + s.v}</td><td class="mono">${s.w}-${s.l}</td><td class="${sgn(s.u)}"><b>${fmtU(s.u)}</b></td></tr>` }).join("")}
       ${ks.length > 1 ? `<tr class="tot"><td>All cards</td><td>${tot.n + tot.v}</td><td class="mono">${tot.w}-${tot.l}</td><td class="${sgn(tot.u)}">${fmtU(tot.u)}</td></tr>` : ""}</tbody></table></div>`;
@@ -607,7 +660,7 @@
 
   <section class="view" data-uview="today">
     <div><div class="kicker" id="ufc-kicker">UFC · moneylines and props</div><h1>Fight <em>night</em></h1>
-      <p class="lede" id="ufc-lede">Every bet is 1 unit. Take the listed price or better. Posted picks stand and are graded at the price they locked.</p>
+      <p class="lede" id="ufc-lede">Moneylines are 1 unit and KO-fade decision props 0.5 unit. Goes-the-distance picks are paper only while fights keep finishing far more often than usual. Take the listed price or better. Posted picks stand and are graded at the price they locked.</p>
       <div class="head-row"><div class="status" id="ufc-status"></div></div></div>
     <div id="ufc-picks"></div>
     <div id="ufc-teaser"></div>
@@ -622,17 +675,19 @@
 
   <section class="view" data-uview="live" hidden>
     <div><div class="kicker">Since October 2026 · real picks only</div><h1>2026 <em>live</em></h1>
-      <p class="lede">Every pick posted here, graded at the book and price shown when it locked, 1 unit each. Nothing from the backtest is mixed in.</p></div>
+      <p class="lede">Every pick posted here, graded at the book and price shown when it locked, at its stake: 1 unit, KO-fade decision props 0.5 unit from Oct 26. Nothing from the backtest is mixed in.</p></div>
+    <div class="panel" id="ufc-trip" hidden></div>
     <div class="panel" id="ufc-clv" hidden></div>
     <div class="panel" id="ufc-live-cards" hidden></div>
     <div id="ufc-live" class="ufc-views"></div>
+    <div class="panel flat prose"><h3>A note on the record</h3><p>Roberto Soldic by decision (+600, UFC 332, Oct 3) counts as a 6-unit win, but that pick had been withdrawn before the fight (one prop per fight; the goes-the-distance pick on the same bout stood). It was restored after the result because it was the bet Mark actually placed, and the goes-the-distance pick was voided instead. Graded strictly as posted, the live record would be about 3 units lower.</p></div>
     <div class="panel flat" id="ufc-paper" style="display:grid;gap:10px"></div>
   </section>
 
   <section class="view" data-uview="backtest" hidden>
     <div><div class="kicker">Out-of-sample backtest · 2023 to 2026</div><h1>The <em>ride</em> so far</h1>
       <p class="lede">Each year was predicted by models trained only on earlier fights, and every blend is fit only on earlier years, so bets start in 2023. Moneylines are graded at the better of FanDuel's and BetMGM's opening prices (BetMGM is about half the bets and isn't one of Mark's books; FanDuel alone beat the close by about 1.9%); props at the best closing price of FanDuel, DraftKings and Caesars. The card rule is applied in the order live picks lock: at most 5 a card, 2 moneylines, one prop per fight, 1 unit each. Simulated results, not a live record.</p>
-      <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>Treat the backtest as an upper bound. Its moneyline picks won far more often than even the model expected (78% vs 68%: luck, concentrated in underdog picks), about half the moneyline units come from a red-corner term, and about 45 rule choices were made on these same years. Prop picks won about as often as the model said, but a shuffled prop model and a no-model version do as well, so their return is a market quirk plus the finish-rate adjustment, not a demonstrated model edge. What the evidence supports: <b>moneylines roughly +1% to +3%</b> (their closing-line value) and <b>props unproven</b>. At about 100 bets a season, if moneylines earn +1-3% and props break even, 8 seasons in 10 land between roughly −14u and +17u, a typical season's worst drawdown is 9 to 21 units, and close to one season in two loses money. Closing-line value settles the question long before ROI does: about 85 moneyline picks to tell +3% CLV from zero.</p></div></div>
+      <div class="panel flat prose" style="margin-top:12px"><h3>Realistic live returns</h3><p>Treat the backtest as an upper bound, not an expectation. <b>Moneylines: expect about +2% to +3% a bet</b> (plausible range roughly −1% to +6%). The most realistic backtest version, FanDuel's first-run prices without the red-corner term, made +15% on 215 bets, and even that includes luck: its picks won about 10 points more often than the closing line implied, while their closing-line value was only about +2.6%. The production backtest's +23% is not something to expect live. <b>Props: no demonstrated edge since May 2026.</b> Their backtest return came from books underpricing fights that go the distance; since May 2026 fights have finished at a rate never seen before (about two in three) and that bias reversed. Goes-the-distance picks are paper only while the last 100 fights finish 55% of the time or more and the league finish-rate state is 0.15 or higher; KO-fade decision picks are staked at 0.5 unit; other decision picks stay on paper. Even with a real moneyline edge, swings are large: in earlier simulations (moneylines +1-3%, props break-even) a typical season's worst drawdown was 9 to 21 units and close to one season in two lost money. Closing-line value settles the question long before ROI does: about 85 moneyline picks to tell +3% CLV from zero, and the tripwires on the live tab say when to stop.</p></div></div>
     <div id="ufc-bt" class="ufc-views"></div>
   </section>
 
@@ -644,7 +699,7 @@
       <div class="panel stop"><h3>Ratings</h3><p>Our own Bradley-Terry rating, solved over the whole web of who beat whom and refit monthly, plus FightMatrix's three rating systems and division rank going into each fight. Adding FightMatrix cut the win model's error noticeably.</p></div>
       <div class="panel stop"><h3>Two models</h3><p>A win model (LightGBM plus logistic regression on about 85 inputs, calibrated on earlier years) and a prop model that reads how each fighter wins and loses: KO, submission and decision rates over his whole career, how fast, how recently, durability, striking, age and reach. Every fight is fed both ways, so the model itself is corner-blind; calibration then adds a small red-corner term (red has won 57% since 2016) when corners are known, and about half the moneyline backtest units come from it.</p></div>
       <div class="panel stop"><h3>Market blend</h3><p>Neither model is bet raw. Each is blended with the book's own price, with weights fit on earlier years for that book and how long the line has been up. The model earns weight only where it beats the market on its own.</p></div>
-      <div class="panel stop"><h3>The card</h3><p>Moneylines need an expected value of 5% or more (model chance × decimal price − 1) at +400 or shorter, in a market of at least two independent books. Props need 5 points of edge: goes-the-distance, and decisions where the model rates that fighter's KO chance 5+ points below the market ("KO fade"); other decision picks are logged on paper only. Prop chances are shifted by how often fights have been finishing lately versus what the market expected (not applied to 5-round fights). At most 5 bets a card, 2 moneylines, 3 of a prop type and one prop per fight (goes-the-distance first). Every bet is 1 unit.</p></div>
+      <div class="panel stop"><h3>The card</h3><p>Moneylines need an expected value of 5% or more (model chance × decimal price − 1) at +400 or shorter, in a market of at least two independent books. Props need 5 points of edge: goes-the-distance, and decisions where the model rates that fighter's KO chance 5+ points below the market ("KO fade"); other decision picks are logged on paper only, and so is goes-the-distance while the last 100 fights finish 55%+ of the time and the league finish-rate state is 0.15+. Prop chances are shifted by how often fights have been finishing lately versus what the market expected (not applied to 5-round fights). At most 5 bets a card, 2 moneylines, 3 of a prop type and one prop per fight (goes-the-distance first). Moneylines are 1 unit, KO-fade decisions 0.5 unit.</p></div>
       <div class="panel stop"><h3>Posted picks stand</h3><p>Picks lock the first time they qualify, at FanDuel, DraftKings (prices from The Odds API) or Caesars, whichever pays best. Once posted they are graded at that price even if the line, the model or the rules change; a pick posted under an earlier rule set is marked as such. Only a cancelled fight or a replacement opponent withdraws one.</p></div>
     </div>
     <div class="grid2">
@@ -652,7 +707,8 @@
         <li>Fights with a UFC debutant: too little to go on.</li>
         <li>KO and submission props. Books mark them up 12% to 35% over fair, more than the model ever disagrees with the market. Over 10,000 angle and matchup combinations were checked; none beat FanDuel's vig.</li>
         <li>Unders and early-round totals. Every pocket tested lost or broke even.</li>
-        <li>Two props on one fight, or more than 5 bets on one card, even when more qualify.</li></ul></div>
+        <li>Two props on one fight, or more than 5 bets on one card, even when more qualify.</li>
+        <li>Goes-the-distance, for now: logged on paper while fights finish far more often than the market's history (trailing-100 finish rate 55%+).</li></ul></div>
       <div class="panel flat prose"><h3>How the backtest stayed honest</h3><ul>
         <li>Walk-forward: each year predicted by models trained only on earlier years.</li>
         <li>Graded at real prices with juice: the better of FanDuel/BetMGM openers for moneylines, FanDuel/DraftKings/Caesars closing prices for props (closing prices flatter props; at prices you could bet live they ran about 10 points lower). Every blend and calibration is fit only on earlier years.</li>
@@ -662,7 +718,7 @@
         <li>Flat 1 unit on every bet, the same as live.</li></ul></div>
     </div>
     <div class="panel flat prose"><h3>Paper tracked, not bet</h3><p>Two angles that looked good but don't have enough history yet: over 4.5 rounds in 5-round fights at FanDuel (113 bets, +18%, every year positive), and submissions where the model beats FanDuel's price by 3+ points against an opponent who has been submitted before (151 bets, +40%, but statistically thin). They're logged on the live tab and graded, but never staked.</p></div>
-    <div class="panel flat prose"><h3>What to expect live</h3><p>The thresholds, the KO-fade cutoff and the card caps were chosen on the same seasons they were tested on, so expect live results well below the backtest. Books can also close the decision bias at any time. Opening lines move fast: if a pick's price is gone, the "take or better" number on each bet tells you where it stops being a bet, and the details show where each of your three books stands.</p></div>
+    <div class="panel flat prose"><h3>What to expect live</h3><p>Moneylines: an edge of about +2% to +3% a bet, not the backtest's +23%. Props: no demonstrated edge since May 2026, so goes-the-distance is on paper during the finish surge and KO-fade decisions are bet at half stake. The thresholds, the KO-fade cutoff and the card caps were chosen on the same seasons they were tested on, so expect live results well below the backtest. Books can also close the decision bias at any time. Opening lines move fast: if a pick's price is gone, the "take or better" number on each bet tells you where it stops being a bet, and the details show where each of your three books stands.</p></div>
   </section>
 
   <section class="view" data-uview="hood" hidden>
@@ -706,12 +762,12 @@
 
       <div class="panel eq"><h3>07 · Decision rule and card</h3>
         ${M(`<mtext>bet</mtext><mo>⇔</mo><mi>p</mi><mo>−</mo><mfrac><mn>1</mn><mi>d</mi></mfrac><mo>≥</mo><msub><mi>τ</mi><mtext>type</mtext></msub><mo>,</mo><mspace width=".6em"/><msub><mi>τ</mi><mtext>prop</mtext></msub><mo>=</mo><mn>.05</mn><mo>,</mo><mspace width=".8em"/><mtext>ML: bet</mtext><mo>⇔</mo><mi>p</mi><mi>d</mi><mo>−</mo><mn>1</mn><mo>≥</mo><mn>.05</mn>`)}
-        <p class="note">Price caps: d ≤ 5 (+400) for moneylines, d ≤ 11 (+1000) for props. No debutants; moneylines need two independent books (Unibet and BetRivers share one feed). Non-KO-fade decisions are paper only. Prop chances are first shifted by the league finish-rate state: logit p<sub>GTD</sub> −= 0.5·dev, where dev is the gap between the recent finish rate and the market's (weighted averages with a 100-fight half-life) relative to the 2021+ gap, decisions scaling with the GTD change (not applied to 5-rounders). Per card, rank KO fades first, then by expected value p·d − 1; keep at most 5, at most 2 moneylines, 3 of any other type and one prop per fight (goes-the-distance, then either fighter's decision). Every bet is 1 unit. Picks lock the first time they qualify and stand; earlier locks count toward the caps.</p></div>
+        <p class="note">Price caps: d ≤ 5 (+400) for moneylines, d ≤ 11 (+1000) for props. No debutants; moneylines need two independent books (Unibet and BetRivers share one feed). Non-KO-fade decisions are paper only. Prop chances are first shifted by the league finish-rate state: logit p<sub>GTD</sub> −= 0.5·dev, where dev is the gap between the recent finish rate and the market's (weighted averages with a 100-fight half-life) relative to the 2021+ gap, decisions scaling with the GTD change (not applied to 5-rounders). Per card, rank KO fades first, then by expected value p·d − 1; keep at most 5, at most 2 moneylines, 3 of any other type and one prop per fight (goes-the-distance, then either fighter's decision). Goes-the-distance is paper only while the trailing-100 finish rate is ≥ 55% and dev ≥ 0.15. Moneylines 1 unit, KO-fade decisions 0.5 unit. Picks lock the first time they qualify and stand; earlier locks count toward the caps.</p></div>
 
       <div class="panel eq"><h3>08 · Staking, grading and CLV</h3>
         <p>Profit per unit at decimal price <i>d</i>, and closing-line value with the de-vigged closing probability <i>c</i>:</p>
         ${M(`<mi>π</mi><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mi>s</mi><mo>(</mo><mi>d</mi><mo>−</mo><mn>1</mn><mo>)</mo></mtd><mtd><mtext>win</mtext></mtd></mtr><mtr><mtd><mo>−</mo><mi>s</mi></mtd><mtd><mtext>loss</mtext></mtd></mtr></mtable></mrow><mspace width="1.4em"/><mtext>CLV</mtext><mo>=</mo><mi>c</mi><mo>·</mo><mi>d</mi><mo>−</mo><mn>1</mn>`)}
-        <p class="note">Draws, no contests and cancelled fights are void. Staking is flat: 1 unit a bet. Bigger stakes on the strongest picks (1.5u) added 1.5-3 points of ROI in backtests, at a larger drawdown; quarter Kelly made more units only by risking twice as much.</p></div>
+        <p class="note">Draws, no contests and cancelled fights are void. Staking: 1 unit a bet, except KO-fade decision props at 0.5 unit since Oct 26, 2026 (the backtest is shown at 1 unit). Bigger stakes on the strongest picks (1.5u) added 1.5-3 points of ROI in backtests, at a larger drawdown; quarter Kelly made more units only by risking twice as much.</p></div>
     </div>
   </section>`;
 
@@ -751,13 +807,15 @@
     Promise.all([getJSON("ufc_live.json"), getJSON("ufc_paper.json")]).then(([live, paper]) => {
       const all = live || [], wd = all.filter(isWithdrawn).length;
       live = all.filter(r => !isWithdrawn(r) && ["W", "L", "D", "NC", "Void"].includes(r.r)).sort(bydate);
+      const tp = $("#ufc-trip"); tp.hidden = false; tripPanel(tp, live);
       if (live.length) { const cv = $("#ufc-clv"); cv.hidden = false; clvPanel(cv, live); const lc = $("#ufc-live-cards"); lc.hidden = false; byCard(lc, live); lab($("#ufc-live"), live, "ulv", "since Oct 2026");
         if (wd) lc.insertAdjacentHTML("beforeend", `<p class="note">${wd} withdrawn pick${wd > 1 ? "s" : ""} (cancelled fight or new opponent) not counted.</p>`) }
       else getJSON("ufc_today.json").then(t => { const n = ((t && t.picks) || []).length; $("#ufc-live").innerHTML = `<div class="banner"><b>Boarding</b><span>No graded picks yet. The record starts with the first locked pick and grows after each event.${n ? ` ${n} pick${n > 1 ? "s are" : " is"} locked and waiting on the fight card.` : ""}</span></div>` });
       const pAll = paper || [], pw = pAll.filter(isWithdrawn).length;
-      paper = pAll.filter(r => !isWithdrawn(r)).sort(bydate).reverse(); const g = paper.filter(r => r.r === "W" || r.r === "L"), s = stats(g);
-      $("#ufc-paper").innerHTML = `<h3>Paper tracked, not bet</h3><p class="note" style="font-size:14px;max-width:72ch">Over 4.5 rounds in 5-round fights, and submissions against opponents who have been submitted before. Graded at 1 unit for the record only.${g.length ? ` So far <b>${s.w}-${s.l}, ${fmtU(s.u)}</b>.` : " Nothing graded yet."}${pw ? ` ${pw} withdrawn paper pick${pw > 1 ? "s" : ""} hidden.` : ""}</p>
-        ${paper.length ? `<div class="tbl"><table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Fight</th><th>Price</th><th>Result</th><th>Units</th></tr></thead><tbody>${paper.slice(0, 40).map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.lab || r.pk)}</b></td><td class="l">${esc(r.op)}</td><td class="mono">${am(r.o)}</td><td>${r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span>` : '<span class="tag small">Open</span>'}</td><td class="${sgn(r.u || 0)}">${r.r ? fmtU(r.u || 0) : "–"}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
+      paper = pAll.filter(r => !isWithdrawn(r)).sort(bydate).reverse(); const g = paper.filter(r => !isV2(r) && (r.r === "W" || r.r === "L")), s = stats(g);
+      const g2 = paper.filter(r => isV2(r) && (r.r === "W" || r.r === "L")), s2 = stats(g2);
+      $("#ufc-paper").innerHTML = `<h3>Paper tracked, not bet</h3><p class="note" style="font-size:14px;max-width:72ch">Over 4.5 rounds in 5-round fights, submissions against opponents who have been submitted before, decision picks without a KO fade, and goes-the-distance picks while that bet is paused for the finish surge. Graded at 1 unit for the record only.${g.length ? ` So far <b>${s.w}-${s.l}, ${fmtU(s.u)}</b>.` : " Nothing graded yet."}${g2.length ? ` Prop model v2 (a shadow model on trial, often the same fights): <b>${s2.w}-${s2.l}, ${fmtU(s2.u)}</b>, not included above.` : ""}${pw ? ` ${pw} withdrawn paper pick${pw > 1 ? "s" : ""} hidden.` : ""}</p>
+        ${paper.length ? `<div class="tbl"><table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Type</th><th class="l">Fight</th><th>Price</th><th>Result</th><th>Units</th></tr></thead><tbody>${paper.slice(0, 40).map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.lab || r.pk)}</b></td><td class="l">${esc(TIER[paperTier(r)] || MK[r.mk] || r.mk)}</td><td class="l">${esc(r.op)}</td><td class="mono">${am(r.o)}</td><td>${r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span>` : '<span class="tag small">Open</span>'}</td><td class="${sgn(r.u || 0)}">${r.r ? fmtU(r.u || 0) : "–"}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
     }) };
   route(); if (onShow[cur]) onShow[cur]();
 
@@ -783,7 +841,7 @@
     let html = "";
     if (picks.length) {
       const by = {}; picks.forEach(r => { const t = TIER[tierOf(r)] || tierOf(r); by[t] = (by[t] || 0) + 1 });
-      html += `<div class="slip"><div class="slipsum"><span><b>${picks.length}</b>bet${picks.length === 1 ? "" : "s"}</span><span><b>1u</b>each</span><span>${Object.entries(by).map(([k, v]) => `${v} ${esc(SHORT[k] || k.toLowerCase())}${v > 1 && !/s$/.test(SHORT[k] || k) && (SHORT[k] || "") !== "KO fade" ? "s" : ""}`).join(" · ")}</span><button class="ghost" id="ufc-copy">Copy bets</button></div>
+      html += `<div class="slip"><div class="slipsum"><span><b>${picks.length}</b>bet${picks.length === 1 ? "" : "s"}</span>${(() => { const ss = [...new Set(picks.map(suOf))].sort((a, b) => b - a); return ss.length === 1 ? `<span><b>${ss[0]}u</b>each</span>` : `<span><b>${picks.reduce((a, r) => a + suOf(r), 0).toFixed(1).replace(/\.0$/, "")}u</b>total · ${ss.map(v => `${picks.filter(r => suOf(r) === v).length} at ${v}u`).join(", ")}</span>` })()}<span>${Object.entries(by).map(([k, v]) => `${v} ${esc(SHORT[k] || k.toLowerCase())}${v > 1 && !/s$/.test(SHORT[k] || k) && (SHORT[k] || "") !== "KO fade" ? "s" : ""}`).join(" · ")}</span><button class="ghost" id="ufc-copy">Copy bets</button></div>
         ${[...groups.entries()].map(([k, g]) => { const [d, ev] = k.split("|"); return evHead(d, ev, g) + g.map(r => betRow(r, false, sideOf.get(r.d + "|" + r.pk))).join("") }).join("")}</div>`;
     } else {
       const nx = evs[0];
@@ -792,8 +850,8 @@
     if (openPaper.length) html += `<details class="more" style="margin-top:14px"><summary>Paper tracked (${openPaper.length})<span>angles logged and graded for the record, never staked</span></summary><div class="inner"><div class="slip">${openPaper.map(r => betRow(r, true)).join("")}</div></div></details>`;
     $("#ufc-picks").innerHTML = html;
     const cp = $("#ufc-copy"); if (cp) cp.onclick = () => {
-      const L = ["UFC picks · 1 unit each · take the listed price or better"];
-      groups.forEach((g, k) => { const [d, ev] = k.split("|"); L.push("", `${ev} · ${dateTxt(d)}`); g.filter(r => !failsNow(r)).forEach((r, i) => { const w = pNow(r) ? minPrice(pNow(r), barOf(r)) : null; L.push(`${i + 1}. ${r.lab || r.pk}${isProp(r) ? "" : " ML"} ${am(r.o)} (${BOOK[r.bk] || r.bk})${w != null ? ` · good to ${am(w)}` : ""}${isProp(r) ? ` · ${r.op}` : ` · vs ${r.op}`}`) }) });
+      const L = ["UFC picks · 1 unit each unless marked · take the listed price or better"];
+      groups.forEach((g, k) => { const [d, ev] = k.split("|"); L.push("", `${ev} · ${dateTxt(d)}`); g.filter(r => !failsNow(r)).forEach((r, i) => { const w = pNow(r) ? minPrice(pNow(r), barOf(r)) : null; L.push(`${i + 1}. ${r.lab || r.pk}${isProp(r) ? "" : " ML"} ${am(r.o)} (${BOOK[r.bk] || r.bk})${suOf(r) !== 1 ? ` · ${suOf(r)}u` : ""}${w != null ? ` · good to ${am(w)}` : ""}${isProp(r) ? ` · ${r.op}` : ` · vs ${r.op}`}`) }) });
       copyText(L.join("\n"), cp, "Copy bets") };
     // full card: one collapsible per event
     $("#ufc-cards").innerHTML = evs.length ? `<div class="sec-h"><h2>Full card</h2><span class="note">Every fight with a line: prices, model chances, method splits, what the model weighs</span></div>` + evs.map(e => { const np = picks.filter(p => p.d === e.d).length;
