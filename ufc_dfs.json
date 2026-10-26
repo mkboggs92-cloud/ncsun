@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-26 10:53",
+ "updated": "2026-10-26 17:00",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -62,9 +62,44 @@
    "event": "UFC Fight Night: Moicano vs. Nolan",
    "date": "2026-10-31",
    "cap": 50000,
-   "salaries": "pending",
-   "lineups": [],
-   "lock_utc": null,
+   "salaries": "live",
+   "lineups": [
+    {
+     "rank": 1,
+     "label": "Best lineup",
+     "ids": [
+      "23dec7c47cb418f8",
+      "85497ffd934ecf7e",
+      "5d495dec23d7c68e",
+      "b6452706b373eea1",
+      "c06d6b18862f9a53",
+      "7eaa5e31c2dd86aa"
+     ],
+     "salary": 50000,
+     "proj": 435.1,
+     "p10": 310.7,
+     "p90": 559.5,
+     "note": "Highest projected total under the $50,000 cap, at most one fighter per fight."
+    },
+    {
+     "rank": 2,
+     "label": "Second lineup",
+     "ids": [
+      "184f6ec4ee712e9f",
+      "23dec7c47cb418f8",
+      "85497ffd934ecf7e",
+      "b6452706b373eea1",
+      "902ec2cc48c8ae8a",
+      "7eaa5e31c2dd86aa"
+     ],
+     "salary": 50000,
+     "proj": 432.9,
+     "p10": 312.3,
+     "p90": 553.5,
+     "note": "Best projected total that differs from the first lineup by at least 2 fighters."
+    }
+   ],
+   "lock_utc": "2026-10-31 21:00",
    "pool": [
     {
      "id": "b6452706b373eea1",
@@ -74,14 +109,14 @@
      "date": "2026-10-31",
      "event": "UFC Fight Night: Moicano vs. Nolan",
      "rounds": 5,
-     "proj": 73.2,
-     "p10": 8.1,
-     "p90": 121.7,
-     "p_win": 0.549,
-     "p_ko": 0.213,
-     "p_sub": 0.182,
-     "p_dec": 0.153,
-     "p_r1": 0.153,
+     "proj": 73.9,
+     "p10": 8.5,
+     "p90": 122.5,
+     "p_win": 0.558,
+     "p_ko": 0.217,
+     "p_sub": 0.185,
+     "p_dec": 0.156,
+     "p_r1": 0.155,
      "mins": 13.6,
      "sig": 43.8,
      "td": 1.46,
@@ -89,9 +124,16 @@
      "kd": 0.27,
      "pts_win": 108.4,
      "pts_loss": 30.3,
-     "ml": -110,
+     "ml": -115,
      "debut": false,
-     "in": []
+     "salary": 8000,
+     "dk_id": "44677875",
+     "dk_name": "Renato Moicano",
+     "value": 9.24,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "6c3b2525436cf5d4",
@@ -101,14 +143,14 @@
      "date": "2026-10-31",
      "event": "UFC Fight Night: Moicano vs. Nolan",
      "rounds": 5,
-     "proj": 62.5,
-     "p10": 6.0,
-     "p90": 116.7,
-     "p_win": 0.451,
-     "p_ko": 0.198,
-     "p_sub": 0.113,
-     "p_dec": 0.139,
-     "p_r1": 0.12,
+     "proj": 61.8,
+     "p10": 5.8,
+     "p90": 116.4,
+     "p_win": 0.442,
+     "p_ko": 0.195,
+     "p_sub": 0.111,
+     "p_dec": 0.136,
+     "p_r1": 0.118,
      "mins": 13.6,
      "sig": 48.4,
      "td": 1.46,
@@ -116,8 +158,12 @@
      "kd": 0.19,
      "pts_win": 105.8,
      "pts_loss": 26.9,
-     "ml": -110,
+     "ml": -105,
      "debut": false,
+     "salary": 8200,
+     "dk_id": "44677874",
+     "dk_name": "Tom Nolan",
+     "value": 7.54,
      "in": []
     },
     {
@@ -145,6 +191,10 @@
      "pts_loss": 20.7,
      "ml": 215,
      "debut": false,
+     "salary": 7300,
+     "dk_id": "44677876",
+     "dk_name": "Yana Santos",
+     "value": 4.55,
      "in": []
     },
     {
@@ -172,6 +222,10 @@
      "pts_loss": 31.7,
      "ml": -265,
      "debut": false,
+     "salary": 8900,
+     "dk_id": "44677877",
+     "dk_name": "Luana Santos",
+     "value": 9.03,
      "in": []
     },
     {
@@ -197,8 +251,12 @@
      "kd": 0.18,
      "pts_win": 89.7,
      "pts_loss": 24.7,
-     "ml": -285,
+     "ml": -298,
      "debut": false,
+     "salary": 9000,
+     "dk_id": "44677882",
+     "dk_name": "Jean-Paul Lebosnoyani",
+     "value": 7.71,
      "in": []
     },
     {
@@ -224,8 +282,12 @@
      "kd": 0.18,
      "pts_win": 95.7,
      "pts_loss": 26.4,
-     "ml": 230,
+     "ml": 240,
      "debut": false,
+     "salary": 7200,
+     "dk_id": "44677883",
+     "dk_name": "Farman Hasanov",
+     "value": 6.68,
      "in": []
     },
     {
@@ -253,7 +315,13 @@
      "pts_loss": 26.8,
      "ml": -245,
      "debut": false,
-     "in": []
+     "salary": 8700,
+     "dk_id": "44677892",
+     "dk_name": "Francis Marshall",
+     "value": 8.82,
+     "in": [
+      1
+     ]
     },
     {
      "id": "6142edbd477d20c9",
@@ -280,6 +348,10 @@
      "pts_loss": 21.3,
      "ml": 200,
      "debut": false,
+     "salary": 7500,
+     "dk_id": "44677893",
+     "dk_name": "Dakota Hope",
+     "value": 4.8,
      "in": []
     },
     {
@@ -307,6 +379,10 @@
      "pts_loss": 26.2,
      "ml": 230,
      "debut": false,
+     "salary": 7000,
+     "dk_id": "44677879",
+     "dk_name": "Talita Alencar",
+     "value": 5.81,
      "in": []
     },
     {
@@ -334,6 +410,10 @@
      "pts_loss": 27.0,
      "ml": -285,
      "debut": false,
+     "salary": 9200,
+     "dk_id": "44677878",
+     "dk_name": "Piera Rodriguez",
+     "value": 8.2,
      "in": []
     },
     {
@@ -361,7 +441,13 @@
      "pts_loss": 22.2,
      "ml": -170,
      "debut": false,
-     "in": []
+     "salary": 8500,
+     "dk_id": "44677880",
+     "dk_name": "Rodrigo Sezinando",
+     "value": 8.68,
+     "in": [
+      1
+     ]
     },
     {
      "id": "feef5f8f5629e5e7",
@@ -388,6 +474,10 @@
      "pts_loss": 21.7,
      "ml": 142,
      "debut": false,
+     "salary": 7700,
+     "dk_id": "44677881",
+     "dk_name": "Theodor Berggren",
+     "value": 5.88,
      "in": []
     },
     {
@@ -415,7 +505,13 @@
      "pts_loss": 26.8,
      "ml": -650,
      "debut": true,
-     "in": []
+     "salary": 9600,
+     "dk_id": "44677872",
+     "dk_name": "Lucia Szabova",
+     "value": 9.36,
+     "in": [
+      2
+     ]
     },
     {
      "id": "2c5f5749569eef66",
@@ -442,6 +538,10 @@
      "pts_loss": 18.4,
      "ml": 470,
      "debut": true,
+     "salary": 6600,
+     "dk_id": "44677873",
+     "dk_name": "Tainara Lisboa",
+     "value": 3.92,
      "in": []
     },
     {
@@ -467,9 +567,16 @@
      "kd": 0.18,
      "pts_win": 95.0,
      "pts_loss": 17.5,
-     "ml": 250,
+     "ml": 260,
      "debut": true,
-     "in": []
+     "salary": 6900,
+     "dk_id": "44677870",
+     "dk_name": "Nick Klein",
+     "value": 5.83,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "8a81a0707350c4a8",
@@ -494,8 +601,12 @@
      "kd": 0.25,
      "pts_win": 96.6,
      "pts_loss": 20.9,
-     "ml": -310,
+     "ml": -325,
      "debut": true,
+     "salary": 9300,
+     "dk_id": "44677871",
+     "dk_name": "Joe Kropschot",
+     "value": 8.0,
      "in": []
     },
     {
@@ -523,6 +634,10 @@
      "pts_loss": 16.7,
      "ml": -112,
      "debut": false,
+     "salary": 8300,
+     "dk_id": "44677887",
+     "dk_name": "Ode Osbourne",
+     "value": 6.71,
      "in": []
     },
     {
@@ -550,6 +665,10 @@
      "pts_loss": 22.3,
      "ml": -108,
      "debut": false,
+     "salary": 7900,
+     "dk_id": "44677886",
+     "dk_name": "Cody Durden",
+     "value": 7.1,
      "in": []
     },
     {
@@ -577,7 +696,13 @@
      "pts_loss": 26.5,
      "ml": 150,
      "debut": false,
-     "in": []
+     "salary": 7600,
+     "dk_id": "44677885",
+     "dk_name": "Julian Erosa",
+     "value": 7.68,
+     "in": [
+      2
+     ]
     },
     {
      "id": "d008d785f6347dc2",
@@ -604,6 +729,10 @@
      "pts_loss": 24.4,
      "ml": -180,
      "debut": false,
+     "salary": 8600,
+     "dk_id": "44677884",
+     "dk_name": "JeongYeong Lee",
+     "value": 7.85,
      "in": []
     },
     {
@@ -631,6 +760,10 @@
      "pts_loss": 16.3,
      "ml": 200,
      "debut": false,
+     "salary": 7400,
+     "dk_id": "44677888",
+     "dk_name": "Randy Brown",
+     "value": 4.72,
      "in": []
     },
     {
@@ -658,7 +791,14 @@
      "pts_loss": 28.5,
      "ml": -265,
      "debut": false,
-     "in": []
+     "salary": 8800,
+     "dk_id": "44677889",
+     "dk_name": "Jacobe Smith",
+     "value": 9.57,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "23dec7c47cb418f8",
@@ -685,7 +825,14 @@
      "pts_loss": 22.1,
      "ml": -295,
      "debut": false,
-     "in": []
+     "salary": 9100,
+     "dk_id": "44677891",
+     "dk_name": "Zach Reese",
+     "value": 9.48,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "9e50097a89442158",
@@ -712,6 +859,10 @@
      "pts_loss": 18.8,
      "ml": 220,
      "debut": false,
+     "salary": 7100,
+     "dk_id": "44677890",
+     "dk_name": "Mickey Gall",
+     "value": 4.65,
      "in": []
     }
    ]
