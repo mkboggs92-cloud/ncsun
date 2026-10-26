@@ -358,6 +358,29 @@
       <p class="note">${verdict} Moneylines are measured against the de-vigged BestFightOdds close; props against the last pre-fight snapshot of every book. "Own book" compares the price taken with the close at the same book (de-vigged where it quotes both sides or all six method props; otherwise price against closing price, which flatters by about half the book's margin). Closing-line value is the best early read on whether a betting edge is real. For props, judge by line move: their CLV starts around −10% from the book's margin alone, even when the bet is good.</p>`;
   }
 
+  // Public vs money (Oct 26): DraftKings ticket % and handle % from the last snapshot before each fight
+  // (ufc_public.json). Tracking only: nothing here changes a bet. The "no public picks" rule is a shadow rule on trial.
+  function publicPanel(el, P) {
+    if (!P || !P.n_fights) { el.innerHTML = `<div class="lab-head"><h2>Public vs money</h2><span class="note">DraftKings splits appear once logged fights are graded</span></div>`; return; }
+    const B = P.buckets || {}, roiTxt = v => (v >= 0 ? "+" : "−") + Math.abs(100 * v).toFixed(1) + "%";
+    const rowB = (lbl, sub, b) => !b || !b.n ? "" : `<tr><td class="l"><b>${lbl}</b><br><span class="note">${sub}</span></td><td class="mono">${b.n}</td><td class="mono">${b.w}-${b.l}</td><td class="mono">${pct0(b.win)}</td><td class="mono">${pct0(b.fair)}</td><td class="mono ${sgn(b.roi)}">${roiTxt(b.roi)}</td><td class="mono ${sgn(b.u)}">${fmtU(b.u)}</td></tr>`;
+    const pk = (P.picks || []), g = pk.filter(r => r.r === "W" || r.r === "L"), on = g.filter(r => r.public), off = g.filter(r => !r.public);
+    const rec = x => { const w = x.filter(r => r.r === "W").length, u = x.reduce((a, r) => a + (r.u || 0), 0), c = x.filter(r => r.clv != null), cm = c.length ? c.reduce((a, r) => a + r.clv, 0) / c.length : null;
+      return `${w}-${x.length - w}${cm == null ? "" : ` · CLV ${clvTxt(cm)}`}` };
+    const K = P.kalshi || {}, T = P.veto_tix || 70, tot = g.reduce((a, r) => a + (r.u || 0), 0), vet = off.reduce((a, r) => a + (r.u || 0), 0);
+    el.innerHTML = `<div class="lab-head"><h2>Public vs money</h2><span class="note">DraftKings tickets % and money % · last snapshot before each fight · ${P.n_fights} graded fights · tracking only</span></div>
+      <div class="kpis"><div><small>Favorite's share of tickets</small><b>${Math.round(P.fav_tix)}%</b><span>vs ${Math.round(P.fav_cash)}% of the money</span></div>
+        <div><small>Our moneylines, public on us (${T}%+ tickets)</small><b class="${sgn(on.reduce((a, r) => a + (r.u || 0), 0))}">${on.length ? fmtU(on.reduce((a, r) => a + (r.u || 0), 0)) : "–"}</b><span>${on.length ? rec(on) : "none graded"}</span></div>
+        <div><small>Our moneylines, everything else</small><b class="${sgn(vet)}">${off.length ? fmtU(vet) : "–"}</b><span>${off.length ? rec(off) : "none graded"}</span></div>
+        <div><small>Shadow rule: skip public picks</small><b class="${sgn(vet - tot)}">${g.length ? (vet - tot >= 0 ? "+" : "−") + Math.abs(vet - tot).toFixed(1) + "u" : "–"}</b><span>vs the actual record, on ${on.length} skipped pick${on.length === 1 ? "" : "s"}</span></div></div>
+      <div class="tbl"><table class="pubt"><thead><tr><th class="l">Backing…</th><th>Fights</th><th>W-L</th><th>Won</th><th>Close said</th><th>ROI at DK</th><th>Units</th></tr></thead><tbody>
+        ${rowB("The public", "side with most tickets", B.tickets)}${rowB("The money", "side with most handle", B.money)}
+        ${rowB("Money over tickets by 10+", "bigger bettors' side (mostly underdogs)", B.sharp)}${rowB("Tickets over money by 10+", "small bettors' side (mostly favorites)", B.square)}
+        ${rowB("Against a 70%+ ticket crowd", "fading lopsided public", B.fade70)}${rowB("Every favorite", "for reference", B.fav)}</tbody></table></div>
+      ${pk.length ? `<div class="tbl"><table class="pubt"><thead><tr><th class="l">Date</th><th class="l">Our moneyline</th><th>Price</th><th>Tickets on us</th><th>Money on us</th><th>Result</th><th>Units</th></tr></thead><tbody>${pk.slice().sort((a, b) => a.d < b.d ? 1 : -1).map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.pk)}</b>${r.public ? ' <span class="tag small">public</span>' : ""}</td><td class="mono">${am(r.o)}</td><td class="mono">${r.tix}%</td><td class="mono">${r.cash}%</td><td>${r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span>` : '<span class="tag small">Open</span>'}</td><td class="${sgn(r.u || 0)}">${r.r ? fmtU(r.u || 0) : "–"}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      <p class="note">"Close said" is how often that side should have won at the de-vigged DraftKings price. So far every group has won about as often as the closing line said, so the ROI gaps are mostly the book's margin plus noise: with 25–50 fights a group's ROI is uncertain by roughly ±15–40%. The public is on the favorite in about 9 of 10 fights. Our moneylines are usually favorites, so most of them are "public picks". The shadow rule skips any moneyline with ${T}%+ of DraftKings tickets on it; it is tracked here and not applied. History says not to expect much: in Kalshi's 2025–26 trade data, model picks with the crowd on them returned ${K.on_roi != null ? roiTxt(K.on_roi) : "–"} (${K.on_n || 0} picks) against ${K.off_roi != null ? roiTxt(K.off_roi) : "–"} (${K.off_n || 0}) otherwise, with no significant difference. A rule like this only gets adopted if it holds up over about 100 picks.</p>`;
+  }
+
   // Tripwires (Oct 26 review). Only bets posted under the rules of Oct 19 or later count. Green = fine or too early to
   // tell, amber = review the model, red = pause betting that market. Computed from ufc_live.json (clv, mv, u, rv).
   const TRIP_FROM = "2026-10-19";
@@ -678,6 +701,7 @@
       <p class="lede">Every pick posted here, graded at the book and price shown when it locked, at its stake: 1 unit, KO-fade decision props 0.5 unit from Oct 26. Nothing from the backtest is mixed in.</p></div>
     <div class="panel" id="ufc-trip" hidden></div>
     <div class="panel" id="ufc-clv" hidden></div>
+    <div class="panel" id="ufc-public" hidden></div>
     <div class="panel" id="ufc-live-cards" hidden></div>
     <div id="ufc-live" class="ufc-views"></div>
     <div class="panel flat prose"><h3>A note on the record</h3><p>Roberto Soldic by decision (+600, UFC 332, Oct 3) counts as a 6-unit win, but that pick had been withdrawn before the fight (one prop per fight; the goes-the-distance pick on the same bout stood). It was restored after the result because it was the bet Mark actually placed, and the goes-the-distance pick was voided instead. Graded strictly as posted, the live record would be about 3 units lower.</p></div>
@@ -804,6 +828,7 @@
     getJSON("ufc_backtest.json").then(bt => { bt = (bt || []).filter(r => !isWithdrawn(r)).sort(bydate); if (bt.length) lab($("#ufc-bt"), bt, "ubt", "2023-2026"); else $("#ufc-bt").innerHTML = '<div class="banner"><b>Loading</b><span>Backtest file not published yet.</span></div>' }) };
   let dfsDone = false; onShow.dfs = () => { if (dfsDone) return; dfsDone = true; getDFS().then(d => dfsView($("#ufc-dfs"), d)) };
   let liveDone = false; onShow.live = () => { if (liveDone) return; liveDone = true;
+    getJSON("ufc_public.json").then(P => { const pp = $("#ufc-public"); if (P && pp) { pp.hidden = false; publicPanel(pp, P) } });
     Promise.all([getJSON("ufc_live.json"), getJSON("ufc_paper.json")]).then(([live, paper]) => {
       const all = live || [], wd = all.filter(isWithdrawn).length;
       live = all.filter(r => !isWithdrawn(r) && ["W", "L", "D", "NC", "Void"].includes(r.r)).sort(bydate);
