@@ -182,9 +182,9 @@
   const dots = rows => rows.length ? `<span class="dots"><small>Last ${rows.length}</small>${rows.map((r, i) => `<i class="${r.r === "W" ? "w" : r.r === "L" ? "l" : "p"}" style="--i:${i}" title="${esc(r.pick)} · ${r.r}"></i>`).join("")}</span>` : "";
   // the trend strip on every ride's card page: this season at a glance before digging into history
   function trendHTML(sp, live) {
-    const g = live.filter(r => r.status === "graded").sort(byTime); if (!g.length) return "";
+    const g = live.filter(r => r.status === "graded" && (!sp.headline || sp.headline(r))).sort(byTime); if (!g.length) return "";
     const s = stats(g);
-    return `<div class="trend"><div class="tr-rec"><small>${esc(sp.seasonLabel || "Season")} so far</small><b>${recTxt(s)}</b><em class="${sgn(s.u)}">${fmtU(s.u)} · ${(s.roi * 100).toFixed(1)}% ROI</em></div>${spark(g.slice(-60))}${dots(g.slice(-10))}<button class="ghost" data-go="${sp.id}-live">Full record</button></div>`;
+    return `<div class="trend"><div class="tr-rec"><small>${esc(sp.trendLabel || (sp.seasonLabel || "Season") + " so far")}</small><b>${recTxt(s)}</b><em class="${sgn(s.u)}">${fmtU(s.u)} · ${(s.roi * 100).toFixed(1)}% ROI</em></div>${spark(g.slice(-60))}${dots(g.slice(-10))}<button class="ghost" data-go="${sp.id}-live">Full record</button></div>`;
   }
   NCSUN.spark = spark;
   // count-up for KPI numbers (first render only; respects reduced motion)
@@ -286,7 +286,7 @@
     let line = "";
     if (r.r) line += resTag(r);
     else if (st === "live") line += `<span class="floor live">In progress</span>`;
-    else if (st === "finished") line += `<span class="floor">Finished · grading soon</span>`;
+    else if (st === "finished") line += `<span class="floor">${esc(sp.finishedText || "Finished · grading soon")}</span>`;
     else if (r.limit) line += `<span class="floor${r.limitGone ? " warn" : ""}">${esc(r.limit)}</span>`;
     if (!r.r && r.e != null) line += `<span>Edge <b style="color:var(--win)">+${r.e.toFixed(1)}</b> pts</span>`;
     if (r.extra) line += `<span>${r.extra}</span>`;
@@ -301,7 +301,7 @@
     const grid = cells.length ? `<div class="pricegrid">${cells.map(c => `<div><small>${esc(c[0])}</small><b class="${c[3] || ""}">${esc(c[1])}</b><span>${esc(c[2] || "")}</span></div>`).join("")}</div>` : "";
     const extra = sp.details ? sp.details(r) : "";
     const why = whyChart(sp.why ? sp.why(r) : r.why);
-    const foot = `<p class="note">${esc(r.ev || "")}${r.posted ? ` · posted ${esc(stampTxt(r.posted))} ET` : ""}${r.paper ? " · paper only: logged and graded, never staked" : ` · ${r.stake}u · posted picks stand and are graded at this price, even if the line moves`}</p>`;
+    const foot = `<p class="note">${esc(r.ev || "")}${r.posted ? ` · posted ${esc(stampTxt(r.posted))} ET` : ""}${r.paper ? " · paper only: logged and graded, never staked" : ` · ${r.stake === 0.5 ? "½" : r.stake === 0.25 ? "¼" : r.stake}u · posted picks stand and are graded at this price, even if the line moves`}</p>`;
     return grid + extra + why + foot;
   }
   function defaultCells(r) {
@@ -427,7 +427,7 @@
   function groupTable(el, rows, sp) {
     const G = sp.liveGroup, g = new Map(); rows.forEach(r => { const k = G.key(r); if (!g.has(k)) g.set(k, { name: G.name(r), rows: [] }); g.get(k).rows.push(r) });
     const ks = [...g.keys()].sort().reverse(), tot = stats(rows);
-    el.innerHTML = `<div class="lab-head"><h2>${esc(G.label)}</h2><span class="note">1 unit a bet, graded at the posted price</span></div>
+    el.innerHTML = `<div class="lab-head"><h2>${esc(G.label)}</h2><span class="note">${esc(G.note || "1 unit a bet, graded at the posted price")}</span></div>
       <div class="tbl"><table class="cards-tbl"><thead><tr><th class="l">${esc(G.col || "Card")}</th><th>Bets</th><th>W-L</th><th>Units</th></tr></thead><tbody>
       ${ks.map(k => { const x = g.get(k), s = stats(x.rows); return `<tr><td class="l" style="white-space:normal"><b>${esc(x.name)}</b><br><span class="note">${x.rows.map(r => esc((G.short ? G.short(r) : r.pick) + " " + (r.r === "W" ? "W" : r.r === "L" ? "L" : r.r === "P" ? "P" : "void"))).join(", ")}</span></td><td>${s.n + s.p + s.v}</td><td class="mono">${recTxt(s)}</td><td class="${sgn(s.u)}"><b>${fmtU(s.u)}</b></td></tr>` }).join("")}
       ${ks.length > 1 ? `<tr class="tot"><td>All</td><td>${tot.n + tot.p + tot.v}</td><td class="mono">${recTxt(tot)}</td><td class="${sgn(tot.u)}">${fmtU(tot.u)}</td></tr>` : ""}</tbody></table></div>`;
@@ -496,7 +496,7 @@
       if (live.length) bits.push(`<b>${live.length}</b> live now`); if (fin.length) bits.push(`<b>${fin.length}</b> awaiting a grade`);
       bits.push(`<b>${posted.length}</b> posted and waiting`);
       if (todayG.length) bits.push(`today <b>${recTxt(sT)}, ${fmtU(sT.u)}</b>`); else if (ydayG.length) bits.push(`yesterday <b>${recTxt(sY)}, ${fmtU(sY.u)}</b>`);
-      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>Every ride's open bets and latest results. 1 unit a pick; posted picks stand at the price they locked.`;
+      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>Every ride's open bets and latest results. Flat stakes (each pick shows its own); posted picks stand at the price they locked.`;
       $("#home-kicker").textContent = `${dateTxt(today)} · ${sports.length} models`;
       // model strip
       const tiles = sports.map((s, i) => { const d = s.data, m = d.meta || {}, g = d.live.filter(r => r.status === "graded").sort(byTime), st = stats(g), open = d.today.filter(r => !r.r && !r.paper), lv = open.filter(r => r.status === "live").length;
