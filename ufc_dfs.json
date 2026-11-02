@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-02 06:30",
+ "updated": "2026-11-02 09:01",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -143,7 +143,7 @@
      "kd": 0.58,
      "pts_win": 98.8,
      "pts_loss": 25.1,
-     "ml": -192,
+     "ml": -205,
      "debut": false,
      "in": []
     },
@@ -170,7 +170,7 @@
      "kd": 0.38,
      "pts_win": 96.9,
      "pts_loss": 21.4,
-     "ml": 160,
+     "ml": 170,
      "debut": false,
      "in": []
     },
@@ -197,7 +197,7 @@
      "kd": 0.39,
      "pts_win": 92.4,
      "pts_loss": 25.4,
-     "ml": -285,
+     "ml": -298,
      "debut": false,
      "in": []
     },
@@ -224,7 +224,7 @@
      "kd": 0.16,
      "pts_win": 85.0,
      "pts_loss": 18.7,
-     "ml": 230,
+     "ml": 240,
      "debut": false,
      "in": []
     },
@@ -251,7 +251,7 @@
      "kd": 0.32,
      "pts_win": 92.1,
      "pts_loss": 19.0,
-     "ml": 124,
+     "ml": 130,
      "debut": true,
      "in": []
     },
@@ -278,7 +278,7 @@
      "kd": 0.23,
      "pts_win": 95.6,
      "pts_loss": 19.1,
-     "ml": -148,
+     "ml": -155,
      "debut": true,
      "in": []
     },
@@ -521,7 +521,7 @@
      "kd": 0.16,
      "pts_win": 91.2,
      "pts_loss": 23.5,
-     "ml": 210,
+     "ml": 220,
      "debut": false,
      "in": []
     },
@@ -548,7 +548,7 @@
      "kd": 0.29,
      "pts_win": 92.6,
      "pts_loss": 25.9,
-     "ml": -258,
+     "ml": -270,
      "debut": false,
      "in": []
     },
