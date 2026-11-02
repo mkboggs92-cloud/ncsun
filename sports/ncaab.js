@@ -78,7 +78,7 @@
         kicker: date && picks.length ? `${dateTxt(date)} · college basketball · spreads and totals` : null,
         summary: picks.length ? `${picks.length - nT} ${picks.length - nT === 1 ? "spread" : "spreads"} · ${nT} ${nT === 1 ? "total" : "totals"}` : "",
         copyTitle: date ? `${dateTxt(date)} card` : "card",
-        emptyHead: "No picks posted today", empty: "The 2026-27 season opens Nov 1. Picks start once both teams have played 5 games, around Nov 21. Until then the model is tracked on paper.",
+        emptyHead: "No picks posted today", empty: openPaper.length ? `Real picks start once both teams have played 5 games, around Nov 16-21. Until then the model runs on paper: today's ${openPaper.length} paper ${openPaper.length === 1 ? "pick is" : "picks are"} below, logged and graded but never staked.` : "The 2026-27 season opens Nov 1. Picks start once both teams have played 5 games, around Nov 21. Until then the model is tracked on paper.",
         health: { ok: true, what: picks.length ? "Card posted" : "Last card", at: posted, note: "Runs 4:40 AM ET on game days" },
         next: "season opens Nov 1", cadence: "4:40 AM ET on game days", openPaper, paperGraded: P.filter(r => r.r === "W" || r.r === "L" || r.r === "P"),
       };
@@ -86,13 +86,13 @@
       const sp = NCSUN.byId.ncaab;
       (window.requestIdleCallback || (f => setTimeout(f, 600)))(() => NCSUN.record(sp).then(bt => { BT = bt.map(x => x.raw);
         picks.forEach(r => r.extra = r.r ? "" : esc(simTxt(r.raw)));
-        if (!picks.length) { const ex = bt.filter(x => x.raw.d === "2026-02-21"); if (ex.length) { const s = NCSUN.stats(ex);
+        if (!picks.length && !openPaper.length) { const ex = bt.filter(x => x.raw.d === "2026-02-21"); if (ex.length) { const s = NCSUN.stats(ex);
           meta.exampleHTML = `<div class="banner" style="margin-top:18px"><b>Example</b><span>Here's how a card looks: the ${ex.length} backtest picks from Saturday, Feb 21, 2026. That day went ${s.w}-${s.l}, ${fmtU(s.u)}.</span></div><div style="margin-top:18px">${NCSUN.cardList(ex, "book", sp)}</div>` } }
         if (sp.redrawCard) sp.redrawCard() }));
       return { today: picks.concat(openPaper), live: lv, meta };
     },
     afterCard(el, d) {
-      const m = d.meta || {}, op = m.openPaper || [], gr = m.paperGraded || [];
+      const sp = NCSUN.byId.ncaab, m = d.meta || {}, op = (m.openPaper || []).map(r => NCSUN.finish(r, sp)), gr = (m.paperGraded || []).map(r => NCSUN.finish(r, sp));
       if (!op.length && !gr.length) { el.innerHTML = ""; return }
       const s = NCSUN.stats(gr), rec = gr.length ? ` · season ${NCSUN.recTxt(s)}, ${fmtU(s.u)}` : "";
       const recent = gr.slice().sort((a, b) => a.d < b.d ? 1 : -1).slice(0, 12);
