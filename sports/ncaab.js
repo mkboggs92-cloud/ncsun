@@ -17,12 +17,13 @@
     for (const b of BT) { if (b.d === r.d || simKey(b) !== k) continue; if (tg && b.why && topG(b.why) !== tg) continue; b.r === "W" ? w++ : l++ }
     const n = w + l; if (!n) return ""; return `Similar past picks: ${w}-${l} (${pct(w / n)}) · n=${n.toLocaleString()}${n < 75 ? " · small sample" : ""}` }
 
-  function toRec(r) {
+  function toRec(r, paper) {
     const sp = isT(r) ? false : true;
     const limit = r.min != null ? (isT(r) ? `${r.side === "Over" ? "Max" : "Min"} line ${r.min}` : `Worst line ${lnTxt(r.min)}`) : null;
     return { d: r.d, t: r.tip || null, season: r.s, ev: evTxt(r), pick: pickTxt(r), detail: (isT(r) ? "Total" : r.ha === "A" ? "Away" : r.ha === "N" ? "Neutral" : "Home") + (r.tot != null && !isT(r) ? ` · total ${r.tot}` : ""),
       mk: isT(r) ? "Total" : "Spread", tier: r.t, o: r.o, bk: BOOK[r.bk] || r.bk, stake: r.u || 1, r: r.r || null, pl: r.r ? r.p : null, act: r.sc || null, clv: r.clv ?? null,
-      limit, worst: r.min != null ? (isT(r) ? String(r.min) : lnTxt(r.min)) : null, extra: r.r ? "" : esc(simTxt(r)), raw: r };
+      limit, worst: r.min != null ? (isT(r) ? String(r.min) : lnTxt(r.min)) : null, extra: r.r || paper ? "" : esc(simTxt(r)), raw: r,
+      paper: !!paper, id: paper ? ["ncaab", "paper", r.d, r.tm, r.op, r.mk].join("|") : undefined };
   }
   const to24 = s => { if (!s) return null; const m = String(s).match(/(\d+):(\d+)\s*(am|pm)/i); if (!m) return null; let h = +m[1] % 12; if (/pm/i.test(m[3])) h += 12; return `${String(h).padStart(2, "0")}:${m[2]}` };
 
@@ -67,9 +68,10 @@
     why: r => { const w = r.raw.why; if (!w || !w.txt || !w.txt.length) return null; const g = w.g || {};
       return { head: "Why", sub: "what drove the pick, not how confident the model is", notes: w.txt, items: Object.keys(WHYG).filter(k => g[k] != null).map(k => ({ label: WHYG[k], pts: g[k], txt: (g[k] > 0 ? "+" : "") + g[k].toFixed(2) })), foot: w.con ? `Working against: ${esc(w.con)}` : "" } },
     async load() {
-      const [today, live] = await Promise.all([load("ncaab_today.json"), load("ncaab_live.json")]);
+      const [today, live, paper] = await Promise.all([load("ncaab_today.json"), load("ncaab_live.json"), load("ncaab_paper.json")]);
       const T = today || { picks: [] }; fixT(T.picks); fixT(live || []);
-      const picks = (T.picks || []).map(toRec), lv = (live || []).filter(r => r.r === "W" || r.r === "L").map(toRec);
+      const P = (paper || []).map(r => toRec(r, true)), openPaper = P.filter(r => !r.r && r.d >= (T.date || etToday()));
+      const picks = (T.picks || []).map(r => toRec(r)), lv = (live || []).filter(r => r.r === "W" || r.r === "L").map(toRec);
       const date = T.date || null, posted = T.posted ? `${date} ${to24(T.posted) || "04:40"}` : null;
       const nT = picks.filter(r => r.mk === "Total").length, isToday = date === etToday();
       const meta = {
@@ -78,7 +80,7 @@
         copyTitle: date ? `${dateTxt(date)} card` : "card",
         emptyHead: "No picks posted today", empty: "The 2026-27 season opens Nov 1. Picks start once both teams have played 5 games, around Nov 21. Until then the model is tracked on paper.",
         health: { ok: true, what: picks.length ? "Card posted" : "Last card", at: posted, note: "Runs 4:40 AM ET on game days" },
-        next: "season opens Nov 1", cadence: "4:40 AM ET on game days",
+        next: "season opens Nov 1", cadence: "4:40 AM ET on game days", openPaper, paperGraded: P.filter(r => r.r === "W" || r.r === "L" || r.r === "P"),
       };
       // the heavy backtest file: load it when idle, for similar-past-pick lines and the example card
       const sp = NCSUN.byId.ncaab;
@@ -87,7 +89,16 @@
         if (!picks.length) { const ex = bt.filter(x => x.raw.d === "2026-02-21"); if (ex.length) { const s = NCSUN.stats(ex);
           meta.exampleHTML = `<div class="banner" style="margin-top:18px"><b>Example</b><span>Here's how a card looks: the ${ex.length} backtest picks from Saturday, Feb 21, 2026. That day went ${s.w}-${s.l}, ${fmtU(s.u)}.</span></div><div style="margin-top:18px">${NCSUN.cardList(ex, "book", sp)}</div>` } }
         if (sp.redrawCard) sp.redrawCard() }));
-      return { today: picks, live: lv, meta };
+      return { today: picks.concat(openPaper), live: lv, meta };
+    },
+    afterCard(el, d) {
+      const m = d.meta || {}, op = m.openPaper || [], gr = m.paperGraded || [];
+      if (!op.length && !gr.length) { el.innerHTML = ""; return }
+      const s = NCSUN.stats(gr), rec = gr.length ? ` · season ${NCSUN.recTxt(s)}, ${fmtU(s.u)}` : "";
+      const recent = gr.slice().sort((a, b) => a.d < b.d ? 1 : -1).slice(0, 12);
+      el.innerHTML = `<details class="more"><summary>Paper tracked (${op.length} today)<span>early-season and test angles logged and graded for the record, never staked${esc(rec)}</span></summary><div class="inner">`
+        + (op.length ? `<div class="slip">${op.map(r => NCSUN.betCard(r)).join("")}</div>` : `<p class="note">No paper picks today.</p>`)
+        + (recent.length ? `<h3 style="margin-top:16px">Recently graded</h3><div class="slip">${recent.map(r => NCSUN.betCard(r)).join("")}</div>` : "") + `</div></details>`;
     },
     async loadRecord() { const bt = fixT(await load("ncaab_backtest.json") || []); return bt.map(toRec) },
     how: `<div><div class="kicker">The theory</div><h1>Fade the <em>luck</em>. Trust the <em>model</em>.</h1>
