@@ -234,6 +234,8 @@
       if (R.mk === "td") sub = cx.pm != null && cx.pk != null ? `model ${pct0(cx.pm)} vs books ${pct0(cx.pk)} to score` : (r.m != null ? `market ${pct0(r.m)} to score` : "");
       else sub = cx.mu != null ? `model ${n1(cx.mu)} ${UNIT[R.mk]} · line ${R.ln}${cx.mm != null ? ` · books imply ${n1(cx.mm)}` : ""}` : `line ${R.ln}`;
       const notes = flags(R).filter(x => FLAG_NOTE[x.k]).map(x => FLAG_NOTE[x.k](x));
+      // [Nov 2, Mark] DraftKings public splits on our side (context only: never part of the pick)
+      if (R.pub && (R.pub.h != null || R.pub.b != null)) notes.push(`DK public: ${[R.pub.h != null ? R.pub.h + "% of the money" : "", R.pub.b != null ? R.pub.b + "% of bets" : ""].filter(Boolean).join(" and ")} on our side (context only, not used by the model).`);
       if (!w.length && !sub && !notes.length) return null;
       // [R3-3] honest first; the raw model % and the 40% blend are named as raw: live, the market has been right
       // about most of their disagreements (the live check in the lede)
