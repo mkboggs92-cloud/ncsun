@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-07 09:02",
+ "updated": "2026-11-07 17:01",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -989,7 +989,8 @@
       2
      ]
     }
-   ]
+   ],
+   "locked": true
   },
   {
    "event": "UFC 334: Gane vs. Hokit",
@@ -1508,7 +1509,7 @@
      "kd": 0.2,
      "pts_win": 84.9,
      "pts_loss": 20.5,
-     "ml": -148,
+     "ml": -155,
      "debut": false,
      "in": []
     },
@@ -1535,7 +1536,7 @@
      "kd": 0.41,
      "pts_win": 91.0,
      "pts_loss": 25.1,
-     "ml": 124,
+     "ml": 130,
      "debut": false,
      "in": []
     },
