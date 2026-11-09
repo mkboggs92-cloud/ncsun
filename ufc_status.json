@@ -3,27 +3,27 @@
   "ok": true,
   "at": "2026-11-09 06:12",
   "note": "",
-  "age_h": 8.7,
+  "age_h": 10.9,
   "stale": true
  },
- "updated": "2026-11-09 14:57",
+ "updated": "2026-11-09 17:03",
  "train": {
   "ok": true,
   "at": "2026-11-09 06:20",
   "note": "",
-  "age_h": 8.6,
+  "age_h": 10.7,
   "stale": true
  },
  "predict": {
   "ok": true,
-  "at": "2026-11-09 14:54",
+  "at": "2026-11-09 17:01",
   "note": "",
   "age_h": 0.0,
   "stale": false
  },
  "lock": {
   "ok": true,
-  "at": "2026-11-09 14:54",
+  "at": "2026-11-09 17:01",
   "note": "",
   "age_h": 0.0,
   "stale": false
@@ -31,11 +31,13 @@
  "grade_export": {
   "ok": true,
   "at": "2026-11-09 14:57",
-  "note": ""
+  "note": "",
+  "age_h": 2.1,
+  "stale": true
  },
  "results": {
   "ok": true,
-  "at": "2026-11-09 14:53",
+  "at": "2026-11-09 17:00",
   "note": "",
   "age_h": 0.1,
   "stale": false
@@ -44,36 +46,38 @@
   "ok": true,
   "at": "2026-11-09 06:26",
   "note": "",
-  "age_h": 8.5,
+  "age_h": 10.6,
   "stale": true
  },
  "grade": {
   "ok": true,
-  "at": "2026-11-09 14:54",
+  "at": "2026-11-09 17:01",
   "note": "",
   "age_h": 0.0,
   "stale": false
  },
  "health": {
   "ok": true,
-  "at": "2026-11-09 14:57",
+  "at": "2026-11-09 17:03",
   "note": ""
  },
  "publish": {
   "ok": true,
   "at": "2026-11-09 14:57",
-  "note": ""
+  "note": "",
+  "age_h": 2.1,
+  "stale": true
  },
  "regime": {
   "ok": true,
-  "at": "2026-11-09 14:53",
+  "at": "2026-11-09 17:00",
   "note": "",
   "age_h": 0.1,
   "stale": false
  },
  "pickcheck": {
   "ok": true,
-  "at": "2026-11-09 14:54",
+  "at": "2026-11-09 17:01",
   "note": "$0.93 of $20 this month",
   "age_h": 0.0,
   "stale": false
@@ -82,12 +86,12 @@
   "ok": true,
   "at": "2026-11-09 06:30",
   "note": "",
-  "age_h": 8.4,
+  "age_h": 10.6,
   "stale": true
  },
  "reports": {
   "ok": true,
-  "at": "2026-11-09 14:54",
+  "at": "2026-11-09 17:01",
   "note": "",
   "age_h": 0.0,
   "stale": false
