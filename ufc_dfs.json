@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-09 09:01",
+ "updated": "2026-11-09 14:54",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -62,9 +62,44 @@
    "event": "UFC 334: Gane vs. Hokit",
    "date": "2026-11-14",
    "cap": 50000,
-   "salaries": "pending",
-   "lineups": [],
-   "lock_utc": null,
+   "salaries": "live",
+   "lineups": [
+    {
+     "rank": 1,
+     "label": "Best lineup",
+     "ids": [
+      "20bccc9bb4ceb23e",
+      "ad5cb64af10fc946",
+      "809bd1a871491508",
+      "681399317dbf4701",
+      "955da1675ad58a50",
+      "80fa8218c99f9c58"
+     ],
+     "salary": 49900,
+     "proj": 444.7,
+     "p10": 314.6,
+     "p90": 574.8,
+     "note": "Highest projected total under the $50,000 cap, at most one fighter per fight."
+    },
+    {
+     "rank": 2,
+     "label": "Second lineup",
+     "ids": [
+      "1af1170ed937cba7",
+      "ad5cb64af10fc946",
+      "809bd1a871491508",
+      "681399317dbf4701",
+      "955da1675ad58a50",
+      "feedf3053472fe56"
+     ],
+     "salary": 49900,
+     "proj": 442.3,
+     "p10": 308.1,
+     "p90": 576.5,
+     "note": "Best projected total that differs from the first lineup by at least 2 fighters."
+    }
+   ],
+   "lock_utc": "2026-11-14 22:00",
    "pool": [
     {
      "id": "787bb1f087ccff8a",
@@ -91,6 +126,10 @@
      "pts_loss": 34.0,
      "ml": -230,
      "debut": false,
+     "salary": 9000,
+     "dk_id": "44857722",
+     "dk_name": "Ciryl Gane",
+     "value": 9.94,
      "in": []
     },
     {
@@ -118,7 +157,14 @@
      "pts_loss": 42.8,
      "ml": 190,
      "debut": false,
-     "in": []
+     "salary": 7200,
+     "dk_id": "44857721",
+     "dk_name": "Josh Hokit",
+     "value": 9.12,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "1af1170ed937cba7",
@@ -128,15 +174,15 @@
      "date": "2026-11-14",
      "event": "UFC 334: Gane vs. Hokit",
      "rounds": 5,
-     "proj": 82.3,
-     "p10": 18.1,
-     "p90": 130.2,
-     "p_win": 0.674,
-     "p_ko": 0.147,
-     "p_sub": 0.285,
-     "p_dec": 0.241,
-     "p_r1": 0.125,
-     "mins": 16.3,
+     "proj": 83.0,
+     "p10": 18.8,
+     "p90": 130.7,
+     "p_win": 0.682,
+     "p_ko": 0.149,
+     "p_sub": 0.289,
+     "p_dec": 0.244,
+     "p_r1": 0.126,
+     "mins": 16.2,
      "sig": 54.9,
      "td": 1.44,
      "ctrl": 4.0,
@@ -145,7 +191,13 @@
      "pts_loss": 33.6,
      "ml": -192,
      "debut": false,
-     "in": []
+     "salary": 8800,
+     "dk_id": "44857723",
+     "dk_name": "Kayla Harrison",
+     "value": 9.43,
+     "in": [
+      2
+     ]
     },
     {
      "id": "80fa8218c99f9c58",
@@ -155,15 +207,15 @@
      "date": "2026-11-14",
      "event": "UFC 334: Gane vs. Hokit",
      "rounds": 5,
-     "proj": 59.2,
-     "p10": 7.4,
-     "p90": 118.2,
-     "p_win": 0.326,
-     "p_ko": 0.119,
-     "p_sub": 0.062,
-     "p_dec": 0.145,
-     "p_r1": 0.052,
-     "mins": 16.3,
+     "proj": 58.6,
+     "p10": 7.3,
+     "p90": 117.4,
+     "p_win": 0.318,
+     "p_ko": 0.116,
+     "p_sub": 0.06,
+     "p_dec": 0.141,
+     "p_r1": 0.051,
+     "mins": 16.2,
      "sig": 55.6,
      "td": 1.75,
      "ctrl": 3.7,
@@ -172,7 +224,13 @@
      "pts_loss": 34.0,
      "ml": 160,
      "debut": false,
-     "in": []
+     "salary": 7400,
+     "dk_id": "44857724",
+     "dk_name": "Amanda Nunes",
+     "value": 7.92,
+     "in": [
+      1
+     ]
     },
     {
      "id": "4126a78111c0855a",
@@ -199,6 +257,10 @@
      "pts_loss": 20.5,
      "ml": -155,
      "debut": false,
+     "salary": 8500,
+     "dk_id": "44857725",
+     "dk_name": "Caio Borralho",
+     "value": 7.11,
      "in": []
     },
     {
@@ -226,6 +288,10 @@
      "pts_loss": 25.2,
      "ml": 130,
      "debut": false,
+     "salary": 7700,
+     "dk_id": "44857726",
+     "dk_name": "Yousri Belgaroui",
+     "value": 6.51,
      "in": []
     },
     {
@@ -253,7 +319,14 @@
      "pts_loss": 23.6,
      "ml": -148,
      "debut": false,
-     "in": []
+     "salary": 8400,
+     "dk_id": "44857727",
+     "dk_name": "Uros Medic",
+     "value": 8.58,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "3a46b268013afede",
@@ -280,6 +353,10 @@
      "pts_loss": 20.1,
      "ml": 124,
      "debut": false,
+     "salary": 7800,
+     "dk_id": "44857728",
+     "dk_name": "Kevin Holland",
+     "value": 6.53,
      "in": []
     },
     {
@@ -290,23 +367,27 @@
      "date": "2026-11-14",
      "event": "UFC 334: Gane vs. Hokit",
      "rounds": 3,
-     "proj": 91.2,
-     "p10": 60.5,
-     "p90": 118.0,
-     "p_win": 0.918,
-     "p_ko": 0.366,
-     "p_sub": 0.147,
-     "p_dec": 0.405,
-     "p_r1": 0.245,
-     "mins": 10.3,
+     "proj": 92.1,
+     "p10": 62.1,
+     "p90": 118.2,
+     "p_win": 0.931,
+     "p_ko": 0.371,
+     "p_sub": 0.149,
+     "p_dec": 0.41,
+     "p_r1": 0.248,
+     "mins": 10.2,
      "sig": 44.9,
-     "td": 1.08,
+     "td": 1.07,
      "ctrl": 1.8,
      "kd": 0.29,
      "pts_win": 96.9,
      "pts_loss": 28.5,
-     "ml": -1050,
+     "ml": -1100,
      "debut": false,
+     "salary": 9800,
+     "dk_id": "44857730",
+     "dk_name": "Bilal Hasan",
+     "value": 9.4,
      "in": []
     },
     {
@@ -317,23 +398,27 @@
      "date": "2026-11-14",
      "event": "UFC 334: Gane vs. Hokit",
      "rounds": 3,
-     "proj": 25.8,
+     "proj": 24.9,
      "p10": 3.3,
-     "p90": 53.5,
-     "p_win": 0.082,
-     "p_ko": 0.02,
-     "p_sub": 0.01,
-     "p_dec": 0.052,
-     "p_r1": 0.014,
-     "mins": 10.3,
-     "sig": 41.1,
-     "td": 0.9,
+     "p90": 50.0,
+     "p_win": 0.069,
+     "p_ko": 0.017,
+     "p_sub": 0.009,
+     "p_dec": 0.044,
+     "p_r1": 0.012,
+     "mins": 10.2,
+     "sig": 41.0,
+     "td": 0.89,
      "ctrl": 1.7,
      "kd": 0.14,
      "pts_win": 88.1,
      "pts_loss": 20.2,
-     "ml": 675,
+     "ml": 700,
      "debut": false,
+     "salary": 6400,
+     "dk_id": "44857729",
+     "dk_name": "Luis Gurule",
+     "value": 3.89,
      "in": []
     },
     {
@@ -359,8 +444,12 @@
      "kd": 0.2,
      "pts_win": 82.3,
      "pts_loss": 15.0,
-     "ml": -148,
+     "ml": -155,
      "debut": false,
+     "salary": 8300,
+     "dk_id": "44857731",
+     "dk_name": "Stephen Thompson",
+     "value": 6.46,
      "in": []
     },
     {
@@ -386,9 +475,15 @@
      "kd": 0.22,
      "pts_win": 100.5,
      "pts_loss": 28.0,
-     "ml": 124,
+     "ml": 130,
      "debut": false,
-     "in": []
+     "salary": 7900,
+     "dk_id": "44857732",
+     "dk_name": "Charles Radtke",
+     "value": 7.47,
+     "in": [
+      2
+     ]
     },
     {
      "id": "519e4fe37ce9ff75",
@@ -415,6 +510,10 @@
      "pts_loss": 18.9,
      "ml": 130,
      "debut": false,
+     "salary": 7600,
+     "dk_id": "44857733",
+     "dk_name": "Drew Dober",
+     "value": 5.8,
      "in": []
     },
     {
@@ -442,6 +541,10 @@
      "pts_loss": 24.2,
      "ml": -155,
      "debut": false,
+     "salary": 8600,
+     "dk_id": "44857734",
+     "dk_name": "Chris Duncan",
+     "value": 8.49,
      "in": []
     },
     {
@@ -467,8 +570,12 @@
      "kd": 0.42,
      "pts_win": 101.8,
      "pts_loss": 21.8,
-     "ml": 160,
+     "ml": 170,
      "debut": false,
+     "salary": 7300,
+     "dk_id": "44857735",
+     "dk_name": "Jim Miller",
+     "value": 6.52,
      "in": []
     },
     {
@@ -494,9 +601,16 @@
      "kd": 0.18,
      "pts_win": 109.4,
      "pts_loss": 21.3,
-     "ml": -192,
+     "ml": -205,
      "debut": false,
-     "in": []
+     "salary": 8900,
+     "dk_id": "44857736",
+     "dk_name": "Terrance McKinney",
+     "value": 9.1,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "ad5cb64af10fc946",
@@ -523,7 +637,14 @@
      "pts_loss": 30.0,
      "ml": -192,
      "debut": false,
-     "in": []
+     "salary": 8700,
+     "dk_id": "44857739",
+     "dk_name": "Donte Johnson",
+     "value": 9.37,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "64d47ef881a437a4",
@@ -550,6 +671,10 @@
      "pts_loss": 15.0,
      "ml": 160,
      "debut": false,
+     "salary": 7500,
+     "dk_id": "44857740",
+     "dk_name": "Cesar Almeida",
+     "value": 4.51,
      "in": []
     },
     {
@@ -577,6 +702,10 @@
      "pts_loss": 17.5,
      "ml": 205,
      "debut": false,
+     "salary": 7100,
+     "dk_id": "44857737",
+     "dk_name": "Macy Chiasson",
+     "value": 5.01,
      "in": []
     },
     {
@@ -604,6 +733,10 @@
      "pts_loss": 29.1,
      "ml": -250,
      "debut": false,
+     "salary": 9100,
+     "dk_id": "44857738",
+     "dk_name": "Bia Mesquita",
+     "value": 8.75,
      "in": []
     },
     {
@@ -631,6 +764,10 @@
      "pts_loss": 25.8,
      "ml": 295,
      "debut": false,
+     "salary": 6900,
+     "dk_id": "44857742",
+     "dk_name": "Jared Gordon",
+     "value": 5.61,
      "in": []
     },
     {
@@ -658,7 +795,13 @@
      "pts_loss": 28.8,
      "ml": -375,
      "debut": false,
-     "in": []
+     "salary": 9300,
+     "dk_id": "44857741",
+     "dk_name": "Melquizael Costa",
+     "value": 9.23,
+     "in": [
+      1
+     ]
     },
     {
      "id": "d9a56ecb6e94f02e",
@@ -685,6 +828,10 @@
      "pts_loss": 22.1,
      "ml": -108,
      "debut": true,
+     "salary": 8000,
+     "dk_id": "44857744",
+     "dk_name": "Evan Elder",
+     "value": 7.0,
      "in": []
     },
     {
@@ -712,6 +859,10 @@
      "pts_loss": 22.6,
      "ml": -112,
      "debut": true,
+     "salary": 8200,
+     "dk_id": "44857743",
+     "dk_name": "Samuel Sanches",
+     "value": 7.21,
      "in": []
     }
    ]
