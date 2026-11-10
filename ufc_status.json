@@ -1,29 +1,29 @@
 {
  "update": {
   "ok": true,
-  "at": "2026-11-09 20:06",
+  "at": "2026-11-10 10:51",
   "note": "",
-  "age_h": 12.9,
+  "age_h": 0.4,
   "stale": false
  },
- "updated": "2026-11-10 09:01",
+ "updated": "2026-11-10 11:12",
  "train": {
   "ok": true,
-  "at": "2026-11-09 20:15",
+  "at": "2026-11-10 11:00",
   "note": "",
-  "age_h": 12.8,
+  "age_h": 0.2,
   "stale": false
  },
  "predict": {
   "ok": true,
-  "at": "2026-11-10 09:01",
+  "at": "2026-11-10 11:11",
   "note": "",
   "age_h": 0.0,
   "stale": false
  },
  "lock": {
   "ok": true,
-  "at": "2026-11-10 09:01",
+  "at": "2026-11-10 11:11",
   "note": "",
   "age_h": 0.0,
   "stale": false
@@ -31,64 +31,82 @@
  "grade_export": {
   "ok": true,
   "at": "2026-11-10 09:01",
-  "note": ""
+  "note": "",
+  "age_h": 2.2,
+  "stale": true
  },
  "results": {
   "ok": true,
   "at": "2026-11-10 09:00",
   "note": "",
-  "age_h": 0.0,
-  "stale": false
+  "age_h": 2.2,
+  "stale": true
  },
  "props_train": {
   "ok": true,
-  "at": "2026-11-09 20:25",
+  "at": "2026-11-10 11:10",
   "note": "",
-  "age_h": 12.6,
+  "age_h": 0.0,
   "stale": false
  },
  "grade": {
   "ok": true,
-  "at": "2026-11-10 09:01",
+  "at": "2026-11-10 11:12",
   "note": "",
   "age_h": 0.0,
   "stale": false
  },
  "health": {
   "ok": true,
-  "at": "2026-11-10 09:01",
+  "at": "2026-11-10 11:12",
   "note": ""
  },
  "publish": {
   "ok": true,
   "at": "2026-11-10 09:01",
-  "note": ""
+  "note": "",
+  "age_h": 2.2,
+  "stale": true
  },
  "regime": {
   "ok": true,
   "at": "2026-11-10 09:00",
   "note": "",
-  "age_h": 0.0,
-  "stale": false
+  "age_h": 2.2,
+  "stale": true
  },
  "pickcheck": {
   "ok": true,
-  "at": "2026-11-10 09:01",
+  "at": "2026-11-10 11:11",
   "note": "$0.93 of $20 this month",
   "age_h": 0.0,
   "stale": false
  },
  "props_v2": {
   "ok": true,
-  "at": "2026-11-09 20:29",
+  "at": "2026-11-10 11:10",
   "note": "",
-  "age_h": 12.5,
+  "age_h": 0.0,
   "stale": false
  },
  "reports": {
   "ok": true,
-  "at": "2026-11-10 09:01",
+  "at": "2026-11-10 11:11",
   "note": "",
+  "age_h": 0.0,
+  "stale": false
+ },
+ "closeline_fit": {
+  "ok": true,
+  "at": "2026-11-10 11:10",
+  "note": "4871 openers 2021-2026 (shadow only)",
+  "age_h": 0.0,
+  "stale": false
+ },
+ "closeline_shadow": {
+  "ok": true,
+  "at": "2026-11-10 11:12",
+  "note": "84 quotes scored, 0 C3>=2%, 9 production; C3 picks 0 (0 graded), CLV-units vs production +0.00 (shadow only)",
   "age_h": 0.0,
   "stale": false
  }
