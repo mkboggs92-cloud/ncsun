@@ -10,6 +10,7 @@
   const barOf = r => (tierOf(r) === "ML" ? 0.05 : 0.05);        // ML: EV >= 5%; props (paper): 5-pt edge (Nov 9)
   const isProp = r => (r.mk || "ML") !== "ML";
   const isWithdrawn = r => r.mth === "superseded";
+  const ML_CAP = 2;         // moneylines per event (live.py cap_for("ML")); props are paper only since 2026-11-09
   // worst price that still qualifies: moneylines need EV p*d - 1 >= 5% (rule since Oct 19); props a 5-pt edge
   const minPrice = (p, bar = 0.05, ml = true) => ml ? fair(p / 1.05) : fair(p - bar);   // American odds
   const MON = U.MON;
@@ -167,8 +168,10 @@
   const isV2 = r => String(r.mk || "").startsWith("V2_");
   const isGraded = r => r.r === "W" || r.r === "L";
   const bydate = (a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0;
-  const TT = { PAPER_GTD: "Goes the distance", PAPER_DEC_B: "Decision" };
-  const paperTier = r => (r.mk === "GTD" ? "PAPER_GTD" : r.tier && String(r.tier).startsWith("PAPER_") ? r.tier : tierOf(r));
+  // paper prop tiers (Nov 9 audit #3: the rule's one prop per fight is logged as PAPER_<tier>; debut fights get _DEBUT)
+  const TT = { PAPER_GTD: "Goes the distance", PAPER_DEC_A: "Decision · KO fade", PAPER_DEC_B: "Decision" };
+  const ttOf = t => { t = String(t || ""); const d = t.endsWith("_DEBUT"), b = d ? t.slice(0, -6) : t; return TT[b] ? TT[b] + (d ? " · debut" : "") : null };
+  const paperTier = r => (r.tier && String(r.tier).startsWith("PAPER_") && r.tier !== "PAPER" ? r.tier : r.mk === "GTD" ? "PAPER_GTD" : tierOf(r));
   // status pill in the engine's .tag style: g = fine / too early, a = review, r = pause (or "rule fires"), n = collecting
   const pill = (s, txt, title) => `<span class="tag${s === "g" ? " w" : s === "r" ? " l" : s === "n" ? " small" : ""}"${s === "a" ? ' style="color:var(--coral-ink)"' : ""}${title ? ` title="${esc(title)}"` : ""}>${esc(txt)}</span>`;
   const WRAP = 'style="white-space:normal;min-width:150px"';
@@ -236,7 +239,7 @@
     const L = mse(lo.map(r => r.cb)), Hh = mse(hi.map(r => r.cb));
     const pp = (paper || []).filter(r => !isWithdrawn(r) && isGraded(r));
     const CP = mse(pp.filter(r => !isProp(r) && !isV2(r)).map(r => r.clv));
-    const byT = new Map(); pp.filter(isProp).forEach(r => { const t = TT[paperTier(r)] || TIER[paperTier(r)] || MK[r.mk] || r.mk; const k = /submission/i.test(t) ? "Submission" : t; if (!byT.has(k)) byT.set(k, []); byT.get(k).push(r) });
+    const byT = new Map(); pp.filter(isProp).forEach(r => { const t = ttOf(paperTier(r)) || TIER[paperTier(r)] || MK[r.mk] || r.mk; const k = /submission/i.test(t) ? "Submission" : t; if (!byT.has(k)) byT.set(k, []); byT.get(k).push(r) });
     const sb = s => s ? `${clvTxt(s.m)} (n = ${s.n})` : "–";
     const T = [];
     { const ok = N >= 40, fire = ok && L && L.n >= 15 && L.m < 0;
@@ -336,8 +339,8 @@
     liveGroup: { label: "Card by card", col: "Card", key: r => r.d + "|" + r.ev, name: r => `${r.ev} · ${dateTxt(r.d)}`, short: r => (r.raw.tier === "GTD" ? "Distance" : short(String(r.raw.pk).replace(/ by (decision|submission|ko\/tko)$/i, "")) + (isProp(r.raw) ? " dec" : " ML")) },
     liveEmpty: "The record starts with the first locked pick and grows after each event.",
     recordHead: { kicker: "Out-of-sample backtest · 2023 to 2026", label: "2023-2026",
-      lede: "Each year was predicted by models trained only on earlier fights, and every blend is fit only on earlier years, so bets start in 2023. Moneylines are graded at FanDuel's (or BetMGM's, before it left BestFightOdds) opening price; props at the best closing price of FanDuel, DraftKings and Caesars. The card rule is applied in the order live picks lock: at most 5 a card, 2 moneylines, one prop per fight, 1 unit each. Simulated results, not a live record.",
-      extra: `<div id="ufc-btsum-slot"></div><div class="panel flat prose" style="margin-top:12px"><h3>What to expect live</h3><p>This backtest is not an expectation. Its moneylines returned +21.8% on 330 bets, but measured against the closing line the same bets were worth about <b>+2.6%</b>: they won 76% of the time where the close said 66%, about 4 standard errors of luck. Most of the units came from 88 bets priced +100 or longer, and about half from a red-corner term in the model's calibration. Honest expectation: <b>about +3% to +5% per moneyline bet</b>. Props showed no edge live (every prop with a closing line got a worse price than the close), so they are paper only until a paper tier beats its book's close over 30 graded picks. At about 75 moneylines a year, even a real 3% edge loses money in roughly 35-40% of seasons, so judge the live record by closing-line value, not units.</p></div>` },
+      lede: "Each year was predicted by models trained only on earlier fights, and every blend is fit only on earlier years, so bets start in 2023. Moneylines only (props are paper and not shown here), graded at FanDuel's (or BetMGM's, before it left BestFightOdds) opening price, at most 2 per card, 1 unit each. Simulated results, not a live record.",
+      extra: `<div id="ufc-btsum-slot"></div><div class="panel flat prose" style="margin-top:12px"><h3>What to expect live</h3><p>This backtest is not an expectation. Every qualifying moneyline (330 bets before the 2-per-card cap) returned +21.8%, but measured against the closing line the same bets were worth about <b>+2.6%</b>: they won 76% of the time where the close said 66%, about 4 standard errors of luck. Most of the units came from 88 bets priced +100 or longer, and about half from a red-corner term in the model's calibration. Honest expectation: <b>about +3% to +5% per moneyline bet</b>. Props showed no edge live (every prop with a closing line got a worse price than the close), so they are paper only until a paper tier beats its book's close over 30 graded picks. At about 75 moneylines a year, even a real 3% edge loses money in roughly 35-40% of seasons, so judge the live record by closing-line value, not units.</p></div>` },
     dims: {
       mk: { n: "Market", f: r => MK[r.mk || "ML"] || r.mk, order: ["Moneyline", "Wins by decision", "Goes the distance", "Over 2.5 rounds"] },
       tier: { n: "Bet type", f: r => TIER[tierOf(r)] || tierOf(r), order: ["Moneyline", "Decision · KO fade", "Decision", "Goes the distance"] },
@@ -367,7 +370,7 @@
       if (r.p != null && r.raw.dec) foot += ` · Blended <b>${pct0(r.p)}</b> vs ${pct0(1 / r.raw.dec)} at the price`;
       if (dec && w.ko != null) foot += `<br>${w.fade != null ? `<b>KO fade</b>: model has the KO at <b>${pct0(w.ko)}</b>, ${pts(w.fade * 100)} pts below the market` : `Model KO chance <b>${pct0(w.ko)}</b>${t === "DEC_A" ? " · 5+ pts below the market (KO fade)" : ""}`}`;
       return { head: "Why the model likes it", sub: "points for / against", items: w.items.map(x => ({ label: x.label, v: x.v, pts: x.pts, txt: pts(x.pts) })), foot } },
-    groupHead: (r, rs) => { const d = r.d, nML = rs.filter(x => !isProp(x.raw)).length, nP = rs.length - nML, dt = daysTo(d); const bits = [dateTxt(d) + (whenTxt(d) ? " · " + whenTxt(d) : ""), `${rs.length} of 5 card slots`]; if (!nP && dt > 3 && dt <= 21) bits.push(`props usually post about ${dateTxt(addDays(d, -3))}`);
+    groupHead: (r, rs) => { const d = r.d, nML = rs.filter(x => !x.paper && !isProp(x.raw)).length; const bits = [dateTxt(d) + (whenTxt(d) ? " · " + whenTxt(d) : ""), `${nML} of ${ML_CAP} moneyline slots`];   // rule 2026-11-09: moneylines only, 2 per event
       return `<div class="slip-ev"><h2>${esc(r.ev)}</h2><span class="note">${esc(bits.join(" · "))}</span></div>` },
     async load() {
       const [today, live, status, paper] = await Promise.all([load("ufc_today.json"), load("ufc_live.json"), load("ufc_status.json"), load("ufc_paper.json")]);
@@ -381,7 +384,7 @@
       const meta = {
         kicker: nx ? `Next up: ${dateTxt(nx.d)} · ${nx.ev}` : null, copyTitle: "picks",
         summary: Object.entries(by).map(([k, v]) => `${v} ${SHORT[k] || k.toLowerCase()}${v > 1 && !/s$/.test(SHORT[k] || k) && (SHORT[k] || "") !== "KO fade" ? "s" : ""}`).join(" · "),
-        emptyHead: "No picks", empty: `Nothing on the upcoming cards clears the rule right now.${nx ? ` Next card: ${esc(nx.ev)}, ${esc(dateTxt(nx.d))}.` : ""} Moneyline picks usually show up 1 to 3 weeks before an event, props about 3 days out.`,
+        emptyHead: "No picks", empty: `Nothing on the upcoming cards clears the rule right now.${nx ? ` Next card: ${esc(nx.ev)}, ${esc(dateTxt(nx.d))}.` : ""} Moneyline picks usually show up 1 to 3 weeks before an event. Props are tracked on paper only.`,
         health: NCSUN.health(status, T.updated, 36, "Runs 9 AM and 5 PM ET"), next: nx ? `${nx.ev.replace(/^UFC /, "UFC ").split(":")[0]} ${whenTxt(nx.d)}` : "", cadence: "9 AM and 5 PM ET",
         events: evs, openPaper, paperAll: paper || [],
       };
@@ -418,31 +421,32 @@
         ${paper.length ? `<div class="tbl"><table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Fight</th><th>Price</th><th>Result</th><th>Units</th></tr></thead><tbody>${paper.slice(0, 40).map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.lab || r.pk)}</b></td><td class="l">${esc(r.op)}</td><td class="mono">${am(r.o)}</td><td>${r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span>` : '<span class="tag small">Open</span>'}</td><td class="${sgn(r.u || 0)}">${r.r ? fmtU(r.u || 0) : "–"}</td></tr>`).join("")}</tbody></table></div>` : ""}</div>`);
     },
     extras: { dfs: { label: "DFS", kicker: "DraftKings · UFC classic", h1: "DFS <em>lineups</em>", lede: "The two best 6-fighter lineups under the salary cap, built from the same fight model as the bets. Below them, every fighter on the slate, sortable.", draw: el => { el.innerHTML = '<p class="note">Loading the slate…</p>'; load("ufc_dfs.json").then(dd => dfsView(el, dd)) } } },
-    how: `<div><div class="kicker">The theory</div><h1>Beat the <em>opener</em>. Fade the <em>knockout</em>.</h1>
-      <p class="lede">UFC moneylines are softest when a book first hangs them and get sharper as money comes in, so the model prices fights against opening lines. Prop markets have a different weakness: they overprice knockouts and underprice fights that go long, above all a favorite winning a decision.</p></div>
+    how: `<div><div class="kicker">The theory</div><h1>Beat the <em>opener</em>. Judge by the <em>close</em>.</h1>
+      <p class="lede">UFC moneylines are softest when a book first hangs them and get sharper as money comes in, so the model prices fights against opening lines and bets a moneyline only when its expected value is at least 5%. Everything else, props included, is logged on paper and graded like a bet, but not staked. The test of the whole thing is whether posted prices beat the closing line.</p></div>
     <div class="ridemap">
       <div class="panel stop"><h3>Every fight, every fighter</h3><p>Round-by-round UFCStats box scores since 1994, each fighter's full pro record from Sherdog (regional shows included), and FightMatrix's pre-fight ratings and rankings: 57,000 bouts across 24,000 fighters. Everything is built from fights before the one being priced.</p></div>
-      <div class="panel stop"><h3>Ratings</h3><p>Our own Bradley-Terry rating, solved over the whole web of who beat whom and refit monthly, plus FightMatrix's three rating systems and division rank going into each fight. Adding FightMatrix cut the win model's error noticeably and lifted the moneyline backtest from +12% to +13.5%.</p></div>
-      <div class="panel stop"><h3>Two models</h3><p>A win model (LightGBM plus logistic regression on about 85 inputs, calibrated on earlier years) and a prop model that reads how each fighter wins and loses: KO, submission and decision rates over his whole career, how fast, how recently, durability, striking, age and reach. Every fight is fed both ways, so the corner never matters.</p></div>
+      <div class="panel stop"><h3>Ratings</h3><p>Our own Bradley-Terry rating, solved over the whole web of who beat whom and refit monthly, plus FightMatrix's three rating systems and division rank going into each fight. Taking FightMatrix, the graph rating and the Sherdog records out together cuts the moneyline backtest from 330 bets and +72 units to 232 bets and +13. Measured against the closing line, though, none of them adds anything the close doesn't already know.</p></div>
+      <div class="panel stop"><h3>Two models</h3><p>A win model (LightGBM plus logistic regression on about 85 inputs, calibrated on earlier years) and a prop model that reads how each fighter wins and loses: KO, submission and decision rates over his whole career, how fast, how recently, durability, striking, age and reach. Every fight is fed both ways, so the corner never matters. Only the win model's picks are staked.</p></div>
       <div class="panel stop"><h3>Market blend</h3><p>Neither model is bet raw. Each is blended with the book's own price, with weights fit on earlier years for that book and how long the line has been up. The model earns weight only where it beats the market on its own.</p></div>
-      <div class="panel stop"><h3>The card</h3><p>Moneylines need at least 5% expected value at +400 or shorter (10% if first qualifying inside 72 hours), with two or more books pricing the fight and no debutants. At most 2 moneylines per event, 1 unit each. Props are tracked on paper only since Nov 9: no prop has beaten its closing line live.</p></div>
+      <div class="panel stop"><h3>The card</h3><p>Moneylines need at least 5% expected value at +400 or shorter (10% if first qualifying inside 72 hours), with two or more books pricing the fight and no debutants. At most 2 moneylines per event, 1 unit each. Props are paper only since Nov 9: every prop with a closing line got a worse price than the close.</p></div>
       <div class="panel stop"><h3>Posted picks stand</h3><p>Picks lock the first time they qualify, at FanDuel, DraftKings or Caesars, whichever pays best. Once posted they are graded at that price even if the line or the model moves. Only a cancelled fight or a replacement opponent withdraws one.</p></div>
     </div>
     <div class="grid2">
       <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
         <li>Fights with a UFC debutant: too little to go on.</li>
+        <li>Props of any kind since Nov 9. The prop rule still runs: one prop per fight (goes the distance first, else the best decision pick) with at least a 5-point edge at +1000 or shorter, logged on paper and graded as if staked. A prop type is staked again only after its paper picks beat their own book's closing price (CLV of 0 or better) over 30 graded picks.</li>
         <li>KO and submission props. Books mark them up 12% to 35% over fair, more than the model ever disagrees with the market. Over 10,000 angle and matchup combinations were checked; none beat FanDuel's vig.</li>
         <li>Unders and early-round totals. Every pocket tested lost or broke even.</li>
-        <li>Two props on one fight, or more than 5 bets on one card, even when more qualify.</li></ul></div>
+        <li>A third moneyline on one event: extra qualifiers are logged on paper.</li></ul></div>
       <div class="panel flat prose"><h3>How the backtest stayed honest</h3><ul>
         <li>Walk-forward: each year predicted by models trained only on earlier years.</li>
         <li>Graded at real prices with juice: FanDuel/BetMGM openers for moneylines, FanDuel/DraftKings/Caesars closing prices for props. Every blend and calibration is fit only on earlier years.</li>
-        <li>Moneyline picks beat the closing line by about 3.5% on average.</li>
+        <li>Moneyline picks beat the closing line by about 2.5% on average, far less than the realised return: see "Backtest vs the close" on the backtest tab.</li>
         <li>Placebo checks: shuffled ratings and a shuffled prop model each lost their edge.</li>
         <li>Flat 1 unit on every bet. Live: moneylines 1 unit; props paper only since Nov 9.</li></ul></div>
     </div>
-    <div class="panel flat prose"><h3>Paper tracked, not bet</h3><p>Two angles that looked good but don't have enough history yet: over 4.5 rounds in 5-round fights at FanDuel (113 bets, +18%, every year positive), and submissions where the model beats FanDuel's price by 3+ points against an opponent who has been submitted before (151 bets, +40%, but statistically thin). They're logged on the live tab and graded, but never staked.</p></div>
-    <div class="panel flat prose"><h3>What to expect live</h3><p>The thresholds, the KO-fade cutoff and the card caps were chosen on the same seasons they were tested on, so expect live results well below the backtest. Books can also close the decision bias at any time. Opening lines move fast: if a pick's price is gone, the "take or better" number on each bet tells you where it stops being a bet, and the details show where each of your three books stands.</p></div>`,
+    <div class="panel flat prose"><h3>Paper tracked, not bet</h3><p>The prop rule's one pick per fight, moneylines blocked only by the 2-per-event cap, and two angles that looked good in the backtest: over 4.5 rounds in 5-round fights at FanDuel (113 bets, +18%) and submissions where the model beats FanDuel's price by 3+ points against an opponent who has been submitted before (151 bets, +40%, statistically thin). Live, their prices have so far been worse than the close. All are logged on the live tab and graded, never staked; the pre-registered checks there say what would change that.</p></div>
+    <div class="panel flat prose"><h3>What to expect live</h3><p>Not the backtest. Its moneylines returned +21.8%, but against the closing line the same bets were worth about +2.5%, and the thresholds and caps were chosen on the seasons they were tested on. Honest expectation: <b>about +3% to +5% per moneyline bet</b>. At about 75 bets a year that is a few units with a swing of about 6 either way, so even a real edge loses money in roughly one season in three. Units can't settle it for decades; closing-line value can in a few dozen bets, so judge the record by whether posted prices beat the close. Opening lines move fast: if a pick's price is gone, the "take or better" number on each bet tells you where it stops being a bet.</p></div>`,
     hood: `<div><div class="kicker">Under the hood · model specification</div><h1>The <em>engine</em> room</h1>
       <p class="lede">Every equation behind the card. Everything is point-in-time: a fight's inputs use only fights completed before it, and each backtest year is scored by models that never saw it.</p></div>
     <div class="hood">
@@ -476,19 +480,20 @@
         ${M(`<mtext>logit</mtext><mspace width=".2em"/><mi>p</mi><mo>=</mo><msub><mi>b</mi><mn>0</mn></msub><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mspace width=".2em"/><mtext>logit</mtext><mspace width=".2em"/><mi>m</mi><mo>+</mo><msub><mi>b</mi><mn>2</mn></msub><mspace width=".2em"/><mtext>logit</mtext><mspace width=".2em"/><mi>q</mi><mo>,</mo><mspace width=".8em"/><mi>b</mi><mo>∼</mo><mi>N</mi><mo>(</mo><mo>(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>)</mo><mo>,</mo><mtext>diag</mtext><mo>(</mo><mn>.15</mn><mo>,</mo><mn>.25</mn><mo>,</mo><mn>.25</mn><msup><mo>)</mo><mn>2</mn></msup><mo>)</mo>`)}
         <p class="note">The prior centers on "trust the market," so the model only earns weight it shows out of sample. Moneyline blends are fit per book and per line age (open, 1-3 days, 3 days out, day before, close) with no intercept: an intercept there is a red-corner effect, unknown when lines first post. Prop blends are fit per market. In the backtest, each year's blend is fit only on earlier years.</p></div>
 
-      <div class="panel eq"><h3>06 · The KO fade</h3>
+      <div class="panel eq"><h3>06 · The KO fade (a past finding)</h3>
         <p>For a decision pick on fighter <i>i</i>, compare the prop model's KO probability with the market's de-vigged KO price:</p>
         ${M(`<msub><mi>Δ</mi><mtext>KO</mtext></msub><mo>=</mo><msubsup><mi>q</mi><mi>i</mi><mtext>KO</mtext></msubsup><mo>−</mo><msubsup><mi>m</mi><mi>i</mi><mtext>KO</mtext></msubsup><mspace width="1.2em"/><mtext>KO fade</mtext><mo>⇔</mo><msub><mi>Δ</mi><mtext>KO</mtext></msub><mo>≤</mo><mo>−</mo><mn>0.05</mn>`)}
-        <p class="note">The market gets the win probability right but splits it wrong: it hands too much to the KO and too little to the decision. Over 2021-26 decision picks with a KO fade returned about +50 to +60%; those without, +9 to +20%.</p></div>
+        <p class="note">In the 2021-26 backtest at closing prices, decision picks with a KO fade returned about +50 to +60% and those without +9 to +20%: the market seemed to hand too much of the win to the knockout. It did not hold up at prices that could actually be bet, so since Oct 19 every prop type needs the same 5-point edge, and since Nov 9 all props are paper only. The fade is still recorded on every paper decision pick (KO fade vs plain decision) so the paper record can test it again.</p></div>
 
       <div class="panel eq"><h3>07 · Decision rule and card</h3>
-        ${M(`<mtext>bet</mtext><mo>⇔</mo><mi>p</mi><mo>−</mo><mfrac><mn>1</mn><mi>d</mi></mfrac><mo>≥</mo><msub><mi>τ</mi><mtext>type</mtext></msub><mo>,</mo><mspace width=".6em"/><msub><mi>τ</mi><mtext>ML</mtext></msub><mo>=</mo><msub><mi>τ</mi><mtext>KO fade</mtext></msub><mo>=</mo><mn>.03</mn><mo>,</mo><mspace width=".4em"/><msub><mi>τ</mi><mtext>DEC</mtext></msub><mo>=</mo><msub><mi>τ</mi><mtext>GTD</mtext></msub><mo>=</mo><mn>.05</mn>`)}
-        <p class="note">Moneylines need expected value p·d − 1 of at least 5% (10% if a pick first qualifies inside 72 hours), d ≤ 5 (+400), at least two books pricing the fight, and no debutants. At most 5 bets a card and 2 moneylines per event. Moneylines are 1 unit; props (5-point edge, d ≤ 5) are paper only since Nov 9. Picks lock the first time they qualify and stand; earlier locks count toward the caps.</p></div>
+        ${M(`<msub><mtext>bet</mtext><mtext>ML</mtext></msub><mo>⇔</mo><mi>p</mi><mi>d</mi><mo>−</mo><mn>1</mn><mo>≥</mo><mn>.05</mn><mo>,</mo><mspace width=".4em"/><mi>d</mi><mo>≤</mo><mn>5</mn>`)}
+        ${M(`<msub><mtext>paper</mtext><mtext>prop</mtext></msub><mo>⇔</mo><mi>p</mi><mo>−</mo><mfrac><mn>1</mn><mi>d</mi></mfrac><mo>≥</mo><mn>.05</mn><mo>,</mo><mspace width=".4em"/><mi>d</mi><mo>≤</mo><mn>11</mn>`)}
+        <p class="note">Moneylines need expected value p·d − 1 of at least 5% (10% if a pick first qualifies inside 72 hours), d ≤ 5 (+400), at least two books pricing the fight, and no debutants; at most 2 moneylines per event, 1 unit each. Props need a 5-point edge over the price at d ≤ 11 (+1000), one per fight (goes the distance first, then the best EV), and are paper only since Nov 9: a prop type is staked again only after its paper picks show same-book CLV ≥ 0 over 30 graded picks. Picks lock the first time they qualify and stand; earlier locks count toward the caps.</p></div>
 
       <div class="panel eq"><h3>08 · Staking, grading and CLV</h3>
         <p>Profit per unit at decimal price <i>d</i>, and closing-line value with the de-vigged closing probability <i>c</i>:</p>
         ${M(`<mi>π</mi><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mi>s</mi><mo>(</mo><mi>d</mi><mo>−</mo><mn>1</mn><mo>)</mo></mtd><mtd><mtext>win</mtext></mtd></mtr><mtr><mtd><mo>−</mo><mi>s</mi></mtd><mtd><mtext>loss</mtext></mtd></mtr></mtable></mrow><mspace width="1.4em"/><mtext>CLV</mtext><mo>=</mo><mi>c</mi><mo>·</mo><mi>d</mi><mo>−</mo><mn>1</mn>`)}
-        <p class="note">Draws, no contests and cancelled fights are void. Staking is flat: 1 unit a moneyline; props are paper only. Bigger stakes on the strongest picks (1.5u) added about 3 points of ROI in the backtest but nearly doubled the worst drawdown; quarter Kelly made more units only by risking twice as much.</p></div>
+        <p class="note">Draws, no contests and cancelled fights are void. Staking is flat: 1 unit a moneyline; props are paper only. Units are too noisy to judge a 3-5% edge for years, so the live tab leads with CLV. Bigger stakes on the strongest picks (1.5u) added about 3 points of ROI in the backtest but nearly doubled the worst drawdown; quarter Kelly made more units only by risking twice as much.</p></div>
     </div>`,
   });
 })();
