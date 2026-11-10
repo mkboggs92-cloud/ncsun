@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-10 11:12",
+ "updated": "2026-11-10 11:25",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -681,13 +681,13 @@
      "date": "2026-11-14",
      "event": "UFC 334: Gane vs. Hokit",
      "rounds": 3,
-     "proj": 60.6,
+     "proj": 60.4,
      "p10": 11.8,
      "p90": 102.4,
-     "p_win": 0.623,
-     "p_ko": 0.199,
+     "p_win": 0.62,
+     "p_ko": 0.198,
      "p_sub": 0.059,
-     "p_dec": 0.365,
+     "p_dec": 0.363,
      "p_r1": 0.111,
      "mins": 11.6,
      "sig": 36.1,
@@ -701,7 +701,7 @@
      "salary": 8500,
      "dk_id": "44857725",
      "dk_name": "Caio Borralho",
-     "value": 7.13,
+     "value": 7.11,
      "in": []
     },
     {
@@ -712,14 +712,14 @@
      "date": "2026-11-14",
      "event": "UFC 334: Gane vs. Hokit",
      "rounds": 3,
-     "proj": 50.0,
+     "proj": 50.2,
      "p10": 9.3,
-     "p90": 102.3,
-     "p_win": 0.377,
-     "p_ko": 0.141,
+     "p90": 102.1,
+     "p_win": 0.38,
+     "p_ko": 0.142,
      "p_sub": 0.008,
-     "p_dec": 0.228,
-     "p_r1": 0.064,
+     "p_dec": 0.23,
+     "p_r1": 0.065,
      "mins": 11.6,
      "sig": 50.2,
      "td": 0.75,
@@ -732,7 +732,7 @@
      "salary": 7700,
      "dk_id": "44857726",
      "dk_name": "Yousri Belgaroui",
-     "value": 6.49,
+     "value": 6.52,
      "in": []
     },
     {
