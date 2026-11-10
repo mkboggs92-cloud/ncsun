@@ -38,7 +38,7 @@
     car: '<circle cx="-12" cy="-19" r="5.5" fill="var(--ball)" stroke="var(--ink)" stroke-width="1.6"/>',
     labels: { card: "Today's card", live: "2026-27 live", record: "Backtest" },
     liveGroup: { label: "Day by day", col: "Day", key: r => r.d, name: r => dateTxt(r.d), short: r => r.pick },
-    liveEmpty: "The record starts with the first real pick, expected around Nov 21 once teams reach 5 games. Paper-tracked early-season games are logged separately and never counted here.",
+    liveEmpty: "The record starts with the first real pick, expected around Nov 16-21 once teams reach 5 games. Paper-tracked early-season games are logged separately and never counted here.",
     recordHead: { kicker: "Out-of-sample backtest · 2022-23 to 2025-26", label: "4 seasons",
       lede: "Each season was predicted by models trained only on earlier seasons, using what was known at 5am on game day. Spreads and totals share one card: at most 6 picks a weekday and 12 on Saturday, one bet per game, graded at the best 5am price at DraftKings, Caesars or FanDuel. Simulated results, not a live record." },
     dims: {
@@ -71,16 +71,16 @@
       const [today, live, paper] = await Promise.all([load("ncaab_today.json"), load("ncaab_live.json"), load("ncaab_paper.json")]);
       const T = today || { picks: [] }; fixT(T.picks); fixT(live || []);
       const P = (paper || []).map(r => toRec(r, true)), openPaper = P.filter(r => !r.r && r.d >= (T.date || etToday()));
-      const picks = (T.picks || []).map(r => toRec(r)), lv = (live || []).filter(r => r.r === "W" || r.r === "L").map(toRec);
-      const date = T.date || null, posted = T.posted ? `${date} ${to24(T.posted) || "04:40"}` : null;
+      const picks = (T.picks || []).map(r => toRec(r)), lv = (live || []).filter(r => r.r === "W" || r.r === "L" || r.r === "P").map(toRec);
+      const date = T.date || null, posted = T.posted ? `${date} ${to24(T.posted) || "05:20"}` : null;
       const nT = picks.filter(r => r.mk === "Total").length, isToday = date === etToday();
       const meta = {
         kicker: date && picks.length ? `${dateTxt(date)} · college basketball · spreads and totals` : null,
         summary: picks.length ? `${picks.length - nT} ${picks.length - nT === 1 ? "spread" : "spreads"} · ${nT} ${nT === 1 ? "total" : "totals"}` : "",
         copyTitle: date ? `${dateTxt(date)} card` : "card",
-        emptyHead: "No picks posted today", empty: openPaper.length ? `Real picks start once both teams have played 5 games, around Nov 16-21. Until then the model runs on paper: today's ${openPaper.length} paper ${openPaper.length === 1 ? "pick is" : "picks are"} below, logged and graded but never staked.` : "The 2026-27 season opens Nov 1. Picks start once both teams have played 5 games, around Nov 21. Until then the model is tracked on paper.",
-        health: { ok: true, what: picks.length ? "Card posted" : "Last card", at: posted, note: "Runs 4:40 AM ET on game days" },
-        next: "season opens Nov 1", cadence: "4:40 AM ET on game days", openPaper, paperGraded: P.filter(r => r.r === "W" || r.r === "L" || r.r === "P"),
+        emptyHead: "No picks posted today", empty: openPaper.length ? `Real picks start once both teams have played 5 games, around Nov 16-21. Until then the model runs on paper: today's ${openPaper.length} paper ${openPaper.length === 1 ? "pick is" : "picks are"} below, logged and graded but never staked.` : "Picks start once both teams have played 5 games, around Nov 16-21. Until then the model is tracked on paper.",
+        health: { ok: true, what: picks.length ? "Card posted" : "Last card", at: posted, note: "Posts about 5:20 AM ET on game days" },
+        next: "next card about 5:20 AM ET", cadence: "about 5:20 AM ET on game days", openPaper, paperGraded: P.filter(r => r.r === "W" || r.r === "L" || r.r === "P"),
       };
       // the heavy backtest file: load it when idle, for similar-past-pick lines and the example card
       const sp = NCSUN.byId.ncaab;
