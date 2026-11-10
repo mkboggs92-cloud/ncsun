@@ -1,4 +1,4 @@
-/* UFC — adapter for ufc_today.json, ufc_live.json, ufc_backtest.json, ufc_status.json, ufc_paper.json, ufc_dfs.json
+/* UFC — adapter for ufc_today.json, ufc_live.json, ufc_backtest.json, ufc_status.json, ufc_paper.json, ufc_dfs.json, ufc_shadow.json
    (written by the UFC model's 9 AM / 5 PM runs). Keeps the fight-by-fight card and the DraftKings DFS pool. */
 (function () {
   const U = NCSUN.u, { $, esc, fmtU, pct, pct0, sgn, am, toDec, fair, dateTxt, daysTo, whenTxt, addDays, cap, load, copyText } = U;
@@ -250,15 +250,41 @@
       T.push(["Moneyline cap 2 → 3", `${n} of 20 capped paper moneylines with a close`, `consensus CLV ${sb(CP)}`,
         !ok ? pill("n", "Collecting") : fire ? pill("r", "Lift cap to 3") : pill("g", "Keep cap at 2"),
         "Moneylines blocked only by the 2-per-card cap are logged on paper. Lift the cap to 3 only if their CLV is +1.5% or better over at least 20."]) }
-    const tiers = [...byT.entries()].sort((a, b) => b[1].length - a[1].length).map(([k, v]) => [k, mse(v.map(r => r.cb))]);
-    T.push(["Props back to staked", tiers.length ? tiers.map(([k, s]) => `${esc(k)}: ${s ? s.n : 0} of 30`).join(" · ") : "0 of 30",
-      tiers.length ? tiers.map(([k, s]) => `${esc(k)} ${sb(s)}`).join(" · ") : "no graded paper props yet",
-      tiers.some(([, s]) => s && s.n >= 30 && s.m >= 0) ? pill("r", "A tier qualifies") : tiers.some(([, s]) => s && s.n >= 30) ? pill("g", "Stay paper") : pill("n", "Collecting"),
-      "Every prop is paper only from Nov 9. A prop tier is staked again only after its paper picks show same-book CLV of 0 or better over 30 graded picks."]);
+    // Prop re-entry (ML review 2026-11-10, stricter; props.py PROP_REENTRY_*): a tier is staked again only if, over at least
+    // 250 graded paper picks, BOTH its same-book CLV >= 0 AND its outcome log loss is no worse than the closing fair's
+    // (paired per pick: d = LL(posted prob) - LL(close fair); passes when mean d <= 1 SE of d). CLV alone can't justify it:
+    // from May 2026 paper picks had positive CLV and still lost to the close on outcomes.
+    const RE_N = 250, llOf = (q, y) => { q = Math.min(Math.max(q, 1e-4), 1 - 1e-4); return -(y ? Math.log(q) : Math.log(1 - q)) };
+    const tiers = [...byT.entries()].sort((a, b) => b[1].length - a[1].length).map(([k, v]) => [k, mse(v.map(r => r.cb)),
+      mse(v.filter(r => r.p != null && r.cf != null).map(r => llOf(r.p, r.r === "W") - llOf(r.cf, r.r === "W")))]);
+    const llTxt = s => s ? `${s.m <= 0 ? "−" : "+"}${Math.abs(1000 * s.m).toFixed(1)}${s.se != null ? ` (SE ${(1000 * s.se).toFixed(1)})` : ""}` : "–";
+    const reOk = (c, l) => c && l && c.n >= RE_N && l.n >= RE_N && c.m >= 0 && l.se != null && l.m <= l.se;
+    T.push(["Props back to staked", tiers.length ? tiers.map(([k, c]) => `${esc(k)}: ${c ? c.n : 0} of ${RE_N}`).join(" · ") : `0 of ${RE_N}`,
+      tiers.length ? tiers.map(([k, c, l]) => `${esc(k)}: same-book CLV ${sb(c)}, log loss vs close ×1000 ${llTxt(l)}`).join(" · ") : "no graded paper props yet",
+      tiers.some(([, c, l]) => reOk(c, l)) ? pill("r", "A tier qualifies") : tiers.some(([, c]) => c && c.n >= RE_N) ? pill("g", "Stay paper") : pill("n", "Collecting"),
+      "Every prop is paper only from Nov 9. A prop tier is staked again only after at least 250 graded paper picks show BOTH same-book CLV of 0 or better AND outcome log loss no worse than the closing fair line (paired per pick; worse by less than 1 SE passes). Rule tightened Nov 10 (was 30 picks, CLV only)."]);
     return `<div class="panel flat" id="ufc-prereg" style="display:grid;gap:10px">${head2("Pre-registered checks", "rules written down before the results · progress from the published files")}
       <div class="tbl"><table style="min-width:720px"><thead><tr><th class="l">Check</th><th class="l">Progress</th><th class="l">Now</th><th class="l">Status</th><th class="l">Rule</th></tr></thead><tbody>
       ${T.map(([nm, prog, now, s, rule]) => `<tr><td class="l"><b>${esc(nm)}</b></td><td class="l" ${WRAP}>${prog}</td><td class="l" ${WRAP}><span class="note">${now}</span></td><td class="l">${s}</td><td class="l" ${WRAP}><span class="note">${esc(rule)}</span></td></tr>`).join("")}</tbody></table></div>
       <p class="note">Posted EV is model chance × posted decimal price − 1 (picks posted before the 5% EV rule fall in the under-7% bucket). Same-book CLV is the close at the book the pick was posted at. Nothing here changes automatically: when a check fires, the rule change is made by hand with a new rule version.</p></div>`;
+  }
+
+  // Shadow test: closing-line model (ML review 2026-11-10; closeline.py -> ufc_shadow.json). It never posts or stakes a bet.
+  // PRE-REGISTERED RULE: switch only if, after >= 60 graded shadow picks, the shadow rule's total CLV-units beat production's
+  // on the same cards by more than 2 SE (paired by card). Nothing switches automatically.
+  function shadowPanel(S) {
+    if (!S || !S.rules) return "";
+    const R = S.rules, V = S.vs_prod || {}, D = S.decision || { min_n: 60, z: 2 };
+    const u = v => v == null ? "–" : (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(2) + "u";
+    const row = (k, lab) => { const r = R[k] || {}, v = V[k], c = r.clv;
+      const st = !v ? "" : v.met ? pill("r", "Rule met") : v.ready ? pill("g", "Keep production") : pill("n", "Collecting");
+      return `<tr><td class="l" ${WRAP}><b>${esc(lab)}</b></td><td>${r.n || 0}</td><td>${r.graded || 0}${v ? ` of ${D.min_n}` : ""}</td><td class="mono">${c ? `${clvTxt(c.m)}${c.se != null ? ` <span class="note">(SE ${(100 * c.se).toFixed(1)})</span>` : ""}` : "–"}</td><td class="mono">${c ? u(c.units) : "–"}</td><td class="mono">${v ? `${u(v.diff)}${v.se != null ? ` <span class="note">± ${v.se.toFixed(2)}${v.z != null ? ` · ${v.z.toFixed(1)} SE` : ""}</span>` : ""}` : "–"}</td><td class="l">${st}</td></tr>` };
+    const O = S.official_same_cards, M = S.model || {};
+    return `${head2("Shadow test: closing-line <em>model</em>", `logged since ${esc(S.since || "Nov 10")} · never bet · updated ${esc(S.updated || "–")}`)}
+      <p class="note" style="font-size:14px;max-width:80ch">A second model predicts where each moneyline will close from the model-market gap at the opener, the gap to the market that already exists, the opening price and age / experience terms, then picks quotes whose predicted closing-line value is at least 2%. In the 2023-26 backtest it found more CLV per bet but not more CLV in total than production (about 1.5 SE), so it runs in the shadow on the same quotes as production. Both are scored by CLV at the consensus close, graded like official picks, uncapped.</p>
+      <div class="tbl"><table style="min-width:640px"><thead><tr><th class="l">Rule</th><th>Picks</th><th>Graded</th><th>Avg CLV</th><th>CLV-units</th><th>vs production, same cards</th><th class="l">Status</th></tr></thead><tbody>
+      ${row("c3", "C3 ≥ 2% predicted CLV")}${row("union", "Production OR C3 ≥ 2%")}${row("prod", "Production rule (mirror)")}</tbody></table></div>
+      <p class="note"><b>Pre-registered decision rule:</b> ${esc(D.text || "Switch only if, after at least 60 graded shadow picks, the shadow rule's total CLV-units beat production's on the same cards by more than 2 SE.")}${O && O.n ? ` Official (capped) picks on the same cards: ${O.n}, average CLV ${O.clv ? clvTxt(O.clv.m) : "–"}.` : ""}${M.asof ? ` Model fit on ${M.n || "?"} openers ${(M.years || []).join("-")}, as of ${esc(M.asof)}.` : ""}</p>`;
   }
 
   // Mark's own bets (output/my_bets.csv): the price actually taken next to the posted one. Only when something is logged.
@@ -340,7 +366,7 @@
     liveEmpty: "The record starts with the first locked pick and grows after each event.",
     recordHead: { kicker: "Out-of-sample backtest · 2023 to 2026", label: "2023-2026",
       lede: "Each year was predicted by models trained only on earlier fights, and every blend is fit only on earlier years, so bets start in 2023. Moneylines only (props are paper and not shown here), graded at FanDuel's (or BetMGM's, before it left BestFightOdds) opening price, at most 2 per card, 1 unit each. Simulated results, not a live record.",
-      extra: `<div id="ufc-btsum-slot"></div><div class="panel flat prose" style="margin-top:12px"><h3>What to expect live</h3><p>This backtest is not an expectation. Every qualifying moneyline (330 bets before the 2-per-card cap) returned +21.8%, but measured against the closing line the same bets were worth about <b>+2.6%</b>: they won 76% of the time where the close said 66%, about 4 standard errors of luck. Most of the units came from 88 bets priced +100 or longer, and about half from a red-corner term in the model's calibration. Honest expectation: <b>about +3% to +5% per moneyline bet</b>. Props showed no edge live (every prop with a closing line got a worse price than the close), so they are paper only until a paper tier beats its book's close over 30 graded picks. At about 75 moneylines a year, even a real 3% edge loses money in roughly 35-40% of seasons, so judge the live record by closing-line value, not units.</p></div>` },
+      extra: `<div id="ufc-btsum-slot"></div><div class="panel flat prose" style="margin-top:12px"><h3>What to expect live</h3><p>This backtest is not an expectation. Every qualifying moneyline (330 bets before the 2-per-card cap) returned +21.8%, but measured against the closing line the same bets were worth about <b>+2.6%</b>: they won 76% of the time where the close said 66%, about 4 standard errors of luck. Most of the units came from 88 bets priced +100 or longer, and about half from a red-corner term in the model's calibration. Honest expectation: <b>about +3% to +5% per moneyline bet</b>. Props showed no edge live (every prop with a closing line got a worse price than the close), so they are paper only until a paper tier beats its book's close (CLV of 0 or better) and the closing line's outcome log loss over 250 graded picks. At about 75 moneylines a year, even a real 3% edge loses money in roughly 35-40% of seasons, so judge the live record by closing-line value, not units.</p></div>` },
     dims: {
       mk: { n: "Market", f: r => MK[r.mk || "ML"] || r.mk, order: ["Moneyline", "Wins by decision", "Goes the distance", "Over 2.5 rounds"] },
       tier: { n: "Bet type", f: r => TIER[tierOf(r)] || tierOf(r), order: ["Moneyline", "Decision · KO fade", "Decision", "Goes the distance"] },
@@ -415,7 +441,8 @@
       // CLV is the headline (top of the view); tripwires, pre-registered checks, your bets and public splits follow the record
       const liveRaw = d.meta.liveRaw || [];
       el.insertAdjacentHTML("afterbegin", clvPanel(liveRaw));
-      el.insertAdjacentHTML("beforeend", tripPanel(liveRaw) + preregPanel(liveRaw, pAll) + minePanel(liveRaw.concat(d.meta.openRaw || [])) + `<div class="panel flat" id="ufc-public" style="display:grid;gap:10px" hidden></div>`);
+      el.insertAdjacentHTML("beforeend", tripPanel(liveRaw) + preregPanel(liveRaw, pAll) + `<div class="panel flat" id="ufc-shadow" style="display:grid;gap:10px" hidden></div>` + minePanel(liveRaw.concat(d.meta.openRaw || [])) + `<div class="panel flat" id="ufc-public" style="display:grid;gap:10px" hidden></div>`);
+      load("ufc_shadow.json").then(S => { const sp = $("#ufc-shadow", el), h = shadowPanel(S); if (sp && h) { sp.innerHTML = h; sp.hidden = false } }).catch(() => {});
       load("ufc_public.json").then(P => { const pp = $("#ufc-public", el); if (P && pp) { pp.innerHTML = publicPanel(P); pp.hidden = false } });
       el.insertAdjacentHTML("beforeend",`<div class="panel flat" style="display:grid;gap:10px"><h3>Paper tracked, not bet</h3><p class="note" style="font-size:14px;max-width:72ch">Every prop since Nov 9 (goes the distance, decisions), plus over 4.5 rounds in 5-round fights and submissions against opponents who have been submitted before. Graded at 1 unit for the record only.${g.length ? ` So far <b>${s.w}-${s.l}, ${fmtU(s.u)}</b>.` : " Nothing graded yet."}${pw ? ` ${pw} withdrawn paper pick${pw > 1 ? "s" : ""} hidden.` : ""}</p>
         ${paper.length ? `<div class="tbl"><table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th class="l">Fight</th><th>Price</th><th>Result</th><th>Units</th></tr></thead><tbody>${paper.slice(0, 40).map(r => `<tr><td class="mono">${r.d}</td><td class="l"><b>${esc(r.lab || r.pk)}</b></td><td class="l">${esc(r.op)}</td><td class="mono">${am(r.o)}</td><td>${r.r ? `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span>` : '<span class="tag small">Open</span>'}</td><td class="${sgn(r.u || 0)}">${r.r ? fmtU(r.u || 0) : "–"}</td></tr>`).join("")}</tbody></table></div>` : ""}</div>`);
@@ -434,7 +461,7 @@
     <div class="grid2">
       <div class="panel flat prose"><h3>What it doesn't bet</h3><ul>
         <li>Fights with a UFC debutant: too little to go on.</li>
-        <li>Props of any kind since Nov 9. The prop rule still runs: one prop per fight (goes the distance first, else the best decision pick) with at least a 5-point edge at +1000 or shorter, logged on paper and graded as if staked. A prop type is staked again only after its paper picks beat their own book's closing price (CLV of 0 or better) over 30 graded picks.</li>
+        <li>Props of any kind since Nov 9. The prop rule still runs: one prop per fight (goes the distance first, else the best decision pick) with at least a 5-point edge at +1000 or shorter, logged on paper and graded as if staked. A prop type is staked again only after at least 250 graded paper picks show both CLV of 0 or better against their own book's closing price and outcome log loss no worse than the closing fair line (rule tightened Nov 10; positive CLV alone did not stop paper props losing to the close from May 2026).</li>
         <li>KO and submission props. Books mark them up 12% to 35% over fair, more than the model ever disagrees with the market. Over 10,000 angle and matchup combinations were checked; none beat FanDuel's vig.</li>
         <li>Unders and early-round totals. Every pocket tested lost or broke even.</li>
         <li>A third moneyline on one event: extra qualifiers are logged on paper.</li></ul></div>
@@ -478,7 +505,7 @@
       <div class="panel eq"><h3>05 · Market blend</h3>
         <p>Every model probability <i>q</i> is blended with the market's fair probability <i>m</i>:</p>
         ${M(`<mtext>logit</mtext><mspace width=".2em"/><mi>p</mi><mo>=</mo><msub><mi>b</mi><mn>0</mn></msub><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mspace width=".2em"/><mtext>logit</mtext><mspace width=".2em"/><mi>m</mi><mo>+</mo><msub><mi>b</mi><mn>2</mn></msub><mspace width=".2em"/><mtext>logit</mtext><mspace width=".2em"/><mi>q</mi><mo>,</mo><mspace width=".8em"/><mi>b</mi><mo>∼</mo><mi>N</mi><mo>(</mo><mo>(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>)</mo><mo>,</mo><mtext>diag</mtext><mo>(</mo><mn>.15</mn><mo>,</mo><mn>.25</mn><mo>,</mo><mn>.25</mn><msup><mo>)</mo><mn>2</mn></msup><mo>)</mo>`)}
-        <p class="note">The prior centers on "trust the market," so the model only earns weight it shows out of sample. Moneyline blends are fit per book and per line age (open, 1-3 days, 3 days out, day before, close) with no intercept: an intercept there is a red-corner effect, unknown when lines first post. Prop blends are fit per market. In the backtest, each year's blend is fit only on earlier years.</p></div>
+        <p class="note">The prior centers on "trust the market," so the model only earns weight it shows out of sample. Moneyline blends are fit per book and per line age (open, 1-3 days, 3 days out, day before, close) with no intercept: an intercept there is a red-corner effect, unknown when lines first post. Prop blends are fit per market, also with no intercept since Nov 10 (the old intercepts leaned toward decisions just as the market started overpricing them); the league finish-rate shift handles drift, in 3- and 5-round fights alike. In the backtest, each year's blend is fit only on earlier years.</p></div>
 
       <div class="panel eq"><h3>06 · The KO fade (a past finding)</h3>
         <p>For a decision pick on fighter <i>i</i>, compare the prop model's KO probability with the market's de-vigged KO price:</p>
@@ -488,7 +515,7 @@
       <div class="panel eq"><h3>07 · Decision rule and card</h3>
         ${M(`<msub><mtext>bet</mtext><mtext>ML</mtext></msub><mo>⇔</mo><mi>p</mi><mi>d</mi><mo>−</mo><mn>1</mn><mo>≥</mo><mn>.05</mn><mo>,</mo><mspace width=".4em"/><mi>d</mi><mo>≤</mo><mn>5</mn>`)}
         ${M(`<msub><mtext>paper</mtext><mtext>prop</mtext></msub><mo>⇔</mo><mi>p</mi><mo>−</mo><mfrac><mn>1</mn><mi>d</mi></mfrac><mo>≥</mo><mn>.05</mn><mo>,</mo><mspace width=".4em"/><mi>d</mi><mo>≤</mo><mn>11</mn>`)}
-        <p class="note">Moneylines need expected value p·d − 1 of at least 5% (10% if a pick first qualifies inside 72 hours), d ≤ 5 (+400), at least two books pricing the fight, and no debutants; at most 2 moneylines per event, 1 unit each. Props need a 5-point edge over the price at d ≤ 11 (+1000), one per fight (goes the distance first, then the best EV), and are paper only since Nov 9: a prop type is staked again only after its paper picks show same-book CLV ≥ 0 over 30 graded picks. Picks lock the first time they qualify and stand; earlier locks count toward the caps.</p></div>
+        <p class="note">Moneylines need expected value p·d − 1 of at least 5% (10% if a pick first qualifies inside 72 hours), d ≤ 5 (+400), at least two books pricing the fight, and no debutants; at most 2 moneylines per event, 1 unit each. Props need a 5-point edge over the price at d ≤ 11 (+1000), one per fight (goes the distance first, then the best EV), and are paper only since Nov 9: a prop type is staked again only after at least 250 graded paper picks show same-book CLV ≥ 0 and outcome log loss no worse than the closing fair line. Picks lock the first time they qualify and stand; earlier locks count toward the caps.</p></div>
 
       <div class="panel eq"><h3>08 · Staking, grading and CLV</h3>
         <p>Profit per unit at decimal price <i>d</i>, and closing-line value with the de-vigged closing probability <i>c</i>:</p>
