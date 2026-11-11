@@ -46,6 +46,7 @@
     missed: x => `Back from ${x.n ? x.n + " " : ""}missed games: the usage inputs are older than usual.`,
   };
   let SLOTS = null;               // this week's slot accounting (nfl_today.json "slots"), set in load()
+  let PARLAYS = null;             // nfl_parlays.json: tracked parlays (boost SGP, cross-game); never part of the card
   let STAKE = null;               // this week's stake in units (nfl_today.json "stake", else the picks', else the monitor's)
   function slotNote(n, prime) {
     const S = SLOTS || {}, part = [];
@@ -135,6 +136,17 @@
       const name = w.prime ? w.games.join(", ") + (PRIME_NAME[w.kick] && w.games.length === 1 ? ` (${PRIME_NAME[w.kick]})` : "") : `${w.games.length} ${plural(w.games.length, "game")}`;
       return Object.assign(w, { st, txt, name, kickTxt, lockTxt: w.lock || `${dow(w.d)} ${timeTxt(addMin(w.d, w.kick, -80).slice(11))}`, isNext: false });
     });
+  }
+  // [P11 2026-11-11] tracked parlays: this week's posts and the paper record. Empty string when there is nothing to show.
+  function parlaysHTML(P) {
+    const tw = (P && P.this_week) || [];
+    if (!tw.length) return "";
+    const f = x => (x == null ? "0.00" : (x >= 0 ? "+" : "") + (+x).toFixed(2)), rec = P.record || {}, s = rec.sgp || {}, c = rec.cross || {}, z = rec.czr || {};
+    const recLine = (s.n || c.n || z.n)
+      ? `Paper record: boost SGP ${s.w || 0}-${s.l || 0} (${f(s.u1)}u no boost, ${f(s.u33)}u at 33%, ${f(s.u50)}u at 50%)` + (z.n ? ` · Caesars pair ${z.w}-${z.l} (${f(z.u1)}u)` : "") + (c.n ? ` · cross-game ${c.w}-${c.l} (${f(c.u1)}u)` : "")
+      : "No graded parlays yet";
+    const li = tw.map(e => `<li>${esc(e.txt || "")}${e.result ? ` <b>${esc(e.result === "W" ? "Won" : e.result === "L" ? "Lost" : e.result)}</b>` : ""}</li>`).join("");
+    return `<div class="sec-h"><h2>Parlays</h2><span class="note">Tracked, not bet · ${esc(recLine)}</span></div><div class="panel flat prose"><ul>${li}</ul><p class="note">${esc(P.note || "")}</p></div>`;
   }
   function windowsHTML(W, stake) {
     if (!W.length) return "";
@@ -251,7 +263,8 @@
     groupHead: (r, rs) => { const pr = r.raw.slate === "Primetime", sec = rs.filter(x => (x.raw.sec || "card") === "card"), extra = slotNote(sec.length, pr);
       return `<div class="slip-ev"><h2>${esc(pr ? "Primetime & standalone" : "Sunday card")}</h2><span class="note">${pr ? ["the single best pick in each game off the Sunday afternoon slate", ...extra].map(esc).join(" · ") : [`${sec.length} of ${(SLOTS && SLOTS.k) || 8} slots`, ...extra, "biggest edges across the day slate"].map(esc).join(" · ")}</span></div>` },
     async load() {
-      const [today, live, status, mon] = await Promise.all([load("nfl_today.json"), load("nfl_live.json"), load("nfl_status.json"), load("nfl_monitor.json")]);
+      const [today, live, status, mon, par] = await Promise.all([load("nfl_today.json"), load("nfl_live.json"), load("nfl_status.json"), load("nfl_monitor.json"), load("nfl_parlays.json").catch(() => null)]);
+      PARLAYS = par || null;
       const T = today || { picks: [], slate: [] };
       const picks = (T.picks || []).map(r => toRec(r, T.updated)), lv = (live || []).filter(r => ["W", "L", "P", "Void"].includes(r.r)).map(r => toRec(r));
       const by = {}; picks.forEach(r => { const k = r.raw.mk === "td" ? "anytime TD" : r.raw.mk === "rec" ? "receptions under" : "yards under"; by[k] = (by[k] || 0) + 1 });
@@ -307,6 +320,7 @@
     async loadRecord() { const bt = await load("nfl_backtest.json"); return (bt || []).filter(r => r.r === "W" || r.r === "L" || r.r === "P").map(r => toRec(r)) },
     afterCard(el, d) { const sl = d.meta.slate, W = d.meta.windows || [];
       let wh = ""; try { wh = windowsHTML(W, STAKE) } catch (e) { console.error("nfl lock times", e) }
+      try { wh = parlaysHTML(PARLAYS) + wh } catch (e) { console.error("nfl parlays", e) }
       el.innerHTML = wh + (sl.length ? `<div class="sec-h"><h2>Full slate</h2><span class="note">Model projections for the top pass-catchers in every game (blend-free, before the market): a sanity check, not bets</span></div>` + sl.map(g => gameBlock(g, d.today)).join("") : `<div class="banner"><b>Quiet</b><span>No games on the schedule this week yet.</span></div>`) },
     afterLive(el, d) { const m = d.meta || {}; try { el.insertAdjacentHTML("beforeend", reviewHTML(m.mon, d.live, m.week)) } catch (e) { console.error("nfl review panel", e) } },
     how: `<div><div class="kicker">The theory</div><h1>Bet the <em>under</em> on the <em>right</em> guys.</h1>
