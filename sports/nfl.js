@@ -143,7 +143,7 @@
     if (!tw.length) return "";
     const f = x => (x == null ? "0.00" : (x >= 0 ? "+" : "") + (+x).toFixed(2)), rec = P.record || {}, s = rec.sgp || {}, c = rec.cross || {}, z = rec.czr || {};
     const recLine = (s.n || c.n || z.n)
-      ? `Paper record: boost SGP ${s.w || 0}-${s.l || 0} (${f(s.u1)}u no boost, ${f(s.u33)}u at 33%, ${f(s.u50)}u at 50%)` + (z.n ? ` · Caesars pair ${z.w}-${z.l} (${f(z.u1)}u)` : "") + (c.n ? ` · cross-game ${c.w}-${c.l} (${f(c.u1)}u)` : "")
+      ? `Paper record: boost SGP ${s.w || 0}-${s.l || 0} (${f(s.u1)}u no boost, ${f(s.u33)}u at 33%, ${f(s.u50)}u at 50%)` + (z.n ? ` · Caesars pair ${z.w}-${z.l} (${f(z.u1)}u)` : "") + (c.n ? ` · cross-game ${c.w}-${c.l} (${f(c.u1)}u no boost, ${f(c.u33)}u at 33%, ${f(c.u50)}u at 50%)` : "")
       : "No graded parlays yet";
     const li = tw.map(e => `<li>${esc(e.txt || "")}${e.result ? ` <b>${esc(e.result === "W" ? "Won" : e.result === "L" ? "Lost" : e.result)}</b>` : ""}</li>`).join("");
     return `<div class="sec-h"><h2>Parlays</h2><span class="note">Tracked, not bet · ${esc(recLine)}</span></div><div class="panel flat prose"><ul>${li}</ul><p class="note">${esc(P.note || "")}</p></div>`;
