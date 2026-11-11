@@ -155,6 +155,15 @@
     return `<div class="panel flat"><div class="lab-head"><h2>Lock times</h2><span class="note">${esc(stake != null && stake !== 1 ? `${uTxt(stake)} a pick this week · ` : "")}picks post about 5 min after each lock, then a push</span></div><div class="dayblk" style="margin-top:10px">${W.map(row).join("")}</div></div>`;
   }
   // ---------------------------------------------------------------- [R3-3] the record tab's review panel (words, not β)
+  // [V2 2026-11-11] picks from before the record restart: a week-by-week summary, kept for the record
+  function archiveHTML(v1, RS) {
+    if (!RS || !v1 || !v1.length) return "";
+    const sec = r => r.raw.sec || (r.raw.mk === "td" ? "td" : "card"), g = v1.filter(r => r.r === "W" || r.r === "L");
+    const st = rows => { const w = rows.filter(r => r.r === "W").length, l = rows.filter(r => r.r === "L").length, u = rows.reduce((a, r) => a + (r.pl || 0), 0); return rows.length ? `${w}-${l}, ${u >= 0 ? "+" : ""}${u.toFixed(2)}u` : "–" };
+    const wks = [...new Set(g.map(r => r.raw.wk))].sort((a, b) => a - b);
+    const rows = wks.map(w => { const x = g.filter(r => r.raw.wk === w); return `<tr><td class="l">Week ${w}</td><td class="mono">${st(x.filter(r => sec(r) === "card"))}</td><td class="mono">${st(x.filter(r => sec(r) === "td"))}</td></tr>` }).join("");
+    return `<div class="panel flat prose" style="margin-top:12px"><h3>${esc(RS.prev_label || "Earlier")} archive: before Week ${RS.week}</h3><p>The count restarted in Week ${RS.week} with the ${esc(RS.label)} model. These picks were posted and bet. They stay in the ledger and no longer count toward the record above.</p><table><thead><tr><th class="l">Week</th><th>Card</th><th>Anytime TD</th></tr></thead><tbody>${rows}<tr><td class="l"><b>Total</b></td><td class="mono"><b>${st(g.filter(r => sec(r) === "card"))}</b></td><td class="mono"><b>${st(g.filter(r => sec(r) === "td"))}</b></td></tr></tbody></table></div>`;
+  }
   function reviewHTML(Mn, live, week) {
     const mb = monBlock(Mn);
     const secOf = r => r.raw.sec || (r.raw.mk === "td" ? "td" : "card");
@@ -193,7 +202,7 @@
     labels: { card: "This week", live: "2026 live", record: "Backtest" },
     liveKicker: "Since October 2026 · real picks only",
     // [R3-3] app.js's default lede said "1 unit each"; the stake is per pick (½u in Weeks 7-9) and two records are kept
-    liveLede: "Every pick posted here, graded at the book, price and stake it locked (1u; ½u in Weeks 7-9). The card and the anytime-TD section are counted apart at the bottom of this page. Nothing from the backtest is mixed in.",
+    liveLede: "Every pick posted here, graded at the book, price and stake it locked. The count restarted in Week 10 with the V2 model; Weeks 5-9 are archived at the bottom of this page. The card and the anytime-TD section are counted apart. Nothing from the backtest is mixed in.",
     // the next four are read only once app.js carries R3-3's optional edits (/tmp/r3_3/app_js.patch); harmless before
     finishedText: "Finished · graded when the play-by-play lands", trendLabel: "2026 card so far",
     headline: r => (r.raw.sec || (r.raw.mk === "td" ? "td" : "card")) === "card",
@@ -266,7 +275,10 @@
       const [today, live, status, mon, par] = await Promise.all([load("nfl_today.json"), load("nfl_live.json"), load("nfl_status.json"), load("nfl_monitor.json"), load("nfl_parlays.json").catch(() => null)]);
       PARLAYS = par || null;
       const T = today || { picks: [], slate: [] };
-      const picks = (T.picks || []).map(r => toRec(r, T.updated)), lv = (live || []).filter(r => ["W", "L", "P", "Void"].includes(r.r)).map(r => toRec(r));
+      const picks = (T.picks || []).map(r => toRec(r, T.updated)), lvAll = (live || []).filter(r => ["W", "L", "P", "Void"].includes(r.r)).map(r => toRec(r));
+      // [V2 2026-11-11] the count restarts at T.record_from {season, week, label}; earlier picks stay on the page as an archive
+      const RS = T.record_from || null, inRec = r => !RS || +r.season > RS.season || (+r.season === RS.season && (r.raw.wk || 0) >= RS.week);
+      const lv = lvAll.filter(inRec), v1 = RS ? lvAll.filter(r => !inRec(r)) : [];
       const by = {}; picks.forEach(r => { const k = r.raw.mk === "td" ? "anytime TD" : r.raw.mk === "rec" ? "receptions under" : "yards under"; by[k] = (by[k] || 0) + 1 });
       const paper = picks.some(r => r.raw.paper);
       // [R3-3] this week's stake: published by the runner, else the posted picks', else the monitor's standing decision
@@ -310,11 +322,15 @@
       const secOf = r => r.raw.sec || (r.raw.mk === "td" ? "td" : "card"), g = lv.filter(r => r.r === "W" || r.r === "L");
       const cardG = g.filter(r => secOf(r) === "card"), tdG = g.filter(r => secOf(r) === "td");
       const recTxt = rows => { const w = rows.filter(r => r.r === "W").length, l = rows.filter(r => r.r === "L").length, u = rows.reduce((a, r) => a + (r.pl || 0), 0); return `${w}-${l} ${u >= 0 ? "+" : ""}${u.toFixed(2)}u` };
-      if (g.length && tdG.length) top.push(`<span class="note">2026 record: card ${recTxt(cardG)} (what the Week-10 rule counts) · anytime-TD section ${recTxt(tdG)}.</span>`);
+      const recLab = RS ? `${RS.label} record (from Week ${RS.week})` : "2026 record";
+      if (g.length) top.push(`<span class="note">${esc(recLab)}: card ${recTxt(cardG)}${tdG.length ? ` · anytime-TD section ${recTxt(tdG)}` : ""}.</span>`);
+      else if (RS) top.push(`<span class="note">${esc(RS.label)} count starts with Week ${RS.week}: no graded picks yet.</span>`);
+      if (v1.length) { const a1 = v1.filter(r => r.r === "W" || r.r === "L"); top.push(`<span class="note">${esc(RS.prev_label || "Earlier")} (before Week ${RS.week}, archived): card ${recTxt(a1.filter(r => secOf(r) === "card"))} · anytime-TD section ${recTxt(a1.filter(r => secOf(r) === "td"))}.</span>`) }
       const stakeLine = paper ? "Paper mode: picks are tracked at 0u and not bet until the stake is switched back on by hand."
-        : STAKE != null && STAKE !== 1 ? `${uTxt(STAKE)} a pick this week (Weeks 7-9, while the live record builds).` : "1 unit a pick.";
+        : STAKE != null && STAKE !== 1 ? `${uTxt(STAKE)} a pick this week (while the V2 record builds).` : "1 unit a pick.";
       top.push(`<span class="note">Receptions, receiving-yards and anytime-TD props for WRs, TEs and RBs. ${stakeLine} Take the listed price or better: each pick shows the worst price that is still a bet. Posted picks stand and are graded at the price they locked.</span>`);
       meta.lede = top.join("<br>");
+      meta.v1 = v1; meta.rs = RS;
       return { today: picks, live: lv, meta };
     },
     async loadRecord() { const bt = await load("nfl_backtest.json"); return (bt || []).filter(r => r.r === "W" || r.r === "L" || r.r === "P").map(r => toRec(r)) },
@@ -322,7 +338,8 @@
       let wh = ""; try { wh = windowsHTML(W, STAKE) } catch (e) { console.error("nfl lock times", e) }
       try { wh = parlaysHTML(PARLAYS) + wh } catch (e) { console.error("nfl parlays", e) }
       el.innerHTML = wh + (sl.length ? `<div class="sec-h"><h2>Full slate</h2><span class="note">Model projections for the top pass-catchers in every game (blend-free, before the market): a sanity check, not bets</span></div>` + sl.map(g => gameBlock(g, d.today)).join("") : `<div class="banner"><b>Quiet</b><span>No games on the schedule this week yet.</span></div>`) },
-    afterLive(el, d) { const m = d.meta || {}; try { el.insertAdjacentHTML("beforeend", reviewHTML(m.mon, d.live, m.week)) } catch (e) { console.error("nfl review panel", e) } },
+    afterLive(el, d) { const m = d.meta || {}; try { el.insertAdjacentHTML("beforeend", reviewHTML(m.mon, d.live, m.week)) } catch (e) { console.error("nfl review panel", e) }
+      try { el.insertAdjacentHTML("beforeend", archiveHTML(m.v1, m.rs)) } catch (e) { console.error("nfl archive", e) } },
     how: `<div><div class="kicker">The theory</div><h1>Bet the <em>under</em> on the <em>right</em> guys.</h1>
       <p class="lede">Prop books shade overs, because that's what the public bets: across 2024-25 their no-vig over price ran 3 to 4 points too high. Blindly betting every under only breaks even, though. The edge is in which players: the model finds the unders where usage, role and matchup point lower than the line.</p></div>
     <div class="ridemap">
