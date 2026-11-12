@@ -80,7 +80,10 @@
     const met = (R.rules || []).filter(x => x.met), stop = met.find(x => x.id === "stop"), on = met.filter(x => x.id !== "stop").map(x => x.then);
     const how = L.beta >= 0.95 ? "the model's disagreements with the market have held up about as well as it claimed" : `the model has been right about ${pct}% of its disagreements with the market`;
     const ev = [nw ? `${nw} ${plural(nw, "week")} of games` : "", se != null ? `±${se} pts` : ""].filter(Boolean).join(", ");
-    const act = stop ? "the hard-stop rule has fired" : on.length && !review ? `on track for "${fixLab(on[on.length - 1])}" at the Week ${rw} review, not decided yet` : on.length ? `rule says: ${fixLab(on[on.length - 1])}` : `the Week ${rw} review can move the card to paper; it cannot raise the stake`;
+    // [review 2026-11-11] until the counting period has 300 lines the percentage above is all weeks: do not pair it with a
+    // verdict from a game or two of the new period
+    const thin = sn < 300 && Mn.from_week != null;
+    const act = stop ? "the hard-stop rule has fired" : thin ? `the Week ${rw} review counts from Week ${Mn.from_week}: ${sn.toLocaleString()} ${plural(sn, "line")} so far` : on.length && !review ? `on track for "${fixLab(on[on.length - 1])}" at the Week ${rw} review, not decided yet` : on.length ? `rule says: ${fixLab(on[on.length - 1])}` : `the Week ${rw} review can move the card to paper; it cannot raise the stake`;
     return { line: `Live check (${span}, ${L.n.toLocaleString()} lines${ev ? "; " + ev : ""}): ${how}; ${act}.`, pct, need, rw, review };
   }
   function toRec(r, posted) {
@@ -149,9 +152,12 @@
     const recLine = parts.length ? `Paper record, 1u each at estimated prices with a 33% boost: ${parts.join(" · ")}. Too few to read anything into yet.` : "No graded parlays yet.";
     const res = e => e.result === "W" ? "Won" : e.result === "L" ? "Lost" : e.result === "Void" ? "Void (a leg did not play)" : e.result;
     const li = e => `<li>${esc(e.txt || "")}${e.result ? ` <b>${esc(res(e))}</b>` : ""}</li>`;
-    const open = tw.filter(e => !e.result), done = tw.filter(e => e.result);
+    // the window key ends in the kickoff time (UTC): a parlay whose game has started is no longer open
+    const kick = e => { const m = /_(\d{4})(\d\d)(\d\d)T(\d\d)(\d\d)Z$/.exec(e.window || ""); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : 0 };
+    const open = tw.filter(e => !e.result && kick(e) > Date.now()).reverse(), started = tw.filter(e => !e.result && kick(e) <= Date.now()), done = tw.filter(e => e.result);
     return `<div class="sec-h"><h2>Boost parlays</h2><span class="note">Optional · only with a boost · not part of the card</span></div><div class="panel flat prose">`
-      + (open.length ? `<h3>Open</h3><ul>${open.map(li).join("")}</ul>` : "") + (done.length ? `<h3>Earlier this week</h3><ul>${done.map(li).join("")}</ul>` : "")
+      + (open.length ? `<h3>Open (not kicked off)</h3><ul>${open.map(li).join("")}</ul>` : "") + (started.length ? `<h3>Kicked off, not graded yet</h3><ul>${started.map(li).join("")}</ul>` : "")
+      + (done.length ? `<h3>Graded this week</h3><ul>${done.map(li).join("")}</ul>` : "")
       + `<p class="note">${esc(recLine)}</p><p class="note">${esc(P.note || "")}</p></div>`;
   }
   function windowsHTML(W, stake) {
@@ -188,12 +194,12 @@
     const stakeTxt = STAKE != null && STAKE !== 1 ? `<b>${uTxt(STAKE)} a pick</b>, fixed through the end of the 2026 season. The review can move the card to paper or stop it; it cannot raise the stake.` : "<b>1u a pick</b>.";
     const when = togo == null ? "" : togo > 0 ? ` The review is ${togo} ${plural(togo, "week")} away, after Week ${rw - 1} grades.` : " The review week is here.";
     return `<div class="panel flat prose"><h3>The Week ${rw} review</h3>
-      <p>${stakeTxt}${when}${D.action ? ` Right now the rule says: <b>${esc(String(D.action).replace(/back to 1u/i, "stay at ½u"))}</b>.` : ""}</p>
+      <p>${stakeTxt}${when}${D.action ? ` Right now the rule says: <b>${esc(String(D.action).replace(/back to 1u/i, "stay at ½u").replace(/0\.5u/g, "½u"))}</b>.` : ""}</p>
       ${mb ? `<p>${esc(mb.line)}</p>` : ""}
       ${since.n ? `<p>Card since Week ${fw}: ${since.w}-${since.l}, ${since.units >= 0 ? "+" : ""}${(+since.units).toFixed(2)}u (${since.units_1u >= 0 ? "+" : ""}${(+since.units_1u).toFixed(2)} at 1u a pick), which is what the triggers count.</p>` : ""}
       ${rules ? `<ul>${rules}</ul>` : ""}
       <h3 style="margin-top:14px">Two records, kept apart</h3>
-      <p>Card: ${fmt(st(card))}.<br>Anytime-TD section: ${fmt(st(td))}.<br>Together: ${fmt(st(g))}. The headline numbers above mix both; the Week ${rw} rule counts the card.</p></div>`;
+      <p>Card: ${fmt(st(card))}.<br>Anytime-TD section (paper, not bet): ${st(td).w}-${st(td).l}.<br>The numbers above and the Week ${rw} rule count the card only.</p></div>`;
   }
   const M = x => `<div class="mbox"><math display="block">${x}</math></div>`;
   NCSUN.register({
@@ -210,13 +216,13 @@
     // [R3-3] app.js's default lede said "1 unit each"; the stake is per pick (½u in Weeks 7-9) and two records are kept
     liveLede: "Every pick posted here, graded at the book, price and stake it locked. The count restarted in Week 10 with the V2 model; Weeks 5-9 are archived at the bottom of this page. The card and the anytime-TD section are counted apart. Nothing from the backtest is mixed in.",
     // the next four are read only once app.js carries R3-3's optional edits (/tmp/r3_3/app_js.patch); harmless before
-    finishedText: "Finished · graded when the play-by-play lands", trendLabel: "2026 card so far",
+    finishedText: "Finished · graded when the play-by-play lands", trendLabel: "V2 card so far",
     headline: r => (r.raw.sec || (r.raw.mk === "td" ? "td" : "card")) === "card",
     liveGroup: { label: "Week by week", col: "Week", note: "graded at the posted price and stake (½u; anytime-TD picks are paper, 0u)", key: r => r.season + "|" + String(r.raw.wk).padStart(2, "0"), name: r => `${r.season} Week ${r.raw.wk}${r.stake !== 1 ? " · " + uTxt(r.stake) + " picks" : ""}`, short: r => r.raw.pk.split(" ").slice(-1)[0] + " " + (r.raw.mk === "td" ? "TD" : (r.raw.sd === "under" ? "u" : "o") + r.raw.ln + (r.raw.mk === "rec" ? " rec" : " yds")) },
     liveEmpty: "The record starts with the first posted card and grows every week.",
     recordHead: { kicker: "Out-of-sample backtest · 2023 to 2025", label: "2023-2025",
-      lede: "Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 80 minutes before kickoff (just after inactives), taking only prices from DraftKings, FanDuel and Caesars (every book still counts toward the market's fair price). The card rule is the live one: the 8 biggest edges on the Sunday afternoon slate plus the single best pick in every other game, one pick per player, 1 unit each. Simulated results, not a live record.",
-      extra: `<div class="panel flat prose" style="margin-top:12px"><h3>What to really expect</h3><p>These backtest numbers are <b>in-sample</b>: the card rules were refined over many rounds of research with all three seasons visible, so the headline overstates what to expect. The honest forward estimate is about <b>+6% on the card</b> (90% range −4% to +16%) and about +3% across every qualifying bet, from Week 7 on. Weeks 1-6 run about even with the market, and the anytime-TD section's in-sample return is far above its forward estimate (about +4%). Even at a true +6%, a full season has roughly a 1-in-4 chance of losing. Judge it on many weeks, not a few: the 2026 live tab's review is where that judgement is made.</p></div>` },
+      lede: "Every week was predicted by models trained only on earlier weeks, then priced at the real sportsbook lines posted about 80 minutes before kickoff (just after inactives), taking only prices from DraftKings, FanDuel and Caesars (every book still counts toward the market's fair price). The card rule is the one the live card started with: the 8 biggest edges on the Sunday afternoon slate plus the single best pick in every other game, one pick per player (up to two a game), 1 unit each. Since Nov 8 the live card is one pick a game, at ½ unit. Simulated results, not a live record.",
+      extra: `<div class="panel flat prose" style="margin-top:12px"><h3>What to really expect</h3><p>These backtest numbers are <b>in-sample</b>: the card rules were refined over many rounds of research with all three seasons visible, so the headline overstates what to expect. The honest forward estimate is about <b>+6% on the card</b> (90% range −4% to +16%) and about +3% across every qualifying bet, from Week 7 on. Weeks 1-6 run about even with the market, and the anytime-TD section's in-sample return is far above anything seen live; TD picks are paper since Nov 10. Even at a true +6%, a full season has roughly a 1-in-4 chance of losing. Judge it on many weeks, not a few: the 2026 live tab's review is where that judgement is made.</p></div>` },
     dims: {
       mk: { n: "Market", f: r => MKT[r.mk] || r.mk, order: ["Receptions", "Receiving yards", "Anytime TD"] },
       slate: { n: "Slate", f: r => r.slate, order: ["Sunday day", "Primetime"] },
@@ -312,7 +318,7 @@
         meta.stake = "0u (paper: tracked, not bet)";
         meta.summary = ["Paper trading: the card is tracked, not bet (the review rule tripped)", meta.summary].filter(Boolean).join(" · ");
       } else {
-        meta.stake = !stakes.length ? null : stakes.length === 1 ? `${uTxt(stakes[0])} each` : `${stakes.map(uTxt).join(" or ")} (each pick shows its stake)`;
+        meta.stake = !stakes.length ? (picks.length ? "paper only, not bet" : null) : stakes.length === 1 ? `${uTxt(stakes[0])} each` : `${stakes.map(uTxt).join(" or ")} (each pick shows its stake)`;
         if (meta.stake && meta.stake !== "1u each") meta.summary = [meta.stake, meta.summary].filter(Boolean).join(" · ");
       }
       // [R3-3] the lede, top to bottom: exceptions (withdrawn / missed / no pick), the live check, the two records,
@@ -337,14 +343,15 @@
       top.push(`<span class="note">Receptions, receiving-yards and anytime-TD props for WRs, TEs and RBs. ${stakeLine} Take the listed price or better: each pick shows the worst price that is still a bet. Posted picks stand and are graded at the price they locked.</span>`);
       meta.lede = top.join("<br>");
       meta.v1 = v1; meta.rs = RS;
-      return { today: picks, live: lv, meta };
+      meta.lvAll = lv;                       // [UX] the review panel shows paper TD results; the record counts bets only
+      return { today: picks, live: lv.filter(r => !r.raw.paper), meta };
     },
     async loadRecord() { const bt = await load("nfl_backtest.json"); return (bt || []).filter(r => r.r === "W" || r.r === "L" || r.r === "P").map(r => toRec(r)) },
     afterCard(el, d) { const sl = d.meta.slate, W = d.meta.windows || [];
       let wh = ""; try { wh = windowsHTML(W, STAKE) } catch (e) { console.error("nfl lock times", e) }
-      try { wh = parlaysHTML(PARLAYS) + wh } catch (e) { console.error("nfl parlays", e) }
+      try { wh = wh + parlaysHTML(PARLAYS) } catch (e) { console.error("nfl parlays", e) }
       el.innerHTML = wh + (sl.length ? `<div class="sec-h"><h2>Full slate</h2><span class="note">Model projections for the top pass-catchers in every game (blend-free, before the market): a sanity check, not bets</span></div>` + sl.map(g => gameBlock(g, d.today)).join("") : `<div class="banner"><b>Quiet</b><span>No games on the schedule this week yet.</span></div>`) },
-    afterLive(el, d) { const m = d.meta || {}; try { el.insertAdjacentHTML("beforeend", reviewHTML(m.mon, d.live, m.week)) } catch (e) { console.error("nfl review panel", e) }
+    afterLive(el, d) { const m = d.meta || {}; try { el.insertAdjacentHTML("beforeend", reviewHTML(m.mon, m.lvAll || d.live, m.week)) } catch (e) { console.error("nfl review panel", e) }
       try { el.insertAdjacentHTML("beforeend", archiveHTML(m.v1, m.rs)) } catch (e) { console.error("nfl archive", e) } },
     how: `<div><div class="kicker">The theory</div><h1>Bet the <em>under</em> on the <em>right</em> guys.</h1>
       <p class="lede">Prop books shade overs, because that's what the public bets: across 2024-25 their no-vig over price ran 3 to 4 points too high. Blindly betting every under only breaks even, though. The edge is in which players: the model finds the unders where usage, role and matchup point lower than the line.</p></div>
@@ -352,7 +359,7 @@
       <div class="panel stop"><h3>Every snap since 2018</h3><p>nflverse play-by-play, snap counts, injury reports, weekly rosters, depth charts, Next Gen Stats, FTN charting and kickoff weather: about 50,000 player-games, every input built from games before the one being priced.</p></div>
       <div class="panel stop"><h3>Who's actually playing</h3><p>The biggest lever. Who is active today, each player's rank among active teammates, depth-chart order, and how his share has moved in past games when a teammate sat. When a WR1 or RB1 is out, the next man up gets priced, not averaged.</p></div>
       <div class="panel stop"><h3>Three models</h3><p>Receptions: targets × catch rate and a form-anchored count model, with spread that grows with volume. Yards: a Tweedie mean, a calibrated yards distribution and direct over/under classifiers. TDs: separate rushing and receiving TD models plus a goal-line structural model, so RBs get their carries counted.</p></div>
-      <div class="panel stop"><h3>Market blend</h3><p>No model is bet raw. Each is blended with the books' no-vig price on the logit scale, 60% market and 40% model for the card. On their own the models lose to the books on receptions and yards; blended, they beat the books in all three markets. The win chance shown on each pick uses a more cautious weight fitted to real results (the "honest" number), because live the market has been right about most of the model's disagreements so far.</p></div>
+      <div class="panel stop"><h3>Market blend</h3><p>No model is bet raw. Each is blended with the books' no-vig price on the logit scale, 60% market and 40% model for the card. On their own the models lose to the books on receptions and yards; blended, they beat the books in the backtest. Live, the TD model has added nothing measurable, which is why TD picks are paper. The win chance shown on each pick uses a more cautious weight fitted to real results (the "honest" number), because live the market has been right about most of the model's disagreements so far.</p></div>
       <div class="panel stop"><h3>The card</h3><p>Only unders on receptions and yards: overs lost money in every season tested. Two-sided markets only. Rank by edge over the market: 8 picks shared across the Sunday afternoon slate (1 PM and 4 PM games), the single best pick in every other game (TNF, SNF, MNF, Saturday, London), one pick per game. Anytime-TD picks post as paper and are not bet. Boost parlays are listed separately and are optional.</p></div>
       <div class="panel stop"><h3>Posted picks stand</h3><p>Picks post just after inactives (about 80 minutes before kickoff) at whichever of DraftKings or FanDuel pays best (Caesars when it has the line), and are graded at that price even if the line or the model moves. A player ruled inactive voids the pick, as books do.</p></div>
     </div>
@@ -376,7 +383,7 @@
       <div class="panel eq"><h3>01 · Removing the vig</h3>
         <p>Two-way props are de-vigged per book, then the consensus is the median across books at the same line:</p>
         ${M(`<msub><mi>m</mi><mtext>over</mtext></msub><mo>=</mo><mfrac><mrow><mn>1</mn><mo>/</mo><msub><mi>d</mi><mi>o</mi></msub></mrow><mrow><mn>1</mn><mo>/</mo><msub><mi>d</mi><mi>o</mi></msub><mo>+</mo><mn>1</mn><mo>/</mo><msub><mi>d</mi><mi>u</mi></msub></mrow></mfrac>`)}
-        <p class="note">Anytime TD is usually yes-only; an 8% hold is removed when no book posts the no side.</p></div>
+        <p class="note">Anytime TD is usually yes-only; a 25% hold is removed when no book posts the no side.</p></div>
       <div class="panel eq"><h3>02 · Receptions</h3>
         <p>The mean averages a form-anchored Poisson GBM, a targets × catch-rate decomposition and a smooth Poisson GLM; the count is negative binomial with dispersion that scales with the mean:</p>
         ${M(`<mi>μ</mi><mo>=</mo><mn>.425</mn><msub><mi>μ</mi><mtext>off</mtext></msub><mo>+</mo><mn>.425</mn><msub><mi>T̂</mi></msub><mo>·</mo><msub><mi>ĉ</mi></msub><mo>+</mo><mn>.15</mn><msub><mi>μ</mi><mtext>GLM</mtext></msub><mo>,</mo><mspace width=".6em"/><mi>Y</mi><mo>∼</mo><mtext>NB</mtext><mo>(</mo><mi>μ</mi><mo>,</mo><mi>r</mi><mo>)</mo><mo>,</mo><mspace width=".4em"/><mi>log</mi><mi>r</mi><mo>=</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>log</mi><mi>μ</mi>`)}</div>
