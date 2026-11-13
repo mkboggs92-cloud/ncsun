@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-12 18:57",
+ "updated": "2026-11-13 05:30",
  "season": 2026,
  "week": 10,
  "this_week": [
@@ -26,7 +26,8 @@
      "bk": "williamhill_us",
      "dec": 2.37,
      "ph": 0.4301,
-     "gm": "WAS @ NYG"
+     "gm": "WAS @ NYG",
+     "act": 3.0
     },
     {
      "pid": "00-0041042",
@@ -39,7 +40,8 @@
      "bk": "williamhill_us",
      "dec": 1.92,
      "ph": 0.5206,
-     "gm": "WAS @ NYG"
+     "gm": "WAS @ NYG",
+     "act": 62.0
     },
     {
      "pid": "00-0036309",
@@ -52,7 +54,8 @@
      "bk": "williamhill_us",
      "dec": 2.14,
      "ph": 0.4445,
-     "gm": "WAS @ NYG"
+     "gm": "WAS @ NYG",
+     "act": 2.0
     },
     {
      "pid": "00-0036309",
@@ -65,7 +68,8 @@
      "bk": "williamhill_us",
      "dec": 1.9,
      "ph": 0.5105,
-     "gm": "WAS @ NYG"
+     "gm": "WAS @ NYG",
+     "act": 8.0
     }
    ],
    "price": null,
@@ -81,11 +85,103 @@
    "ev50": 0.6752,
    "posted": "2026-11-12 18:57",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 WAS @ NYG: Malachi Fields O2.5 rec + O27.5 yds; Darnell Mooney O1.5 rec + O13.5 yds \u00b7 Needs +487 before a 33% boost, +432 before 50%. Caesars est. +729."
   }
  ],
- "history": [],
+ "history": [
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261113T0115Z",
+   "kind": "czr",
+   "game_id": "2026_10_WAS_NYG",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "WAS @ NYG",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0041042",
+     "pk": "Malachi Fields",
+     "team": "NYG",
+     "game_id": "2026_10_WAS_NYG",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.37,
+     "ph": 0.4301,
+     "gm": "WAS @ NYG",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0041042",
+     "pk": "Malachi Fields",
+     "team": "NYG",
+     "game_id": "2026_10_WAS_NYG",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 27.5,
+     "bk": "williamhill_us",
+     "dec": 1.92,
+     "ph": 0.5206,
+     "gm": "WAS @ NYG",
+     "act": 62.0
+    },
+    {
+     "pid": "00-0036309",
+     "pk": "Darnell Mooney",
+     "team": "NYG",
+     "game_id": "2026_10_WAS_NYG",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 1.5,
+     "bk": "williamhill_us",
+     "dec": 2.14,
+     "ph": 0.4445,
+     "gm": "WAS @ NYG",
+     "act": 2.0
+    },
+    {
+     "pid": "00-0036309",
+     "pk": "Darnell Mooney",
+     "team": "NYG",
+     "game_id": "2026_10_WAS_NYG",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 13.5,
+     "bk": "williamhill_us",
+     "dec": 1.9,
+     "ph": 0.5105,
+     "gm": "WAS @ NYG",
+     "act": 8.0
+    }
+   ],
+   "price": null,
+   "est_price": 8.289,
+   "p_joint": 0.1404,
+   "p_indep": 0.0508,
+   "fair": 7.123,
+   "min0": 7.48,
+   "min33": 5.872,
+   "min50": 5.32,
+   "ev0": 0.1636,
+   "ev33": 0.5013,
+   "ev50": 0.6752,
+   "posted": "2026-11-12 18:57",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 WAS @ NYG: Malachi Fields O2.5 rec + O27.5 yds; Darnell Mooney O1.5 rec + O13.5 yds \u00b7 Needs +487 before a 33% boost, +432 before 50%. Caesars est. +729."
+  }
+ ],
  "record": {
   "cross": {
    "n": 0,
@@ -104,12 +200,12 @@
    "u50": 0
   },
   "czr": {
-   "n": 0,
+   "n": 1,
    "w": 0,
-   "l": 0,
-   "u1": 0,
-   "u33": 0,
-   "u50": 0
+   "l": 1,
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
