@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-14 09:02",
+ "updated": "2026-11-14 10:20",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -86,8 +86,8 @@
      "label": "Second lineup",
      "ids": [
       "809bd1a871491508",
-      "ad5cb64af10fc946",
       "eff9074bc066f0f2",
+      "ad5cb64af10fc946",
       "fd406a32a6fb3a29",
       "955da1675ad58a50",
       "80fa8218c99f9c58"
@@ -222,10 +222,10 @@
      "pts_loss": 23.3,
      "ml": -410,
      "debut": false,
-     "salary": null,
-     "dk_id": null,
-     "dk_name": null,
-     "value": null,
+     "salary": 9200.0,
+     "dk_id": "44885914",
+     "dk_name": "Juan Diaz",
+     "value": 8.33,
      "in": []
     },
     {

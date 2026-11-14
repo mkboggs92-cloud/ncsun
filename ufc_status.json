@@ -30,10 +30,8 @@
  },
  "grade_export": {
   "ok": true,
-  "at": "2026-11-13 17:02",
-  "note": "",
-  "age_h": 16.0,
-  "stale": true
+  "at": "2026-11-14 09:02",
+  "note": ""
  },
  "results": {
   "ok": true,
@@ -63,10 +61,8 @@
  },
  "publish": {
   "ok": true,
-  "at": "2026-11-13 17:02",
-  "note": "",
-  "age_h": 16.0,
-  "stale": true
+  "at": "2026-11-14 09:02",
+  "note": ""
  },
  "regime": {
   "ok": true,
