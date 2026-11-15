@@ -3,81 +3,81 @@
   "ok": true,
   "at": "2026-11-10 10:51",
   "note": "",
-  "age_h": 102.2,
+  "age_h": 117.0,
   "stale": false
  },
- "updated": "2026-11-14 17:02",
+ "updated": "2026-11-15 07:52",
  "train": {
   "ok": true,
   "at": "2026-11-10 11:00",
   "note": "",
-  "age_h": 102.0,
+  "age_h": 116.9,
   "stale": false
  },
  "predict": {
   "ok": true,
-  "at": "2026-11-14 17:01",
+  "at": "2026-11-15 07:50",
   "note": "",
   "age_h": 0.0,
   "stale": false
  },
  "lock": {
   "ok": true,
-  "at": "2026-11-14 17:01",
+  "at": "2026-11-15 07:50",
   "note": "",
   "age_h": 0.0,
   "stale": false
  },
  "grade_export": {
   "ok": true,
-  "at": "2026-11-14 09:02",
+  "at": "2026-11-14 17:02",
   "note": "",
-  "age_h": 8.0,
+  "age_h": 14.8,
   "stale": true
  },
  "results": {
   "ok": true,
-  "at": "2026-11-14 17:00",
+  "at": "2026-11-15 07:47",
   "note": "",
-  "age_h": 0.0,
+  "age_h": 0.1,
   "stale": false
  },
  "props_train": {
   "ok": true,
   "at": "2026-11-10 11:10",
   "note": "",
-  "age_h": 101.9,
+  "age_h": 116.7,
   "stale": false
  },
  "grade": {
   "ok": true,
-  "at": "2026-11-14 17:01",
+  "at": "2026-11-15 07:51",
   "note": "",
   "age_h": 0.0,
   "stale": false
  },
  "health": {
-  "ok": false,
-  "at": "2026-11-14 17:02",
-  "note": "card_match: 46% of BFO fights on the UFCStats card; win_inputs_missing: NaN rate live - train > 20 pts: ['d_home']"
+  "ok": true,
+  "at": "2026-11-15 07:52",
+  "note": ""
  },
  "publish": {
   "ok": true,
-  "at": "2026-11-14 09:02",
+  "at": "2026-11-14 17:02",
   "note": "",
-  "age_h": 8.0,
+  "age_h": 14.8,
   "stale": true
  },
  "regime": {
   "ok": true,
-  "at": "2026-11-14 17:00",
+  "at": "2026-11-15 07:49",
   "note": "",
-  "age_h": 0.0,
+  "age_h": 0.1,
   "stale": false
  },
  "pickcheck": {
   "ok": true,
-  "at": "2026-11-14 17:01",
+  "at": "2026-11-15 07:50",
   "note": "$2.17 of $20 this month",
   "age_h": 0.0,
   "stale": false
@@ -86,12 +86,12 @@
   "ok": true,
   "at": "2026-11-10 11:10",
   "note": "",
-  "age_h": 101.9,
+  "age_h": 116.7,
   "stale": false
  },
  "reports": {
   "ok": true,
-  "at": "2026-11-14 17:01",
+  "at": "2026-11-15 07:50",
   "note": "",
   "age_h": 0.0,
   "stale": false
@@ -100,21 +100,21 @@
   "ok": true,
   "at": "2026-11-10 11:10",
   "note": "4871 openers 2021-2026 (shadow only)",
-  "age_h": 101.9,
+  "age_h": 116.7,
   "stale": false
  },
  "closeline_shadow": {
   "ok": true,
-  "at": "2026-11-14 17:01",
-  "note": "142 quotes scored, 3 C3>=2%, 9 production; C3 picks 3 (0 graded), CLV-units vs production +0.00 (shadow only)",
+  "at": "2026-11-15 07:51",
+  "note": "78 quotes scored, 4 C3>=2%, 12 production; C3 picks 4 (1 graded), CLV-units vs production +0.03 (shadow only)",
   "age_h": 0.0,
   "stale": false
  },
  "snapshot": {
   "ok": true,
-  "at": "2026-11-14 15:00",
-  "note": "dk_splits 26 rows, bfo_prices 2816 rows, oddsapi 155 rows",
-  "age_h": 2.0,
+  "at": "2026-11-14 20:00",
+  "note": "dk_splits 14 rows, bfo_prices 2820 rows, oddsapi 123 rows",
+  "age_h": 11.9,
   "stale": false
  }
 }
