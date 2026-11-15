@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-15 14:57",
+ "updated": "2026-11-15 17:30",
  "season": 2026,
  "week": 10,
  "this_week": [
@@ -316,7 +316,8 @@
      "dec": 1.6,
      "ph": 0.6589,
      "gm": "NE @ DET",
-     "card": true
+     "card": true,
+     "act": 1.0
     },
     {
      "pid": "00-0033090",
@@ -329,7 +330,8 @@
      "bk": "draftkings",
      "dec": 1.89,
      "ph": 0.561,
-     "gm": "NE @ DET"
+     "gm": "NE @ DET",
+     "act": 22.0
     },
     {
      "pid": "00-0038621",
@@ -342,7 +344,8 @@
      "bk": "draftkings",
      "dec": 1.75,
      "ph": 0.5893,
-     "gm": "NE @ DET"
+     "gm": "NE @ DET",
+     "act": 1.0
     }
    ],
    "price": null,
@@ -359,7 +362,11 @@
    "qualifies": true,
    "posted": "2026-11-15 08:02",
    "stake": 0.0,
-   "result": null,
+   "result": "W",
+   "u1": 3.878,
+   "price_graded": 4.878,
+   "u33": 5.158,
+   "u50": 5.817,
    "txt": "DK same-game \u00b7 NE @ DET: Rhamondre Stevenson U3.5 rec (card pick) + Hunter Henry U38.5 yds + DeMario Douglas U3.5 rec \u00b7 Needs +309 before a 33% boost, +300 before 50%. DK est. +388."
   },
   {
@@ -385,7 +392,8 @@
      "bk": "williamhill_us",
      "dec": 2.14,
      "ph": 0.4688,
-     "gm": "NE @ DET"
+     "gm": "NE @ DET",
+     "act": 1.0
     },
     {
      "pid": "00-0039065",
@@ -398,7 +406,8 @@
      "bk": "williamhill_us",
      "dec": 1.87,
      "ph": 0.5306,
-     "gm": "NE @ DET"
+     "gm": "NE @ DET",
+     "act": 16.0
     },
     {
      "pid": "00-0037240",
@@ -411,7 +420,8 @@
      "bk": "williamhill_us",
      "dec": 1.75,
      "ph": 0.5639,
-     "gm": "NE @ DET"
+     "gm": "NE @ DET",
+     "act": 4.0
     },
     {
      "pid": "00-0037240",
@@ -424,7 +434,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.5317,
-     "gm": "NE @ DET"
+     "gm": "NE @ DET",
+     "act": 50.0
     }
    ],
    "price": null,
@@ -440,8 +451,11 @@
    "ev50": 0.5036,
    "posted": "2026-11-15 08:02",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
    "got": 6.25,
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 NE @ DET: Sam LaPorta O4.5 rec + O43.5 yds; Jameson Williams O3.5 rec + O56.5 yds \u00b7 Needs +363 before a 33% boost, +322 before 50%. Caesars est. +490."
   },
   {
@@ -464,7 +478,8 @@
      "dec": 2.21,
      "ph": 0.5042,
      "gm": "MIA @ IND",
-     "card": true
+     "card": true,
+     "act": 2.0
     },
     {
      "pid": "00-0041013",
@@ -477,7 +492,8 @@
      "bk": "draftkings",
      "dec": 1.77,
      "ph": 0.6187,
-     "gm": "KC @ ATL"
+     "gm": "KC @ ATL",
+     "act": 6.0
     },
     {
      "pid": "00-0034827",
@@ -491,7 +507,8 @@
      "dec": 1.88,
      "ph": 0.5693,
      "gm": "BUF @ NYJ",
-     "card": true
+     "card": true,
+     "act": 90.0
     }
    ],
    "price": 7.354,
@@ -504,7 +521,10 @@
    "ev50": 0.8705,
    "posted": "2026-11-15 11:35",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK, three different games (first choice if the boost allows it): Anthony Gould U1.5 rec (MIA@IND, card pick) + Emmett Johnson U3.5 rec (KC@ATL) + DJ Moore U48.5 yds (BUF@NYJ, card pick) \u00b7 Needs +369 before a 33% boost, +327 before 50%. DK now +635."
   },
   {
@@ -530,7 +550,8 @@
      "dec": 2.21,
      "ph": 0.5042,
      "gm": "MIA @ IND",
-     "card": true
+     "card": true,
+     "act": 2.0
     },
     {
      "pid": "00-0041529",
@@ -543,7 +564,8 @@
      "bk": "draftkings",
      "dec": 2.03,
      "ph": 0.5591,
-     "gm": "MIA @ IND"
+     "gm": "MIA @ IND",
+     "act": 1.0
     },
     {
      "pid": "00-0040198",
@@ -556,7 +578,8 @@
      "bk": "draftkings",
      "dec": 1.83,
      "ph": 0.5702,
-     "gm": "MIA @ IND"
+     "gm": "MIA @ IND",
+     "act": 4.0
     }
    ],
    "price": null,
@@ -573,7 +596,10 @@
    "qualifies": true,
    "posted": "2026-11-15 11:35",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 MIA @ IND: Anthony Gould U1.5 rec (card pick) + Kevin Coleman Jr. U1.5 rec + Ollie Gordon II U1.5 rec \u00b7 Needs +406 before a 33% boost, +360 before 50%. DK est. +657."
   },
   {
@@ -598,7 +624,8 @@
      "bk": "draftkings",
      "dec": 1.86,
      "ph": 0.5483,
-     "gm": "CAR @ NO"
+     "gm": "CAR @ NO",
+     "act": 0.0
     },
     {
      "pid": "00-0041029",
@@ -611,7 +638,8 @@
      "bk": "draftkings",
      "dec": 2.3,
      "ph": 0.4455,
-     "gm": "CAR @ NO"
+     "gm": "CAR @ NO",
+     "act": 11.0
     },
     {
      "pid": "00-0039342",
@@ -667,7 +695,8 @@
      "dec": 1.88,
      "ph": 0.5693,
      "gm": "BUF @ NYJ",
-     "card": true
+     "card": true,
+     "act": 90.0
     },
     {
      "pid": "00-0038933",
@@ -680,7 +709,8 @@
      "bk": "draftkings",
      "dec": 1.92,
      "ph": 0.5435,
-     "gm": "BUF @ NYJ"
+     "gm": "BUF @ NYJ",
+     "act": 58.0
     },
     {
      "pid": "00-0035537",
@@ -693,7 +723,8 @@
      "bk": "draftkings",
      "dec": 2.26,
      "ph": 0.4458,
-     "gm": "BUF @ NYJ"
+     "gm": "BUF @ NYJ",
+     "act": 1.0
     }
    ],
    "price": null,
@@ -710,7 +741,10 @@
    "qualifies": true,
    "posted": "2026-11-15 11:35",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 BUF @ NYJ: DJ Moore U48.5 yds (card pick) + Dalton Kincaid U42.5 yds + Ty Johnson U1.5 rec \u00b7 Needs +532 before a 33% boost, +472 before 50%. DK est. +652."
   },
   {
@@ -736,7 +770,8 @@
      "bk": "williamhill_us",
      "dec": 2.2,
      "ph": 0.5072,
-     "gm": "MIA @ IND"
+     "gm": "MIA @ IND",
+     "act": 1.0
     },
     {
      "pid": "00-0035021",
@@ -749,7 +784,8 @@
      "bk": "williamhill_us",
      "dec": 1.9,
      "ph": 0.5599,
-     "gm": "MIA @ IND"
+     "gm": "MIA @ IND",
+     "act": 30.0
     },
     {
      "pid": "00-0041523",
@@ -762,7 +798,8 @@
      "bk": "williamhill_us",
      "dec": 1.97,
      "ph": 0.4826,
-     "gm": "MIA @ IND"
+     "gm": "MIA @ IND",
+     "act": 3.0
     },
     {
      "pid": "00-0041523",
@@ -775,7 +812,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.5258,
-     "gm": "MIA @ IND"
+     "gm": "MIA @ IND",
+     "act": 71.0
     }
    ],
    "price": null,
@@ -791,7 +829,10 @@
    "ev50": 0.7466,
    "posted": "2026-11-15 11:35",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 MIA @ IND: Ashton Dulin O1.5 rec + O14.5 yds; Caleb Douglas O3.5 rec + O41.5 yds \u00b7 Needs +372 before a 33% boost, +330 before 50%. Caesars est. +594."
   },
   {
@@ -1616,18 +1657,482 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 WAS @ NYG: Malachi Fields O2.5 rec + O26.5 yds \u00b7 Needs +1213 before a 33% boost, +1075 before 50%. Caesars est. +1450."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1430Z",
+   "kind": "sgp",
+   "game_id": "2026_10_NE_DET",
+   "book": "draftkings",
+   "fill": 0,
+   "day": false,
+   "gm": "NE @ DET",
+   "legs": [
+    {
+     "pid": "00-0036875",
+     "pk": "Rhamondre Stevenson",
+     "team": "NE",
+     "game_id": "2026_10_NE_DET",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.6,
+     "ph": 0.6589,
+     "gm": "NE @ DET",
+     "card": true,
+     "act": 1.0
+    },
+    {
+     "pid": "00-0033090",
+     "pk": "Hunter Henry",
+     "team": "NE",
+     "game_id": "2026_10_NE_DET",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 38.5,
+     "bk": "draftkings",
+     "dec": 1.89,
+     "ph": 0.561,
+     "gm": "NE @ DET",
+     "act": 22.0
+    },
+    {
+     "pid": "00-0038621",
+     "pk": "DeMario Douglas",
+     "team": "NE",
+     "game_id": "2026_10_NE_DET",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.75,
+     "ph": 0.5893,
+     "gm": "NE @ DET",
+     "act": 1.0
+    }
+   ],
+   "price": null,
+   "est_price": 4.878,
+   "p_joint": 0.2053,
+   "p_indep": 0.2178,
+   "fair": 4.872,
+   "min0": 5.115,
+   "min33": 4.094,
+   "min50": 3.744,
+   "ev0": 0.0012,
+   "ev33": 0.2638,
+   "ev50": 0.3991,
+   "qualifies": true,
+   "posted": "2026-11-15 08:02",
+   "stake": 0.0,
+   "result": "W",
+   "u1": 3.878,
+   "price_graded": 4.878,
+   "u33": 5.158,
+   "u50": 5.817,
+   "txt": "DK same-game \u00b7 NE @ DET: Rhamondre Stevenson U3.5 rec (card pick) + Hunter Henry U38.5 yds + DeMario Douglas U3.5 rec \u00b7 Needs +309 before a 33% boost, +300 before 50%. DK est. +388."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1430Z",
+   "kind": "czr",
+   "game_id": "2026_10_NE_DET",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "NE @ DET",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0039065",
+     "pk": "Sam LaPorta",
+     "team": "DET",
+     "game_id": "2026_10_NE_DET",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 4.5,
+     "bk": "williamhill_us",
+     "dec": 2.14,
+     "ph": 0.4688,
+     "gm": "NE @ DET",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0039065",
+     "pk": "Sam LaPorta",
+     "team": "DET",
+     "game_id": "2026_10_NE_DET",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 43.5,
+     "bk": "williamhill_us",
+     "dec": 1.87,
+     "ph": 0.5306,
+     "gm": "NE @ DET",
+     "act": 16.0
+    },
+    {
+     "pid": "00-0037240",
+     "pk": "Jameson Williams",
+     "team": "DET",
+     "game_id": "2026_10_NE_DET",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 1.75,
+     "ph": 0.5639,
+     "gm": "NE @ DET",
+     "act": 4.0
+    },
+    {
+     "pid": "00-0037240",
+     "pk": "Jameson Williams",
+     "team": "DET",
+     "game_id": "2026_10_NE_DET",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 56.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.5317,
+     "gm": "NE @ DET",
+     "act": 50.0
+    }
+   ],
+   "price": null,
+   "est_price": 5.898,
+   "p_joint": 0.1801,
+   "p_indep": 0.0746,
+   "fair": 5.552,
+   "min0": 5.829,
+   "min33": 4.631,
+   "min50": 4.219,
+   "ev0": 0.0624,
+   "ev33": 0.3536,
+   "ev50": 0.5036,
+   "posted": "2026-11-15 08:02",
+   "stake": 0.0,
+   "result": "L",
+   "got": 6.25,
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 NE @ DET: Sam LaPorta O4.5 rec + O43.5 yds; Jameson Williams O3.5 rec + O56.5 yds \u00b7 Needs +363 before a 33% boost, +322 before 50%. Caesars est. +490."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1800Z",
+   "kind": "cross",
+   "game_id": null,
+   "book": "draftkings",
+   "legs": [
+    {
+     "pid": "00-0039816",
+     "pk": "Anthony Gould",
+     "team": "IND",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 1.5,
+     "bk": "draftkings",
+     "dec": 2.21,
+     "ph": 0.5042,
+     "gm": "MIA @ IND",
+     "card": true,
+     "act": 2.0
+    },
+    {
+     "pid": "00-0041013",
+     "pk": "Emmett Johnson",
+     "team": "KC",
+     "game_id": "2026_10_KC_ATL",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.77,
+     "ph": 0.6187,
+     "gm": "KC @ ATL",
+     "act": 6.0
+    },
+    {
+     "pid": "00-0034827",
+     "pk": "DJ Moore",
+     "team": "BUF",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 48.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5693,
+     "gm": "BUF @ NYJ",
+     "card": true,
+     "act": 90.0
+    }
+   ],
+   "price": 7.354,
+   "p_joint": 0.1776,
+   "ev": 0.3062,
+   "min_price": 5.912,
+   "min33": 4.693,
+   "min50": 4.274,
+   "ev33": 0.6786,
+   "ev50": 0.8705,
+   "posted": "2026-11-15 11:35",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK, three different games (first choice if the boost allows it): Anthony Gould U1.5 rec (MIA@IND, card pick) + Emmett Johnson U3.5 rec (KC@ATL) + DJ Moore U48.5 yds (BUF@NYJ, card pick) \u00b7 Needs +369 before a 33% boost, +327 before 50%. DK now +635."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1800Z",
+   "kind": "sgp",
+   "game_id": "2026_10_MIA_IND",
+   "book": "draftkings",
+   "fill": 0,
+   "day": true,
+   "gm": "MIA @ IND",
+   "legs": [
+    {
+     "pid": "00-0039816",
+     "pk": "Anthony Gould",
+     "team": "IND",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 1.5,
+     "bk": "draftkings",
+     "dec": 2.21,
+     "ph": 0.5042,
+     "gm": "MIA @ IND",
+     "card": true,
+     "act": 2.0
+    },
+    {
+     "pid": "00-0041529",
+     "pk": "Kevin Coleman Jr.",
+     "team": "MIA",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 1.5,
+     "bk": "draftkings",
+     "dec": 2.03,
+     "ph": 0.5591,
+     "gm": "MIA @ IND",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0040198",
+     "pk": "Ollie Gordon II",
+     "team": "MIA",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 1.5,
+     "bk": "draftkings",
+     "dec": 1.83,
+     "ph": 0.5702,
+     "gm": "MIA @ IND",
+     "act": 4.0
+    }
+   ],
+   "price": null,
+   "est_price": 7.567,
+   "p_joint": 0.1641,
+   "p_indep": 0.1608,
+   "fair": 6.093,
+   "min0": 6.398,
+   "min33": 5.059,
+   "min50": 4.599,
+   "ev0": 0.2419,
+   "ev33": 0.5975,
+   "ev50": 0.7807,
+   "qualifies": true,
+   "posted": "2026-11-15 11:35",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 MIA @ IND: Anthony Gould U1.5 rec (card pick) + Kevin Coleman Jr. U1.5 rec + Ollie Gordon II U1.5 rec \u00b7 Needs +406 before a 33% boost, +360 before 50%. DK est. +657."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1800Z",
+   "kind": "sgp",
+   "game_id": "2026_10_BUF_NYJ",
+   "book": "draftkings",
+   "fill": 1,
+   "day": true,
+   "gm": "BUF @ NYJ",
+   "legs": [
+    {
+     "pid": "00-0034827",
+     "pk": "DJ Moore",
+     "team": "BUF",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 48.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5693,
+     "gm": "BUF @ NYJ",
+     "card": true,
+     "act": 90.0
+    },
+    {
+     "pid": "00-0038933",
+     "pk": "Dalton Kincaid",
+     "team": "BUF",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 42.5,
+     "bk": "draftkings",
+     "dec": 1.92,
+     "ph": 0.5435,
+     "gm": "BUF @ NYJ",
+     "act": 58.0
+    },
+    {
+     "pid": "00-0035537",
+     "pk": "Ty Johnson",
+     "team": "BUF",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 1.5,
+     "bk": "draftkings",
+     "dec": 2.26,
+     "ph": 0.4458,
+     "gm": "BUF @ NYJ",
+     "act": 1.0
+    }
+   ],
+   "price": null,
+   "est_price": 7.519,
+   "p_joint": 0.13,
+   "p_indep": 0.1379,
+   "fair": 7.694,
+   "min0": 8.078,
+   "min33": 6.322,
+   "min50": 5.719,
+   "ev0": -0.0227,
+   "ev33": 0.2569,
+   "ev50": 0.4009,
+   "qualifies": true,
+   "posted": "2026-11-15 11:35",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 BUF @ NYJ: DJ Moore U48.5 yds (card pick) + Dalton Kincaid U42.5 yds + Ty Johnson U1.5 rec \u00b7 Needs +532 before a 33% boost, +472 before 50%. DK est. +652."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1800Z",
+   "kind": "czr",
+   "game_id": "2026_10_MIA_IND",
+   "book": "williamhill_us",
+   "day": true,
+   "gm": "MIA @ IND",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0035021",
+     "pk": "Ashton Dulin",
+     "team": "IND",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 1.5,
+     "bk": "williamhill_us",
+     "dec": 2.2,
+     "ph": 0.5072,
+     "gm": "MIA @ IND",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0035021",
+     "pk": "Ashton Dulin",
+     "team": "IND",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 14.5,
+     "bk": "williamhill_us",
+     "dec": 1.9,
+     "ph": 0.5599,
+     "gm": "MIA @ IND",
+     "act": 30.0
+    },
+    {
+     "pid": "00-0041523",
+     "pk": "Caleb Douglas",
+     "team": "MIA",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 1.97,
+     "ph": 0.4826,
+     "gm": "MIA @ IND",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0041523",
+     "pk": "Caleb Douglas",
+     "team": "MIA",
+     "game_id": "2026_10_MIA_IND",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 41.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.5258,
+     "gm": "MIA @ IND",
+     "act": 71.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.936,
+   "p_joint": 0.1764,
+   "p_indep": 0.0721,
+   "fair": 5.67,
+   "min0": 5.953,
+   "min33": 4.724,
+   "min50": 4.302,
+   "ev0": 0.2232,
+   "ev33": 0.5687,
+   "ev50": 0.7466,
+   "posted": "2026-11-15 11:35",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 MIA @ IND: Ashton Dulin O1.5 rec + O14.5 yds; Caleb Douglas O3.5 rec + O41.5 yds \u00b7 Needs +372 before a 33% boost, +330 before 50%. Caesars est. +594."
   }
  ],
  "record": {
   "cross": {
-   "n": 0,
-   "w": 0,
-   "l": 0,
-   "u1": 0,
-   "u33": 0,
-   "u50": 0
-  },
-  "sgp": {
    "n": 1,
    "w": 0,
    "l": 1,
@@ -1635,13 +2140,21 @@
    "u33": -1.0,
    "u50": -1.0
   },
+  "sgp": {
+   "n": 4,
+   "w": 1,
+   "l": 3,
+   "u1": 0.88,
+   "u33": 2.16,
+   "u50": 2.82
+  },
   "czr": {
-   "n": 2,
+   "n": 4,
    "w": 0,
-   "l": 2,
-   "u1": -2.0,
-   "u33": -2.0,
-   "u50": -2.0
+   "l": 4,
+   "u1": -4.0,
+   "u33": -4.0,
+   "u50": -4.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
