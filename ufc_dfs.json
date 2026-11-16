@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16 09:00",
+ "updated": "2026-11-16 17:01",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -62,9 +62,44 @@
    "event": "UFC Fight Night: Prochazka vs. Stirling",
    "date": "2026-11-21",
    "cap": 50000,
-   "salaries": "pending",
-   "lineups": [],
-   "lock_utc": null,
+   "salaries": "live",
+   "lineups": [
+    {
+     "rank": 1,
+     "label": "Best lineup",
+     "ids": [
+      "b07aed698fba8624",
+      "b4b496ec2197ee3e",
+      "709fadb644ee3f51",
+      "239d8e5359022f3b",
+      "17923f676f100e16",
+      "def8166ff24bd237"
+     ],
+     "salary": 50000,
+     "proj": 426.6,
+     "p10": 300.1,
+     "p90": 553.1,
+     "note": "Highest projected total under the $50,000 cap, at most one fighter per fight."
+    },
+    {
+     "rank": 2,
+     "label": "Second lineup",
+     "ids": [
+      "b07aed698fba8624",
+      "b4b496ec2197ee3e",
+      "709fadb644ee3f51",
+      "193b9d1858bc4df3",
+      "17923f676f100e16",
+      "faf317c665546a36"
+     ],
+     "salary": 49900,
+     "proj": 425.6,
+     "p10": 298.8,
+     "p90": 552.4,
+     "note": "Best projected total that differs from the first lineup by at least 2 fighters."
+    }
+   ],
+   "lock_utc": "2026-11-21 15:00",
    "pool": [
     {
      "id": "009341ed974bad72",
@@ -89,8 +124,12 @@
      "kd": 0.37,
      "pts_win": 107.5,
      "pts_loss": 26.2,
-     "ml": 124,
+     "ml": 142,
      "debut": false,
+     "salary": 7800.0,
+     "dk_id": "44944559",
+     "dk_name": "Jiri Prochazka",
+     "value": 7.09,
      "in": []
     },
     {
@@ -116,9 +155,16 @@
      "kd": 0.51,
      "pts_win": 114.7,
      "pts_loss": 37.5,
-     "ml": -148,
+     "ml": -170,
      "debut": false,
-     "in": []
+     "salary": 8400.0,
+     "dk_id": "44944558",
+     "dk_name": "Navajo Stirling",
+     "value": 10.37,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "cb696ebfb6598724",
@@ -143,8 +189,12 @@
      "kd": 0.1,
      "pts_win": 91.1,
      "pts_loss": 26.2,
-     "ml": 114,
+     "ml": 110,
      "debut": false,
+     "salary": 7900.0,
+     "dk_id": "44944560",
+     "dk_name": "Aljamain Sterling",
+     "value": 6.78,
      "in": []
     },
     {
@@ -170,9 +220,15 @@
      "kd": 0.54,
      "pts_win": 89.7,
      "pts_loss": 26.1,
-     "ml": -135,
+     "ml": -130,
      "debut": false,
-     "in": []
+     "salary": 8300.0,
+     "dk_id": "44944561",
+     "dk_name": "Kevin Vallejos",
+     "value": 7.58,
+     "in": [
+      1
+     ]
     },
     {
      "id": "193b9d1858bc4df3",
@@ -199,7 +255,13 @@
      "pts_loss": 22.6,
      "ml": -185,
      "debut": false,
-     "in": []
+     "salary": 8600.0,
+     "dk_id": "44944563",
+     "dk_name": "Dan Hooker",
+     "value": 7.42,
+     "in": [
+      2
+     ]
     },
     {
      "id": "def8166ff24bd237",
@@ -226,7 +288,13 @@
      "pts_loss": 25.6,
      "ml": 154,
      "debut": false,
-     "in": []
+     "salary": 7600.0,
+     "dk_id": "44944562",
+     "dk_name": "Brian Ortega",
+     "value": 7.11,
+     "in": [
+      1
+     ]
     },
     {
      "id": "98aa60cf58071fd6",
@@ -251,8 +319,12 @@
      "kd": 0.26,
      "pts_win": 83.0,
      "pts_loss": 20.8,
-     "ml": -198,
+     "ml": -205,
      "debut": false,
+     "salary": 8700.0,
+     "dk_id": "44944555",
+     "dk_name": "Kyoji Horiguchi",
+     "value": 6.85,
      "in": []
     },
     {
@@ -278,8 +350,12 @@
      "kd": 0.22,
      "pts_win": 88.2,
      "pts_loss": 25.1,
-     "ml": 164,
+     "ml": 170,
      "debut": false,
+     "salary": 7500.0,
+     "dk_id": "44944554",
+     "dk_name": "Asu Almabayev",
+     "value": 6.51,
      "in": []
     },
     {
@@ -307,6 +383,10 @@
      "pts_loss": 17.9,
      "ml": 250,
      "debut": false,
+     "salary": 7000.0,
+     "dk_id": "44944549",
+     "dk_name": "Jared Cannonier",
+     "value": 4.36,
      "in": []
     },
     {
@@ -334,7 +414,14 @@
      "pts_loss": 28.7,
      "ml": -310,
      "debut": false,
-     "in": []
+     "salary": 9200.0,
+     "dk_id": "44944548",
+     "dk_name": "Ikram Aliskerov",
+     "value": 9.52,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "6747ccd6d1acd266",
@@ -359,8 +446,12 @@
      "kd": 0.42,
      "pts_win": 97.1,
      "pts_loss": 18.0,
-     "ml": -205,
+     "ml": -198,
      "debut": false,
+     "salary": 8800.0,
+     "dk_id": "44944564",
+     "dk_name": "Shamil Gaziev",
+     "value": 7.25,
      "in": []
     },
     {
@@ -386,9 +477,16 @@
      "kd": 0.37,
      "pts_win": 101.1,
      "pts_loss": 21.8,
-     "ml": 170,
+     "ml": 164,
      "debut": false,
-     "in": []
+     "salary": 7400.0,
+     "dk_id": "44944565",
+     "dk_name": "Tallison Teixeira",
+     "value": 7.45,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "6d35bf94f7d30241",
@@ -398,23 +496,27 @@
      "date": "2026-11-21",
      "event": "UFC Fight Night: Prochazka vs. Stirling",
      "rounds": 3,
-     "proj": 48.7,
-     "p10": 6.6,
-     "p90": 97.5,
-     "p_win": 0.477,
-     "p_ko": 0.134,
-     "p_sub": 0.096,
-     "p_dec": 0.246,
-     "p_r1": 0.104,
+     "proj": 47.3,
+     "p10": 6.2,
+     "p90": 97.2,
+     "p_win": 0.455,
+     "p_ko": 0.128,
+     "p_sub": 0.092,
+     "p_dec": 0.235,
+     "p_r1": 0.1,
      "mins": 11.1,
      "sig": 34.8,
-     "td": 0.83,
+     "td": 0.84,
      "ctrl": 2.1,
      "kd": 0.17,
      "pts_win": 83.3,
      "pts_loss": 17.3,
-     "ml": 102,
+     "ml": -112,
      "debut": false,
+     "salary": 8000.0,
+     "dk_id": "44944556",
+     "dk_name": "Amir Albazi",
+     "value": 5.91,
      "in": []
     },
     {
@@ -425,14 +527,14 @@
      "date": "2026-11-21",
      "event": "UFC Fight Night: Prochazka vs. Stirling",
      "rounds": 3,
-     "proj": 55.2,
-     "p10": 8.3,
-     "p90": 101.8,
-     "p_win": 0.523,
-     "p_ko": 0.193,
-     "p_sub": 0.04,
-     "p_dec": 0.29,
-     "p_r1": 0.105,
+     "proj": 56.6,
+     "p10": 8.7,
+     "p90": 102.6,
+     "p_win": 0.545,
+     "p_ko": 0.201,
+     "p_sub": 0.041,
+     "p_dec": 0.302,
+     "p_r1": 0.11,
      "mins": 11.1,
      "sig": 42.2,
      "td": 0.81,
@@ -440,8 +542,12 @@
      "kd": 0.31,
      "pts_win": 87.1,
      "pts_loss": 20.2,
-     "ml": -122,
+     "ml": -108,
      "debut": false,
+     "salary": 8200.0,
+     "dk_id": "44944557",
+     "dk_name": "Alessandro Costa",
+     "value": 6.9,
      "in": []
     },
     {
@@ -467,8 +573,12 @@
      "kd": 0.23,
      "pts_win": 86.9,
      "pts_loss": 21.0,
-     "ml": -238,
+     "ml": -245,
      "debut": false,
+     "salary": 8900.0,
+     "dk_id": "44944551",
+     "dk_name": "Jake Matthews",
+     "value": 7.45,
      "in": []
     },
     {
@@ -494,8 +604,12 @@
      "kd": 0.19,
      "pts_win": 84.7,
      "pts_loss": 19.4,
-     "ml": 195,
+     "ml": 200,
      "debut": false,
+     "salary": 7300.0,
+     "dk_id": "44944550",
+     "dk_name": "Tahir Abdullayev",
+     "value": 5.44,
      "in": []
     },
     {
@@ -523,6 +637,10 @@
      "pts_loss": 23.2,
      "ml": -250,
      "debut": false,
+     "salary": 9000.0,
+     "dk_id": "44944552",
+     "dk_name": "Aleksandre Topuria",
+     "value": 6.68,
      "in": []
     },
     {
@@ -550,7 +668,13 @@
      "pts_loss": 26.6,
      "ml": 190,
      "debut": false,
-     "in": []
+     "salary": 7200.0,
+     "dk_id": "44944553",
+     "dk_name": "Santiago Luna",
+     "value": 7.24,
+     "in": [
+      2
+     ]
     },
     {
      "id": "37f560436d745c18",
@@ -577,6 +701,10 @@
      "pts_loss": 19.3,
      "ml": 124,
      "debut": false,
+     "salary": null,
+     "dk_id": null,
+     "dk_name": null,
+     "value": null,
      "in": []
     },
     {
@@ -604,6 +732,10 @@
      "pts_loss": 21.3,
      "ml": -160,
      "debut": false,
+     "salary": null,
+     "dk_id": null,
+     "dk_name": null,
+     "value": null,
      "in": []
     },
     {
@@ -631,7 +763,14 @@
      "pts_loss": 21.7,
      "ml": -265,
      "debut": true,
-     "in": []
+     "salary": 9100.0,
+     "dk_id": "44944569",
+     "dk_name": "Diyar Nurgozhay",
+     "value": 8.78,
+     "in": [
+      1,
+      2
+     ]
     },
     {
      "id": "92b5f4ee9ff40321",
@@ -658,6 +797,10 @@
      "pts_loss": 19.0,
      "ml": 200,
      "debut": true,
+     "salary": 7100.0,
+     "dk_id": "44944568",
+     "dk_name": "Alik Lorenz",
+     "value": 5.17,
      "in": []
     }
    ]
