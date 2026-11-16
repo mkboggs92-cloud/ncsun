@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-15 20:30",
+ "updated": "2026-11-16 05:31",
  "season": 2026,
  "week": 10,
  "this_week": [
@@ -1422,7 +1422,8 @@
      "dec": 1.91,
      "ph": 0.5413,
      "gm": "PIT @ CIN",
-     "card": true
+     "card": true,
+     "act": 0.0
     },
     {
      "pid": "00-0035640",
@@ -1435,7 +1436,8 @@
      "bk": "draftkings",
      "dec": 1.88,
      "ph": 0.5444,
-     "gm": "PIT @ CIN"
+     "gm": "PIT @ CIN",
+     "act": 54.0
     },
     {
      "pid": "00-0037228",
@@ -1448,7 +1450,8 @@
      "bk": "draftkings",
      "dec": 1.88,
      "ph": 0.5377,
-     "gm": "PIT @ CIN"
+     "gm": "PIT @ CIN",
+     "act": 26.0
     }
    ],
    "price": null,
@@ -1465,7 +1468,10 @@
    "qualifies": true,
    "posted": "2026-11-15 19:02",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 PIT @ CIN: Germie Bernard U48.5 yds (card pick) + DK Metcalf U55.5 yds + Jaylen Warren U23.5 yds \u00b7 Needs +454 before a 33% boost, +402 before 50%. DK est. +522."
   },
   {
@@ -1491,7 +1497,8 @@
      "bk": "williamhill_us",
      "dec": 2.03,
      "ph": 0.4774,
-     "gm": "PIT @ CIN"
+     "gm": "PIT @ CIN",
+     "act": 1.0
     },
     {
      "pid": "00-0034829",
@@ -1504,7 +1511,8 @@
      "bk": "williamhill_us",
      "dec": 1.87,
      "ph": 0.5216,
-     "gm": "PIT @ CIN"
+     "gm": "PIT @ CIN",
+     "act": 9.0
     },
     {
      "pid": "00-0036900",
@@ -1517,7 +1525,8 @@
      "bk": "williamhill_us",
      "dec": 1.81,
      "ph": 0.5111,
-     "gm": "PIT @ CIN"
+     "gm": "PIT @ CIN",
+     "act": 11.0
     },
     {
      "pid": "00-0036900",
@@ -1530,7 +1539,8 @@
      "bk": "williamhill_us",
      "dec": 1.9,
      "ph": 0.4917,
-     "gm": "PIT @ CIN"
+     "gm": "PIT @ CIN",
+     "act": 231.0
     }
    ],
    "price": null,
@@ -1546,7 +1556,10 @@
    "ev50": 0.3404,
    "posted": "2026-11-15 19:02",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 PIT @ CIN: Mike Gesicki O2.5 rec + O24.5 yds; Ja'Marr Chase O7.5 rec + O89.5 yds \u00b7 Needs +412 before a 33% boost, +365 before 50%. Caesars est. +485."
   }
  ],
@@ -2726,6 +2739,169 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 SF @ DAL: Ryan Flournoy O3.5 rec + O36.5 yds; CeeDee Lamb O7.5 rec + O90.5 yds \u00b7 Needs +359 before a 33% boost, +318 before 50%. Caesars est. +594."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261116T0120Z",
+   "kind": "sgp",
+   "game_id": "2026_10_PIT_CIN",
+   "book": "draftkings",
+   "fill": 2,
+   "day": false,
+   "gm": "PIT @ CIN",
+   "legs": [
+    {
+     "pid": "00-0041489",
+     "pk": "Germie Bernard",
+     "team": "PIT",
+     "game_id": "2026_10_PIT_CIN",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 48.5,
+     "bk": "draftkings",
+     "dec": 1.91,
+     "ph": 0.5413,
+     "gm": "PIT @ CIN",
+     "card": true,
+     "act": 0.0
+    },
+    {
+     "pid": "00-0035640",
+     "pk": "DK Metcalf",
+     "team": "PIT",
+     "game_id": "2026_10_PIT_CIN",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 55.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5444,
+     "gm": "PIT @ CIN",
+     "act": 54.0
+    },
+    {
+     "pid": "00-0037228",
+     "pk": "Jaylen Warren",
+     "team": "PIT",
+     "game_id": "2026_10_PIT_CIN",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 23.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5377,
+     "gm": "PIT @ CIN",
+     "act": 26.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.222,
+   "p_joint": 0.1493,
+   "p_indep": 0.1585,
+   "fair": 6.697,
+   "min0": 7.032,
+   "min33": 5.535,
+   "min50": 5.021,
+   "ev0": -0.071,
+   "ev33": 0.1864,
+   "ev50": 0.3189,
+   "qualifies": true,
+   "posted": "2026-11-15 19:02",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 PIT @ CIN: Germie Bernard U48.5 yds (card pick) + DK Metcalf U55.5 yds + Jaylen Warren U23.5 yds \u00b7 Needs +454 before a 33% boost, +402 before 50%. DK est. +522."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261116T0120Z",
+   "kind": "czr",
+   "game_id": "2026_10_PIT_CIN",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "PIT @ CIN",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0034829",
+     "pk": "Mike Gesicki",
+     "team": "CIN",
+     "game_id": "2026_10_PIT_CIN",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.03,
+     "ph": 0.4774,
+     "gm": "PIT @ CIN",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0034829",
+     "pk": "Mike Gesicki",
+     "team": "CIN",
+     "game_id": "2026_10_PIT_CIN",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 24.5,
+     "bk": "williamhill_us",
+     "dec": 1.87,
+     "ph": 0.5216,
+     "gm": "PIT @ CIN",
+     "act": 9.0
+    },
+    {
+     "pid": "00-0036900",
+     "pk": "Ja'Marr Chase",
+     "team": "CIN",
+     "game_id": "2026_10_PIT_CIN",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 7.5,
+     "bk": "williamhill_us",
+     "dec": 1.81,
+     "ph": 0.5111,
+     "gm": "PIT @ CIN",
+     "act": 11.0
+    },
+    {
+     "pid": "00-0036900",
+     "pk": "Ja'Marr Chase",
+     "team": "CIN",
+     "game_id": "2026_10_PIT_CIN",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 89.5,
+     "bk": "williamhill_us",
+     "dec": 1.9,
+     "ph": 0.4917,
+     "gm": "PIT @ CIN",
+     "act": 231.0
+    }
+   ],
+   "price": null,
+   "est_price": 5.849,
+   "p_joint": 0.162,
+   "p_indep": 0.0626,
+   "fair": 6.172,
+   "min0": 6.48,
+   "min33": 5.121,
+   "min50": 4.654,
+   "ev0": -0.0524,
+   "ev33": 0.2069,
+   "ev50": 0.3404,
+   "posted": "2026-11-15 19:02",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 PIT @ CIN: Mike Gesicki O2.5 rec + O24.5 yds; Ja'Marr Chase O7.5 rec + O89.5 yds \u00b7 Needs +412 before a 33% boost, +365 before 50%. Caesars est. +485."
   }
  ],
  "record": {
@@ -2738,20 +2914,20 @@
    "u50": -1.0
   },
   "sgp": {
-   "n": 6,
+   "n": 7,
    "w": 1,
-   "l": 5,
-   "u1": -1.12,
-   "u33": 0.16,
-   "u50": 0.82
+   "l": 6,
+   "u1": -2.12,
+   "u33": -0.84,
+   "u50": -0.18
   },
   "czr": {
-   "n": 7,
+   "n": 8,
    "w": 0,
-   "l": 7,
-   "u1": -7.0,
-   "u33": -7.0,
-   "u50": -7.0
+   "l": 8,
+   "u1": -8.0,
+   "u33": -8.0,
+   "u50": -8.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
