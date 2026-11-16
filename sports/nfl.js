@@ -287,7 +287,11 @@
       const [today, live, status, mon, par] = await Promise.all([load("nfl_today.json"), load("nfl_live.json"), load("nfl_status.json"), load("nfl_monitor.json"), load("nfl_parlays.json").catch(() => null)]);
       PARLAYS = par || null;
       const T = today || { picks: [], slate: [] };
-      const picks = (T.picks || []).map(r => toRec(r, T.updated)), lvAll = (live || []).filter(r => ["W", "L", "P", "Void"].includes(r.r)).map(r => toRec(r));
+      // [gradefix 2026-11-16] a window post rewrites nfl_today.json without results until the next grade pass; fill r / act / u / clv
+      // from the graded nfl_live.json row for the same pick (season, week, player, market, side) so This Week shows W/L.
+      const gk = r => [r.ses, r.wk, r.pk, r.mk, r.sd].join("|"), graded = new Map((live || []).filter(r => r.r).map(r => [gk(r), r]));
+      const withRes = r => { const g = r.r ? null : graded.get(gk(r)); return g ? { ...r, r: g.r, act: g.act ?? r.act, u: g.u ?? r.u, clv: g.clv ?? r.clv } : r };
+      const picks = (T.picks || []).map(r => toRec(withRes(r), T.updated)), lvAll = (live || []).filter(r => ["W", "L", "P", "Void"].includes(r.r)).map(r => toRec(r));
       // [V2 2026-11-11] the count restarts at T.record_from {season, week, label}; earlier picks stay on the page as an archive
       const RS = T.record_from || null, inRec = r => !RS || +r.season > RS.season || (+r.season === RS.season && (r.raw.wk || 0) >= RS.week);
       const lv = lvAll.filter(inRec), v1 = RS ? lvAll.filter(r => !inRec(r)) : [];
