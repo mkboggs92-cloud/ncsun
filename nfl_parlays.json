@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16 11:10",
+ "updated": "2026-11-16 15:10",
  "season": 2026,
  "week": 10,
  "this_week": [
@@ -652,7 +652,8 @@
      "bk": "draftkings",
      "dec": 1.66,
      "ph": 0.6043,
-     "gm": "CAR @ NO"
+     "gm": "CAR @ NO",
+     "act": 0.0
     }
    ],
    "price": null,
@@ -669,7 +670,10 @@
    "qualifies": true,
    "posted": "2026-11-15 11:35",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 CAR @ NO: Jalen Coker U4.5 rec + Jordyn Tyson U3.5 rec + Xavier Legette U1.5 rec \u00b7 Needs +449 before a 33% boost, +398 before 50%. DK est. +554."
   },
   {
@@ -858,7 +862,8 @@
      "bk": "williamhill_us",
      "dec": 2.1,
      "ph": 0.4835,
-     "gm": "BUF @ NYJ"
+     "gm": "BUF @ NYJ",
+     "act": 0.0
     },
     {
      "pid": "00-0041511",
@@ -871,7 +876,8 @@
      "bk": "williamhill_us",
      "dec": 1.9,
      "ph": 0.5092,
-     "gm": "BUF @ NYJ"
+     "gm": "BUF @ NYJ",
+     "act": 0.0
     },
     {
      "pid": "00-0039901",
@@ -884,7 +890,8 @@
      "bk": "williamhill_us",
      "dec": 2.19,
      "ph": 0.4191,
-     "gm": "BUF @ NYJ"
+     "gm": "BUF @ NYJ",
+     "act": 1.0
     },
     {
      "pid": "00-0039901",
@@ -897,7 +904,8 @@
      "bk": "williamhill_us",
      "dec": 1.92,
      "ph": 0.4909,
-     "gm": "BUF @ NYJ"
+     "gm": "BUF @ NYJ",
+     "act": 11.0
     }
    ],
    "price": null,
@@ -913,7 +921,10 @@
    "ev50": 0.5235,
    "posted": "2026-11-15 11:35",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 BUF @ NYJ: Omar Cooper Jr. O3.5 rec + O37.5 yds; Keon Coleman O2.5 rec + O27.5 yds \u00b7 Needs +483 before a 33% boost, +428 before 50%. Caesars est. +652."
   },
   {
@@ -1265,7 +1276,8 @@
      "dec": 1.88,
      "ph": 0.5597,
      "gm": "SF @ DAL",
-     "card": true
+     "card": true,
+     "act": 0.0
     },
     {
      "pid": "00-0035719",
@@ -1278,7 +1290,8 @@
      "bk": "draftkings",
      "dec": 1.9,
      "ph": 0.5444,
-     "gm": "SF @ DAL"
+     "gm": "SF @ DAL",
+     "act": 31.0
     },
     {
      "pid": "00-0040172",
@@ -1291,7 +1304,8 @@
      "bk": "draftkings",
      "dec": 1.89,
      "ph": 0.5398,
-     "gm": "SF @ DAL"
+     "gm": "SF @ DAL",
+     "act": 49.0
     }
    ],
    "price": null,
@@ -1308,7 +1322,10 @@
    "qualifies": true,
    "posted": "2026-11-15 14:57",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 SF @ DAL: Demarcus Robinson U31.5 yds (card pick) + Deebo Samuel Sr. U37.5 yds + Jordan Watkins U23.5 yds \u00b7 Needs +434 before a 33% boost, +385 before 50%. DK est. +522."
   },
   {
@@ -2168,6 +2185,80 @@
    "week": 10,
    "window": "2026_w10_20261115T1800Z",
    "kind": "sgp",
+   "game_id": "2026_10_CAR_NO",
+   "book": "draftkings",
+   "fill": 3,
+   "day": true,
+   "gm": "CAR @ NO",
+   "legs": [
+    {
+     "pid": "00-0039491",
+     "pk": "Jalen Coker",
+     "team": "CAR",
+     "game_id": "2026_10_CAR_NO",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 4.5,
+     "bk": "draftkings",
+     "dec": 1.86,
+     "ph": 0.5483,
+     "gm": "CAR @ NO",
+     "act": 0.0
+    },
+    {
+     "pid": "00-0041029",
+     "pk": "Jordyn Tyson",
+     "team": "NO",
+     "game_id": "2026_10_CAR_NO",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 2.3,
+     "ph": 0.4455,
+     "gm": "CAR @ NO",
+     "act": 11.0
+    },
+    {
+     "pid": "00-0039342",
+     "pk": "Xavier Legette",
+     "team": "CAR",
+     "game_id": "2026_10_CAR_NO",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 1.5,
+     "bk": "draftkings",
+     "dec": 1.66,
+     "ph": 0.6043,
+     "gm": "CAR @ NO",
+     "act": 0.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.545,
+   "p_joint": 0.1507,
+   "p_indep": 0.1476,
+   "fair": 6.638,
+   "min0": 6.97,
+   "min33": 5.488,
+   "min50": 4.98,
+   "ev0": -0.0139,
+   "ev33": 0.2618,
+   "ev50": 0.4038,
+   "qualifies": true,
+   "posted": "2026-11-15 11:35",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 CAR @ NO: Jalen Coker U4.5 rec + Jordyn Tyson U3.5 rec + Xavier Legette U1.5 rec \u00b7 Needs +449 before a 33% boost, +398 before 50%. DK est. +554."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1800Z",
+   "kind": "sgp",
    "game_id": "2026_10_BUF_NYJ",
    "book": "draftkings",
    "fill": 1,
@@ -2325,6 +2416,94 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 MIA @ IND: Ashton Dulin O1.5 rec + O14.5 yds; Caleb Douglas O3.5 rec + O41.5 yds \u00b7 Needs +372 before a 33% boost, +330 before 50%. Caesars est. +594."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T1800Z",
+   "kind": "czr",
+   "game_id": "2026_10_BUF_NYJ",
+   "book": "williamhill_us",
+   "day": true,
+   "gm": "BUF @ NYJ",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0041511",
+     "pk": "Omar Cooper Jr.",
+     "team": "NYJ",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 2.1,
+     "ph": 0.4835,
+     "gm": "BUF @ NYJ",
+     "act": 0.0
+    },
+    {
+     "pid": "00-0041511",
+     "pk": "Omar Cooper Jr.",
+     "team": "NYJ",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 37.5,
+     "bk": "williamhill_us",
+     "dec": 1.9,
+     "ph": 0.5092,
+     "gm": "BUF @ NYJ",
+     "act": 0.0
+    },
+    {
+     "pid": "00-0039901",
+     "pk": "Keon Coleman",
+     "team": "BUF",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.19,
+     "ph": 0.4191,
+     "gm": "BUF @ NYJ",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0039901",
+     "pk": "Keon Coleman",
+     "team": "BUF",
+     "game_id": "2026_10_BUF_NYJ",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 27.5,
+     "bk": "williamhill_us",
+     "dec": 1.92,
+     "ph": 0.4909,
+     "gm": "BUF @ NYJ",
+     "act": 11.0
+    }
+   ],
+   "price": null,
+   "est_price": 7.516,
+   "p_joint": 0.1414,
+   "p_indep": 0.0506,
+   "fair": 7.072,
+   "min0": 7.425,
+   "min33": 5.831,
+   "min50": 5.284,
+   "ev0": 0.0628,
+   "ev33": 0.3669,
+   "ev50": 0.5235,
+   "posted": "2026-11-15 11:35",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 BUF @ NYJ: Omar Cooper Jr. O3.5 rec + O37.5 yds; Keon Coleman O2.5 rec + O27.5 yds \u00b7 Needs +483 before a 33% boost, +428 before 50%. Caesars est. +652."
   },
   {
    "season": 2026,
@@ -2656,6 +2835,81 @@
    "season": 2026,
    "week": 10,
    "window": "2026_w10_20261115T2125Z",
+   "kind": "sgp",
+   "game_id": "2026_10_SF_DAL",
+   "book": "draftkings",
+   "fill": 1,
+   "day": true,
+   "gm": "SF @ DAL",
+   "legs": [
+    {
+     "pid": "00-0032775",
+     "pk": "Demarcus Robinson",
+     "team": "SF",
+     "game_id": "2026_10_SF_DAL",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 31.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5597,
+     "gm": "SF @ DAL",
+     "card": true,
+     "act": 0.0
+    },
+    {
+     "pid": "00-0035719",
+     "pk": "Deebo Samuel Sr.",
+     "team": "SF",
+     "game_id": "2026_10_SF_DAL",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 37.5,
+     "bk": "draftkings",
+     "dec": 1.9,
+     "ph": 0.5444,
+     "gm": "SF @ DAL",
+     "act": 31.0
+    },
+    {
+     "pid": "00-0040172",
+     "pk": "Jordan Watkins",
+     "team": "SF",
+     "game_id": "2026_10_SF_DAL",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 23.5,
+     "bk": "draftkings",
+     "dec": 1.89,
+     "ph": 0.5398,
+     "gm": "SF @ DAL",
+     "act": 49.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.222,
+   "p_joint": 0.155,
+   "p_indep": 0.1645,
+   "fair": 6.452,
+   "min0": 6.775,
+   "min33": 5.342,
+   "min50": 4.85,
+   "ev0": -0.0357,
+   "ev33": 0.2314,
+   "ev50": 0.369,
+   "qualifies": true,
+   "posted": "2026-11-15 14:57",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 SF @ DAL: Demarcus Robinson U31.5 yds (card pick) + Deebo Samuel Sr. U37.5 yds + Jordan Watkins U23.5 yds \u00b7 Needs +434 before a 33% boost, +385 before 50%. DK est. +522."
+  },
+  {
+   "season": 2026,
+   "week": 10,
+   "window": "2026_w10_20261115T2125Z",
    "kind": "czr",
    "game_id": "2026_10_SF_DAL",
    "book": "williamhill_us",
@@ -2914,20 +3168,20 @@
    "u50": -1.0
   },
   "sgp": {
-   "n": 7,
+   "n": 9,
    "w": 1,
-   "l": 6,
-   "u1": -2.12,
-   "u33": -0.84,
-   "u50": -0.18
+   "l": 8,
+   "u1": -4.12,
+   "u33": -2.84,
+   "u50": -2.18
   },
   "czr": {
-   "n": 8,
+   "n": 9,
    "w": 0,
-   "l": 8,
-   "u1": -8.0,
-   "u33": -8.0,
-   "u50": -8.0
+   "l": 9,
+   "u1": -9.0,
+   "u33": -9.0,
+   "u50": -9.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
