@@ -143,22 +143,37 @@
     });
   }
   // [P11 2026-11-11] tracked parlays: this week's posts and the paper record. Empty string when there is nothing to show.
+  // [expparlay 2026-11-20, Mark] Mark's real slips (his own lines and prices), shown apart from the paper record.
+  const REAL_SLIPS = [
+    { wk: 10, gm: "NE @ DET", bk: "Caesars", legs: "Sam LaPorta O4.5 rec + O42.5 yds; Jameson Williams O3.5 rec + O56.5 yds", am: 525, boost: 0.5, stake: 50, r: "L", note: "" },
+    { wk: 11, gm: "IND @ HOU", bk: "Caesars", legs: "Nico Collins O4.5 rec + O71.5 yds; Tank Dell O2.5 rec + O38.5 yds", am: 400, boost: 0.33, stake: 50, r: "L",
+      note: "Collins 3 rec, 58 yds; Dell 3 rec, 27 yds" },
+  ];
+  function realSlipsHTML() {
+    if (!REAL_SLIPS.length) return "";
+    const won = s => s.stake * (s.am / 100) * (1 + s.boost), net = s => s.r === "W" ? won(s) : s.r === "L" ? -s.stake : 0;
+    const g = REAL_SLIPS.filter(s => s.r === "W" || s.r === "L"), tot = g.reduce((a, s) => a + net(s), 0), stk = g.reduce((a, s) => a + s.stake, 0);
+    const money = x => (x < 0 ? "-$" : "+$") + Math.abs(x).toFixed(0);
+    const row = s => `<li>Week ${s.wk} · ${esc(s.gm)} · ${esc(s.bk)} +${s.am} with a ${Math.round(s.boost * 100)}% boost, $${s.stake}: ${esc(s.legs)}`
+      + ` <b>${s.r === "W" ? "Won " + money(won(s)) : s.r === "L" ? "Lost" : "Open"}</b>${s.note ? ` <span class="note">(${esc(s.note)})</span>` : ""}</li>`;
+    return `<h3>Real bets (Mark's slips)</h3><p class="note">${g.filter(s => s.r === "W").length}-${g.filter(s => s.r === "L").length}, ${money(tot)} on $${stk} staked.</p><ul>${REAL_SLIPS.slice().reverse().map(row).join("")}</ul>`;
+  }
   function parlaysHTML(P) {
     const tw = (P && P.this_week) || [];
-    if (!tw.length) return "";
+    if (!tw.length && !REAL_SLIPS.length) return "";
     const f = x => (x == null ? "0.0" : (x >= 0 ? "+" : "") + (+x).toFixed(1)), rec = P.record || {};
     const one = (k, name) => { const s = rec[k] || {}; return s.n ? `${name} ${s.w}-${s.l}, ${f(s.u33)}u` : "" };
     const parts = [one("sgp", "DK same-game"), one("czr", "Caesars same-game"), one("cross", "different games")].filter(Boolean);
     const recLine = parts.length ? `Paper record, 1u each at estimated prices with a 33% boost: ${parts.join(" · ")}. Too few to read anything into yet.` : "No graded parlays yet.";
     const res = e => e.result === "W" ? "Won" : e.result === "L" ? "Lost" : e.result === "Void" ? "Void (a leg did not play)" : e.result;
-    const li = e => `<li>${esc(e.txt || "")}${e.result ? ` <b>${esc(res(e))}</b>` : ""}</li>`;
+    const li = e => `<li>${esc(e.txt || "")}${e.got ? ` <b>Bet: ${(e.got - 1) * 100 >= 0 ? "+" : ""}${Math.round((e.got - 1) * 100)} (Mark's slip)</b>` : ""}${e.result ? ` <b>${esc(res(e))}</b>` : ""}</li>`;
     // the window key ends in the kickoff time (UTC): a parlay whose game has started is no longer open
     const kick = e => { const m = /_(\d{4})(\d\d)(\d\d)T(\d\d)(\d\d)Z$/.exec(e.window || ""); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : 0 };
     const open = tw.filter(e => !e.result && kick(e) > Date.now()).reverse(), started = tw.filter(e => !e.result && kick(e) <= Date.now()), done = tw.filter(e => e.result);
-    return `<div class="sec-h"><h2>Boost parlays</h2><span class="note">Optional · only with a boost · not part of the card</span></div><div class="panel flat prose">`
+    return `<div class="sec-h"><h2>Experimental: boost parlays</h2><span class="note">Tracked, not part of the card or its record · only with a boost</span></div><div class="panel flat prose">`
       + (open.length ? `<h3>Open (not kicked off)</h3><ul>${open.map(li).join("")}</ul>` : "") + (started.length ? `<h3>Kicked off, not graded yet</h3><ul>${started.map(li).join("")}</ul>` : "")
       + (done.length ? `<h3>Graded this week</h3><ul>${done.map(li).join("")}</ul>` : "")
-      + `<p class="note">${esc(recLine)}</p><p class="note">${esc(P.note || "")}</p></div>`;
+      + `<p class="note">${esc(recLine)}</p>` + realSlipsHTML() + `<p class="note">${esc((P && P.note) || "")}</p></div>`;
   }
   function windowsHTML(W, stake) {
     if (!W.length) return "";
