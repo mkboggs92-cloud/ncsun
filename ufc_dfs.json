@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-22 09:04",
+ "updated": "2026-11-22 17:05",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -89,7 +89,7 @@
      "kd": 0.34,
      "pts_win": 101.3,
      "pts_loss": 26.7,
-     "ml": -162,
+     "ml": -166,
      "debut": false,
      "in": []
     },
@@ -116,7 +116,7 @@
      "kd": 0.32,
      "pts_win": 106.3,
      "pts_loss": 36.2,
-     "ml": 136,
+     "ml": 140,
      "debut": false,
      "in": []
     },
