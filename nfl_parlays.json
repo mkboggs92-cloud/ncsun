@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-22 15:08",
+ "updated": "2026-11-22 17:31",
  "season": 2026,
  "week": 11,
  "this_week": [
@@ -186,7 +186,8 @@
      "dec": 2.08,
      "ph": 0.5812,
      "gm": "MIA @ BUF",
-     "card": true
+     "card": true,
+     "act": 2.0
     },
     {
      "pid": "00-0040870",
@@ -253,7 +254,8 @@
      "dec": 2.08,
      "ph": 0.5812,
      "gm": "MIA @ BUF",
-     "card": true
+     "card": true,
+     "act": 2.0
     },
     {
      "pid": "00-0037252",
@@ -266,7 +268,8 @@
      "bk": "draftkings",
      "dec": 1.88,
      "ph": 0.5561,
-     "gm": "MIA @ BUF"
+     "gm": "MIA @ BUF",
+     "act": 12.0
     },
     {
      "pid": "00-0039880",
@@ -279,7 +282,8 @@
      "bk": "draftkings",
      "dec": 1.94,
      "ph": 0.5273,
-     "gm": "MIA @ BUF"
+     "gm": "MIA @ BUF",
+     "act": 3.0
     }
    ],
    "price": null,
@@ -296,7 +300,11 @@
    "qualifies": true,
    "posted": "2026-11-22 11:45",
    "stake": 0.0,
-   "result": null,
+   "result": "W",
+   "u1": 5.992,
+   "price_graded": 6.992,
+   "u33": 7.969,
+   "u50": 8.988,
    "txt": "DK same-game \u00b7 MIA @ BUF: Ollie Gordon II U2.5 rec (card pick) + Greg Dulcich U26.5 yds + Malik Washington U3.5 rec \u00b7 Needs +416 before a 33% boost, +369 before 50%. DK est. +599."
   },
   {
@@ -391,7 +399,8 @@
      "dec": 1.81,
      "ph": 0.5748,
      "gm": "TEN @ DAL",
-     "card": true
+     "card": true,
+     "act": 0.0
     },
     {
      "pid": "00-0040170",
@@ -404,7 +413,8 @@
      "bk": "draftkings",
      "dec": 1.83,
      "ph": 0.5576,
-     "gm": "TEN @ DAL"
+     "gm": "TEN @ DAL",
+     "act": 3.0
     },
     {
      "pid": "00-0041438",
@@ -417,7 +427,8 @@
      "bk": "draftkings",
      "dec": 1.88,
      "ph": 0.5429,
-     "gm": "TEN @ DAL"
+     "gm": "TEN @ DAL",
+     "act": 58.0
     }
    ],
    "price": null,
@@ -434,7 +445,11 @@
    "qualifies": true,
    "posted": "2026-11-22 11:45",
    "stake": 0.0,
-   "result": null,
+   "result": "W",
+   "u1": 4.739,
+   "price_graded": 5.739,
+   "u33": 6.303,
+   "u50": 7.108,
    "txt": "DK same-game \u00b7 TEN @ DAL: Tony Pollard U3.5 rec (card pick) + Elic Ayomanor U3.5 rec + Carnell Tate U67.5 yds \u00b7 Needs +406 before a 33% boost, +360 before 50%. DK est. +474."
   },
   {
@@ -460,7 +475,8 @@
      "bk": "williamhill_us",
      "dec": 2.14,
      "ph": 0.4902,
-     "gm": "MIA @ BUF"
+     "gm": "MIA @ BUF",
+     "act": 5.0
     },
     {
      "pid": "00-0037261",
@@ -473,7 +489,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.5416,
-     "gm": "MIA @ BUF"
+     "gm": "MIA @ BUF",
+     "act": 101.0
     },
     {
      "pid": "00-0035689",
@@ -486,7 +503,8 @@
      "bk": "williamhill_us",
      "dec": 2.36,
      "ph": 0.4418,
-     "gm": "MIA @ BUF"
+     "gm": "MIA @ BUF",
+     "act": 2.0
     },
     {
      "pid": "00-0035689",
@@ -499,7 +517,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.5305,
-     "gm": "MIA @ BUF"
+     "gm": "MIA @ BUF",
+     "act": 31.0
     }
    ],
    "price": null,
@@ -515,7 +534,10 @@
    "ev50": 0.8357,
    "posted": "2026-11-22 11:45",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 MIA @ BUF: Khalil Shakir O3.5 rec + O37.5 yds; Dawson Knox O2.5 rec + O21.5 yds \u00b7 Needs +419 before a 33% boost, +372 before 50%. Caesars est. +700."
   },
   {
@@ -2801,6 +2823,246 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 IND @ HOU: Tank Dell O2.5 rec + O39.5 yds; Nico Collins O4.5 rec + O72.5 yds \u00b7 Needs +303 before a 33% boost, +300 before 50%. Caesars est. +367."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T1800Z",
+   "kind": "sgp",
+   "game_id": "2026_11_MIA_BUF",
+   "book": "draftkings",
+   "fill": 1,
+   "day": true,
+   "gm": "MIA @ BUF",
+   "legs": [
+    {
+     "pid": "00-0040198",
+     "pk": "Ollie Gordon II",
+     "team": "MIA",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 2.5,
+     "bk": "draftkings",
+     "dec": 2.08,
+     "ph": 0.5812,
+     "gm": "MIA @ BUF",
+     "card": true,
+     "act": 2.0
+    },
+    {
+     "pid": "00-0037252",
+     "pk": "Greg Dulcich",
+     "team": "MIA",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 26.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5561,
+     "gm": "MIA @ BUF",
+     "act": 12.0
+    },
+    {
+     "pid": "00-0039880",
+     "pk": "Malik Washington",
+     "team": "MIA",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.94,
+     "ph": 0.5273,
+     "gm": "MIA @ BUF",
+     "act": 3.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.992,
+   "p_joint": 0.1606,
+   "p_indep": 0.1705,
+   "fair": 6.226,
+   "min0": 6.537,
+   "min33": 5.163,
+   "min50": 4.691,
+   "ev0": 0.1231,
+   "ev33": 0.4407,
+   "ev50": 0.6043,
+   "qualifies": true,
+   "posted": "2026-11-22 11:45",
+   "stake": 0.0,
+   "result": "W",
+   "u1": 5.992,
+   "price_graded": 6.992,
+   "u33": 7.969,
+   "u50": 8.988,
+   "txt": "DK same-game \u00b7 MIA @ BUF: Ollie Gordon II U2.5 rec (card pick) + Greg Dulcich U26.5 yds + Malik Washington U3.5 rec \u00b7 Needs +416 before a 33% boost, +369 before 50%. DK est. +599."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T1800Z",
+   "kind": "sgp",
+   "game_id": "2026_11_TEN_DAL",
+   "book": "draftkings",
+   "fill": 2,
+   "day": true,
+   "gm": "TEN @ DAL",
+   "legs": [
+    {
+     "pid": "00-0035261",
+     "pk": "Tony Pollard",
+     "team": "TEN",
+     "game_id": "2026_11_TEN_DAL",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.81,
+     "ph": 0.5748,
+     "gm": "TEN @ DAL",
+     "card": true,
+     "act": 0.0
+    },
+    {
+     "pid": "00-0040170",
+     "pk": "Elic Ayomanor",
+     "team": "TEN",
+     "game_id": "2026_11_TEN_DAL",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.83,
+     "ph": 0.5576,
+     "gm": "TEN @ DAL",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0041438",
+     "pk": "Carnell Tate",
+     "team": "TEN",
+     "game_id": "2026_11_TEN_DAL",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 67.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5429,
+     "gm": "TEN @ DAL",
+     "act": 58.0
+    }
+   ],
+   "price": null,
+   "est_price": 5.739,
+   "p_joint": 0.164,
+   "p_indep": 0.174,
+   "fair": 6.098,
+   "min0": 6.403,
+   "min33": 5.063,
+   "min50": 4.602,
+   "ev0": -0.0589,
+   "ev33": 0.1976,
+   "ev50": 0.3297,
+   "qualifies": true,
+   "posted": "2026-11-22 11:45",
+   "stake": 0.0,
+   "result": "W",
+   "u1": 4.739,
+   "price_graded": 5.739,
+   "u33": 6.303,
+   "u50": 7.108,
+   "txt": "DK same-game \u00b7 TEN @ DAL: Tony Pollard U3.5 rec (card pick) + Elic Ayomanor U3.5 rec + Carnell Tate U67.5 yds \u00b7 Needs +406 before a 33% boost, +360 before 50%. DK est. +474."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T1800Z",
+   "kind": "czr",
+   "game_id": "2026_11_MIA_BUF",
+   "book": "williamhill_us",
+   "day": true,
+   "gm": "MIA @ BUF",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0037261",
+     "pk": "Khalil Shakir",
+     "team": "BUF",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 2.14,
+     "ph": 0.4902,
+     "gm": "MIA @ BUF",
+     "act": 5.0
+    },
+    {
+     "pid": "00-0037261",
+     "pk": "Khalil Shakir",
+     "team": "BUF",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 37.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.5416,
+     "gm": "MIA @ BUF",
+     "act": 101.0
+    },
+    {
+     "pid": "00-0035689",
+     "pk": "Dawson Knox",
+     "team": "BUF",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.36,
+     "ph": 0.4418,
+     "gm": "MIA @ BUF",
+     "act": 2.0
+    },
+    {
+     "pid": "00-0035689",
+     "pk": "Dawson Knox",
+     "team": "BUF",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 21.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.5305,
+     "gm": "MIA @ BUF",
+     "act": 31.0
+    }
+   ],
+   "price": null,
+   "est_price": 7.997,
+   "p_joint": 0.1597,
+   "p_indep": 0.0622,
+   "fair": 6.262,
+   "min0": 6.575,
+   "min33": 5.192,
+   "min50": 4.717,
+   "ev0": 0.277,
+   "ev33": 0.6457,
+   "ev50": 0.8357,
+   "posted": "2026-11-22 11:45",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 MIA @ BUF: Khalil Shakir O3.5 rec + O37.5 yds; Dawson Knox O2.5 rec + O21.5 yds \u00b7 Needs +419 before a 33% boost, +372 before 50%. Caesars est. +700."
   }
  ],
  "record": {
@@ -2813,20 +3075,20 @@
    "u50": -1.0
   },
   "sgp": {
-   "n": 11,
-   "w": 1,
+   "n": 13,
+   "w": 3,
    "l": 10,
-   "u1": -6.12,
-   "u33": -4.84,
-   "u50": -4.18
+   "u1": 4.61,
+   "u33": 9.43,
+   "u50": 11.91
   },
   "czr": {
-   "n": 11,
+   "n": 12,
    "w": 0,
-   "l": 11,
-   "u1": -11.0,
-   "u33": -11.0,
-   "u50": -11.0
+   "l": 12,
+   "u1": -12.0,
+   "u33": -12.0,
+   "u50": -12.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
