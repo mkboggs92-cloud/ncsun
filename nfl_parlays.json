@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-22 20:31",
+ "updated": "2026-11-23 06:36",
  "season": 2026,
  "week": 11,
  "this_week": [
@@ -563,7 +563,8 @@
      "bk": "williamhill_us",
      "dec": 2.13,
      "ph": 0.4847,
-     "gm": "JAX @ NYG"
+     "gm": "JAX @ NYG",
+     "act": 2.0
     },
     {
      "pid": "00-0041042",
@@ -576,7 +577,8 @@
      "bk": "williamhill_us",
      "dec": 1.87,
      "ph": 0.5493,
-     "gm": "JAX @ NYG"
+     "gm": "JAX @ NYG",
+     "act": 25.0
     },
     {
      "pid": "00-0036309",
@@ -589,7 +591,8 @@
      "bk": "williamhill_us",
      "dec": 2.05,
      "ph": 0.5058,
-     "gm": "JAX @ NYG"
+     "gm": "JAX @ NYG",
+     "act": 0.0
     },
     {
      "pid": "00-0036309",
@@ -602,7 +605,8 @@
      "bk": "williamhill_us",
      "dec": 1.86,
      "ph": 0.5399,
-     "gm": "JAX @ NYG"
+     "gm": "JAX @ NYG",
+     "act": 0.0
     }
    ],
    "price": null,
@@ -618,7 +622,10 @@
    "ev50": 0.7197,
    "posted": "2026-11-22 11:45",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 JAX @ NYG: Malachi Fields O2.5 rec + O29.5 yds; Darnell Mooney O1.5 rec + O15.5 yds \u00b7 Needs +370 before a 33% boost, +328 before 50%. Caesars est. +580."
   },
   {
@@ -968,7 +975,8 @@
      "bk": "draftkings",
      "dec": 1.91,
      "ph": 0.5589,
-     "gm": "MIN @ SF"
+     "gm": "MIN @ SF",
+     "act": 86.0
     },
     {
      "pid": "00-0035229",
@@ -981,7 +989,8 @@
      "bk": "draftkings",
      "dec": 1.92,
      "ph": 0.5417,
-     "gm": "MIN @ SF"
+     "gm": "MIN @ SF",
+     "act": 55.0
     },
     {
      "pid": "00-0031408",
@@ -994,7 +1003,8 @@
      "bk": "draftkings",
      "dec": 2.02,
      "ph": 0.5155,
-     "gm": "MIN @ SF"
+     "gm": "MIN @ SF",
+     "act": 6.0
     }
    ],
    "price": null,
@@ -1011,7 +1021,10 @@
    "qualifies": true,
    "posted": "2026-11-22 18:53",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 MIN @ SF: Justin Jefferson U84.5 yds + T.J. Hockenson U44.5 yds + Mike Evans U3.5 rec \u00b7 Needs +420 before a 33% boost, +373 before 50%. DK est. +583."
   },
   {
@@ -1037,7 +1050,8 @@
      "bk": "williamhill_us",
      "dec": 2.19,
      "ph": 0.4382,
-     "gm": "MIN @ SF"
+     "gm": "MIN @ SF",
+     "act": 3.0
     },
     {
      "pid": "00-0033288",
@@ -1050,7 +1064,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.5084,
-     "gm": "MIN @ SF"
+     "gm": "MIN @ SF",
+     "act": 34.0
     },
     {
      "pid": "00-0030279",
@@ -1063,7 +1078,8 @@
      "bk": "williamhill_us",
      "dec": 1.79,
      "ph": 0.5331,
-     "gm": "MIN @ SF"
+     "gm": "MIN @ SF",
+     "act": 3.0
     },
     {
      "pid": "00-0030279",
@@ -1076,7 +1092,8 @@
      "bk": "williamhill_us",
      "dec": 1.93,
      "ph": 0.4927,
-     "gm": "MIN @ SF"
+     "gm": "MIN @ SF",
+     "act": 38.0
     }
    ],
    "price": null,
@@ -1092,7 +1109,10 @@
    "ev50": 0.3998,
    "posted": "2026-11-22 18:53",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 MIN @ SF: George Kittle O4.5 rec + O48.5 yds; Keenan Allen O2.5 rec + O26.5 yds \u00b7 Needs +436 before a 33% boost, +386 before 50%. Caesars est. +537."
   }
  ],
@@ -3242,6 +3262,94 @@
   {
    "season": 2026,
    "week": 11,
+   "window": "2026_w11_20261122T1800Z",
+   "kind": "czr",
+   "game_id": "2026_11_JAX_NYG",
+   "book": "williamhill_us",
+   "day": true,
+   "gm": "JAX @ NYG",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0041042",
+     "pk": "Malachi Fields",
+     "team": "NYG",
+     "game_id": "2026_11_JAX_NYG",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.13,
+     "ph": 0.4847,
+     "gm": "JAX @ NYG",
+     "act": 2.0
+    },
+    {
+     "pid": "00-0041042",
+     "pk": "Malachi Fields",
+     "team": "NYG",
+     "game_id": "2026_11_JAX_NYG",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 29.5,
+     "bk": "williamhill_us",
+     "dec": 1.87,
+     "ph": 0.5493,
+     "gm": "JAX @ NYG",
+     "act": 25.0
+    },
+    {
+     "pid": "00-0036309",
+     "pk": "Darnell Mooney",
+     "team": "NYG",
+     "game_id": "2026_11_JAX_NYG",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 1.5,
+     "bk": "williamhill_us",
+     "dec": 2.05,
+     "ph": 0.5058,
+     "gm": "JAX @ NYG",
+     "act": 0.0
+    },
+    {
+     "pid": "00-0036309",
+     "pk": "Darnell Mooney",
+     "team": "NYG",
+     "game_id": "2026_11_JAX_NYG",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 15.5,
+     "bk": "williamhill_us",
+     "dec": 1.86,
+     "ph": 0.5399,
+     "gm": "JAX @ NYG",
+     "act": 0.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.804,
+   "p_joint": 0.1772,
+   "p_indep": 0.0727,
+   "fair": 5.644,
+   "min0": 5.926,
+   "min33": 4.704,
+   "min50": 4.284,
+   "ev0": 0.2055,
+   "ev33": 0.5449,
+   "ev50": 0.7197,
+   "posted": "2026-11-22 11:45",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 JAX @ NYG: Malachi Fields O2.5 rec + O29.5 yds; Darnell Mooney O1.5 rec + O15.5 yds \u00b7 Needs +370 before a 33% boost, +328 before 50%. Caesars est. +580."
+  },
+  {
+   "season": 2026,
+   "week": 11,
    "window": "2026_w11_20261122T2105Z",
    "kind": "sgp",
    "game_id": "2026_11_NYJ_LAC",
@@ -3563,6 +3671,168 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 LV @ DEN: Pat Bryant O2.5 rec + O27.5 yds; Courtland Sutton O3.5 rec + O32.5 yds \u00b7 Needs +458 before a 33% boost, +406 before 50%. Caesars est. +621."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261123T0120Z",
+   "kind": "sgp",
+   "game_id": "2026_11_MIN_SF",
+   "book": "draftkings",
+   "fill": 0,
+   "day": false,
+   "gm": "MIN @ SF",
+   "legs": [
+    {
+     "pid": "00-0036322",
+     "pk": "Justin Jefferson",
+     "team": "MIN",
+     "game_id": "2026_11_MIN_SF",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 84.5,
+     "bk": "draftkings",
+     "dec": 1.91,
+     "ph": 0.5589,
+     "gm": "MIN @ SF",
+     "act": 86.0
+    },
+    {
+     "pid": "00-0035229",
+     "pk": "T.J. Hockenson",
+     "team": "MIN",
+     "game_id": "2026_11_MIN_SF",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 44.5,
+     "bk": "draftkings",
+     "dec": 1.92,
+     "ph": 0.5417,
+     "gm": "MIN @ SF",
+     "act": 55.0
+    },
+    {
+     "pid": "00-0031408",
+     "pk": "Mike Evans",
+     "team": "SF",
+     "game_id": "2026_11_MIN_SF",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 2.02,
+     "ph": 0.5155,
+     "gm": "MIN @ SF",
+     "act": 6.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.828,
+   "p_joint": 0.1593,
+   "p_indep": 0.1561,
+   "fair": 6.276,
+   "min0": 6.59,
+   "min33": 5.203,
+   "min50": 4.726,
+   "ev0": 0.0879,
+   "ev33": 0.3944,
+   "ev50": 0.5522,
+   "qualifies": true,
+   "posted": "2026-11-22 18:53",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 MIN @ SF: Justin Jefferson U84.5 yds + T.J. Hockenson U44.5 yds + Mike Evans U3.5 rec \u00b7 Needs +420 before a 33% boost, +373 before 50%. DK est. +583."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261123T0120Z",
+   "kind": "czr",
+   "game_id": "2026_11_MIN_SF",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "MIN @ SF",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0033288",
+     "pk": "George Kittle",
+     "team": "SF",
+     "game_id": "2026_11_MIN_SF",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 4.5,
+     "bk": "williamhill_us",
+     "dec": 2.19,
+     "ph": 0.4382,
+     "gm": "MIN @ SF",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0033288",
+     "pk": "George Kittle",
+     "team": "SF",
+     "game_id": "2026_11_MIN_SF",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 48.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.5084,
+     "gm": "MIN @ SF",
+     "act": 34.0
+    },
+    {
+     "pid": "00-0030279",
+     "pk": "Keenan Allen",
+     "team": "SF",
+     "game_id": "2026_11_MIN_SF",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 1.79,
+     "ph": 0.5331,
+     "gm": "MIN @ SF",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0030279",
+     "pk": "Keenan Allen",
+     "team": "SF",
+     "game_id": "2026_11_MIN_SF",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 26.5,
+     "bk": "williamhill_us",
+     "dec": 1.93,
+     "ph": 0.4927,
+     "gm": "MIN @ SF",
+     "act": 38.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.372,
+   "p_joint": 0.1545,
+   "p_indep": 0.0585,
+   "fair": 6.471,
+   "min0": 6.795,
+   "min33": 5.357,
+   "min50": 4.863,
+   "ev0": -0.0153,
+   "ev33": 0.2587,
+   "ev50": 0.3998,
+   "posted": "2026-11-22 18:53",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 MIN @ SF: George Kittle O4.5 rec + O48.5 yds; Keenan Allen O2.5 rec + O26.5 yds \u00b7 Needs +436 before a 33% boost, +386 before 50%. Caesars est. +537."
   }
  ],
  "record": {
@@ -3575,20 +3845,20 @@
    "u50": -1.0
   },
   "sgp": {
-   "n": 15,
+   "n": 16,
    "w": 3,
-   "l": 12,
-   "u1": 2.61,
-   "u33": 7.43,
-   "u50": 9.91
+   "l": 13,
+   "u1": 1.61,
+   "u33": 6.43,
+   "u50": 8.91
   },
   "czr": {
-   "n": 14,
+   "n": 16,
    "w": 0,
-   "l": 14,
-   "u1": -14.0,
-   "u33": -14.0,
-   "u50": -14.0
+   "l": 16,
+   "u1": -16.0,
+   "u33": -16.0,
+   "u50": -16.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
