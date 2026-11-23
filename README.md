@@ -46,3 +46,15 @@ A row: `{"d": "2027-04-03", "t": "19:05", "ev": "NYY at BOS", "pick": "Red Sox -
 git clone https://github.com/<you>/<repo>.git C:\Users\mkbog\Desktop\Basketball\ncsun\site_repo
 ```
 Then `python ncsun_hub_register.py` from the Basketball folder (once), and fill in `ncsun_hub_secrets.json`.
+
+## Changes, Nov 22 2026
+
+- **Alerts are email** (Gmail, the hoops model's credentials). New picks and line changes go out the moment the hub sees them, quiet hours or not; grades that land overnight follow the 7 AM digest in full. Every line says how far it is still a bet; hoops and UFC grades say what we got and where the line closed.
+- **Subscribers**: `Basketball\ncsun_subscribers.json` (private, never in this repo), managed with `python ncsun_subs.py add|set|remove|list`. Each person picks sports and `all` (every pick + results) or `digest` (one morning email). They never get run alerts or paper picks.
+- **Pick keys are stable** (sport, day, game, selection): a new line, price or book is an "updated" notice.
+- **Run problems** alert once per distinct problem; standing ones are listed in the morning digest. A data file that fails to parse is a run problem.
+- **`activity.json` is pick events only.** The Home activity log, raw run-problem text, dollar stakes and own slips are drawn only in the owner view: open the site once with `#owner` (`#owner-off` to hide). This changes what is drawn; the files themselves are public.
+- **Get picks** page (`#get`): what the site is, how to read a pick, the closing line, and picks by email.
+- **Closing line**: every graded hoops and UFC card shows got / closed; hoops Live has a "Beating the close" panel; Home tiles and the trend strip show it. Home's combined track is models only (CFB hand picks shown apart).
+- **Guards**: `.git/hooks/pre-commit` (source: `Basketball\ncsun_ops\pre-commit`) refuses broken JSON, NaN and backup files; it is per-clone, so re-install it after a fresh clone with `python ncsun_ops_install.py`. `.github/workflows/watchdog.yml` opens an issue ("NCSUN laptop quiet") when `hub_status.json` is 100+ minutes old.
+- **Tab files have masters in the model folders**: `nfl_model\site\sports_nfl.js` → `sports/nfl.js`, `ufc_model\v2\site\sports_ufc.js` → `sports/ufc.js`. Edit the master, or the next model run puts the old one back.
