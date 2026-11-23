@@ -1,0 +1,41 @@
+# Laptop watchdog. The models and the hub run on one laptop; when it goes quiet nothing on the laptop can say so.
+# Twice an hour this checks how old hub_status.json's last_run is. Quiet for 100+ minutes -> it opens an issue
+# ("NCSUN laptop quiet"), which GitHub emails to the repo owner. When the hub is back it comments and closes it.
+name: Laptop watchdog
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: watchdog
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the hub heartbeat
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, datetime as dt
+          from zoneinfo import ZoneInfo
+          ET = ZoneInfo("America/New_York")
+          last = json.load(open("hub_status.json")).get("last_run")
+          t = dt.datetime.strptime(last, "%Y-%m-%d %H:%M").replace(tzinfo=ET)
+          age = (dt.datetime.now(ET) - t).total_seconds() / 60
+          print(f"hub last ran {last} ET, {age:.0f} min ago")
+          gh = lambda *a: subprocess.run(["gh", *a], capture_output=True, text=True)
+          op = json.loads(gh("issue", "list", "--state", "open", "--search", "NCSUN laptop quiet in:title", "--json", "number").stdout or "[]")
+          if age > 100 and not op:
+              gh("issue", "create", "--title", "NCSUN laptop quiet",
+                 "--body", f"The hub last ran at {last} ET ({age / 60:.1f} hours ago). Nothing is being posted, graded or emailed until the laptop is back: check that it is on, awake, online and signed in.")
+              print("opened an issue")
+          elif age <= 100 and op:
+              for i in op:
+                  gh("issue", "close", str(i["number"]), "--comment", f"Back: the hub ran at {last} ET.")
+              print("closed the issue")
+          PY
