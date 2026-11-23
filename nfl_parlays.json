@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-23 11:41",
+ "updated": "2026-11-23 15:41",
  "season": 2026,
  "week": 11,
  "this_week": [
@@ -201,7 +201,8 @@
      "dec": 2.11,
      "ph": 0.5303,
      "gm": "BAL @ CAR",
-     "card": true
+     "card": true,
+     "act": 0.0
     },
     {
      "pid": "00-0035261",
@@ -215,7 +216,8 @@
      "dec": 1.81,
      "ph": 0.5748,
      "gm": "TEN @ DAL",
-     "card": true
+     "card": true,
+     "act": 0.0
     }
    ],
    "price": 7.944,
@@ -228,7 +230,11 @@
    "ev50": 1.0223,
    "posted": "2026-11-22 11:45",
    "stake": 0.0,
-   "result": null,
+   "result": "W",
+   "u1": 6.944,
+   "price_graded": 7.944,
+   "u33": 9.235,
+   "u50": 10.416,
    "txt": "DK, three different games (first choice if the boost allows it): Ollie Gordon II U2.5 rec (MIA@BUF, card pick) + Ja'Kobi Lane U2.5 rec (BAL@CAR, card pick) + Tony Pollard U3.5 rec (TEN@DAL, card pick) \u00b7 Needs +370 before a 33% boost, +328 before 50%. DK now +694."
   },
   {
@@ -330,7 +336,8 @@
      "dec": 2.11,
      "ph": 0.5303,
      "gm": "BAL @ CAR",
-     "card": true
+     "card": true,
+     "act": 0.0
     },
     {
      "pid": "00-0034753",
@@ -343,7 +350,8 @@
      "bk": "draftkings",
      "dec": 1.63,
      "ph": 0.6478,
-     "gm": "BAL @ CAR"
+     "gm": "BAL @ CAR",
+     "act": 2.0
     },
     {
      "pid": "00-0040887",
@@ -356,7 +364,8 @@
      "bk": "draftkings",
      "dec": 1.85,
      "ph": 0.5653,
-     "gm": "BAL @ CAR"
+     "gm": "BAL @ CAR",
+     "act": 8.0
     }
    ],
    "price": null,
@@ -373,7 +382,11 @@
    "qualifies": true,
    "posted": "2026-11-22 11:45",
    "stake": 0.0,
-   "result": null,
+   "result": "W",
+   "u1": 4.864,
+   "price_graded": 5.864,
+   "u33": 6.469,
+   "u50": 7.296,
    "txt": "DK same-game \u00b7 BAL @ CAR: Ja'Kobi Lane U2.5 rec (card pick) + Mark Andrews U4.5 rec + Josh Cuevas U10.5 yds \u00b7 Needs +356 before a 33% boost, +316 before 50%. DK est. +486."
   },
   {
@@ -3023,6 +3036,77 @@
    "season": 2026,
    "week": 11,
    "window": "2026_w11_20261122T1800Z",
+   "kind": "cross",
+   "game_id": null,
+   "book": "draftkings",
+   "legs": [
+    {
+     "pid": "00-0040198",
+     "pk": "Ollie Gordon II",
+     "team": "MIA",
+     "game_id": "2026_11_MIA_BUF",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 2.5,
+     "bk": "draftkings",
+     "dec": 2.08,
+     "ph": 0.5812,
+     "gm": "MIA @ BUF",
+     "card": true,
+     "act": 2.0
+    },
+    {
+     "pid": "00-0040870",
+     "pk": "Ja'Kobi Lane",
+     "team": "BAL",
+     "game_id": "2026_11_BAL_CAR",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 2.5,
+     "bk": "draftkings",
+     "dec": 2.11,
+     "ph": 0.5303,
+     "gm": "BAL @ CAR",
+     "card": true,
+     "act": 0.0
+    },
+    {
+     "pid": "00-0035261",
+     "pk": "Tony Pollard",
+     "team": "TEN",
+     "game_id": "2026_11_TEN_DAL",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.81,
+     "ph": 0.5748,
+     "gm": "TEN @ DAL",
+     "card": true,
+     "act": 0.0
+    }
+   ],
+   "price": 7.944,
+   "p_joint": 0.1772,
+   "ev": 0.4073,
+   "min_price": 5.927,
+   "min33": 4.704,
+   "min50": 4.285,
+   "ev33": 0.8132,
+   "ev50": 1.0223,
+   "posted": "2026-11-22 11:45",
+   "stake": 0.0,
+   "result": "W",
+   "u1": 6.944,
+   "price_graded": 7.944,
+   "u33": 9.235,
+   "u50": 10.416,
+   "txt": "DK, three different games (first choice if the boost allows it): Ollie Gordon II U2.5 rec (MIA@BUF, card pick) + Ja'Kobi Lane U2.5 rec (BAL@CAR, card pick) + Tony Pollard U3.5 rec (TEN@DAL, card pick) \u00b7 Needs +370 before a 33% boost, +328 before 50%. DK now +694."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T1800Z",
    "kind": "sgp",
    "game_id": "2026_11_MIA_BUF",
    "book": "draftkings",
@@ -3094,6 +3178,82 @@
    "u33": 7.969,
    "u50": 8.988,
    "txt": "DK same-game \u00b7 MIA @ BUF: Ollie Gordon II U2.5 rec (card pick) + Greg Dulcich U26.5 yds + Malik Washington U3.5 rec \u00b7 Needs +416 before a 33% boost, +369 before 50%. DK est. +599."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T1800Z",
+   "kind": "sgp",
+   "game_id": "2026_11_BAL_CAR",
+   "book": "draftkings",
+   "fill": 0,
+   "day": true,
+   "gm": "BAL @ CAR",
+   "legs": [
+    {
+     "pid": "00-0040870",
+     "pk": "Ja'Kobi Lane",
+     "team": "BAL",
+     "game_id": "2026_11_BAL_CAR",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 2.5,
+     "bk": "draftkings",
+     "dec": 2.11,
+     "ph": 0.5303,
+     "gm": "BAL @ CAR",
+     "card": true,
+     "act": 0.0
+    },
+    {
+     "pid": "00-0034753",
+     "pk": "Mark Andrews",
+     "team": "BAL",
+     "game_id": "2026_11_BAL_CAR",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 4.5,
+     "bk": "draftkings",
+     "dec": 1.63,
+     "ph": 0.6478,
+     "gm": "BAL @ CAR",
+     "act": 2.0
+    },
+    {
+     "pid": "00-0040887",
+     "pk": "Josh Cuevas",
+     "team": "BAL",
+     "game_id": "2026_11_BAL_CAR",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 10.5,
+     "bk": "draftkings",
+     "dec": 1.85,
+     "ph": 0.5653,
+     "gm": "BAL @ CAR",
+     "act": 8.0
+    }
+   ],
+   "price": null,
+   "est_price": 5.864,
+   "p_joint": 0.183,
+   "p_indep": 0.1942,
+   "fair": 5.465,
+   "min0": 5.738,
+   "min33": 4.563,
+   "min50": 4.159,
+   "ev0": 0.0731,
+   "ev33": 0.3668,
+   "ev50": 0.5181,
+   "qualifies": true,
+   "posted": "2026-11-22 11:45",
+   "stake": 0.0,
+   "result": "W",
+   "u1": 4.864,
+   "price_graded": 5.864,
+   "u33": 6.469,
+   "u50": 7.296,
+   "txt": "DK same-game \u00b7 BAL @ CAR: Ja'Kobi Lane U2.5 rec (card pick) + Mark Andrews U4.5 rec + Josh Cuevas U10.5 yds \u00b7 Needs +356 before a 33% boost, +316 before 50%. DK est. +486."
   },
   {
    "season": 2026,
@@ -3837,20 +3997,20 @@
  ],
  "record": {
   "cross": {
-   "n": 1,
-   "w": 0,
+   "n": 2,
+   "w": 1,
    "l": 1,
-   "u1": -1.0,
-   "u33": -1.0,
-   "u50": -1.0
+   "u1": 5.94,
+   "u33": 8.23,
+   "u50": 9.42
   },
   "sgp": {
-   "n": 16,
-   "w": 3,
+   "n": 17,
+   "w": 4,
    "l": 13,
-   "u1": 1.61,
-   "u33": 6.43,
-   "u50": 8.91
+   "u1": 6.47,
+   "u33": 12.9,
+   "u50": 16.21
   },
   "czr": {
    "n": 16,
