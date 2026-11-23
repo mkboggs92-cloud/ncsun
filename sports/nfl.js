@@ -150,7 +150,7 @@
       note: "Collins 3 rec, 58 yds; Dell 3 rec, 27 yds" },
   ];
   function realSlipsHTML() {
-    if (!REAL_SLIPS.length) return "";
+    if (!REAL_SLIPS.length || !NCSUN.owner) return "";       // owner view only (open the site with #owner)
     const won = s => s.stake * (s.am / 100) * (1 + s.boost), net = s => s.r === "W" ? won(s) : s.r === "L" ? -s.stake : 0;
     const g = REAL_SLIPS.filter(s => s.r === "W" || s.r === "L"), tot = g.reduce((a, s) => a + net(s), 0), stk = g.reduce((a, s) => a + s.stake, 0);
     const money = x => (x < 0 ? "-$" : "+$") + Math.abs(x).toFixed(0);

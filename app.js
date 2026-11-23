@@ -53,6 +53,11 @@
     const fb = () => { const a = document.createElement("textarea"); a.value = t; a.setAttribute("readonly", ""); a.style.cssText = "position:fixed;top:0;left:0;opacity:0"; document.body.appendChild(a); a.select(); let ok = false; try { ok = document.execCommand("copy") } catch (e) { } a.remove(); return ok };
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(() => done(true), () => done(fb())); else done(fb());
   }
+  // Owner view: open the site once with #owner to see the owner-only parts on this device (activity log, raw run
+  // problems, dollar stakes, own slips); #owner-off hides them again. It only changes what is drawn, nothing is secret.
+  try { const h0 = location.hash.slice(1); if (h0 === "owner" || h0 === "owner-off") { localStorage.setItem("ncsun_owner", h0 === "owner" ? "1" : ""); history.replaceState(null, "", location.pathname + location.search) }
+    NCSUN.owner = localStorage.getItem("ncsun_owner") === "1" } catch (e) { NCSUN.owner = false }
+  document.documentElement.classList.toggle("owner", !!NCSUN.owner);
   NCSUN.u = { $, esc, fmtU, pct, pct0, sgn, am, lnTxt, toDec, fair, payout, MON, DOW, dateTxt, timeTxt, stampTxt, daysTo, whenTxt, addDays, cap, plural, etToday, etDate, load, copyText };
 
   // ------------------------------------------------------------------ records
@@ -183,10 +188,32 @@
   // the trend strip on every ride's card page: this season at a glance before digging into history
   function trendHTML(sp, live) {
     const g = live.filter(r => r.status === "graded" && (!sp.headline || sp.headline(r))).sort(byTime); if (!g.length) return "";
-    const s = stats(g);
-    return `<div class="trend"><div class="tr-rec"><small>${esc(sp.trendLabel || (sp.seasonLabel || "Season") + " so far")}</small><b>${recTxt(s)}</b><em class="${sgn(s.u)}">${fmtU(s.u)} · ${(s.roi * 100).toFixed(1)}% ROI</em></div>${spark(g.slice(-60))}${dots(g.slice(-10))}<button class="ghost" data-go="${sp.id}-live">Full record</button></div>`;
+    const s = stats(g), cv = clvStats(g);
+    return `<div class="trend"><div class="tr-rec"><small>${esc(sp.trendLabel || (sp.seasonLabel || "Season") + " so far")}</small><b>${recTxt(s)}</b><em class="${sgn(s.u)}">${fmtU(s.u)} · ${(s.roi * 100).toFixed(1)}% ROI</em></div>${sp.clvFront && cv.n ? `<div class="tr-rec"><small>Vs the closing line</small><b class="${sgn(cv.avg)}">${sp.clv.fmt(cv.avg)}${sp.clvUnit || ""}</b><em>beat it ${cv.beat} of ${cv.n}</em></div>` : ""}${spark(g.slice(-60))}${dots(g.slice(-10))}<button class="ghost" data-go="${sp.id}-live">Full record</button></div>`;
   }
   NCSUN.spark = spark;
+  // closing line: how many graded picks got a better number than the market closed at, and by how much on average
+  function clvStats(rows) { const c = rows.filter(r => r.clv != null); const beat = c.filter(r => r.clv > 0).length, tied = c.filter(r => r.clv === 0).length;
+    return { n: c.length, beat, tied, worse: c.length - beat - tied, avg: c.length ? c.reduce((a, r) => a + r.clv, 0) / c.length : null } }
+  NCSUN.clvStats = clvStats;
+  // "Beating the close" panel (college hoops; UFC draws its own): the headline read on whether the edge is real
+  function clvPanel(rows, sp) {
+    const c = rows.filter(r => r.clv != null).sort(byTime); if (!c.length) return "";
+    const cv = clvStats(c), f = sp.clv.fmt, beat = c.filter(r => r.clv > 0), not = c.filter(r => r.clv <= 0), sb = stats(beat), sn = stats(not);
+    const g = c.slice(-40), W = 100, H = 56, bw = W / Math.max(g.length, 12), mx = Math.max(0.5, ...g.map(r => Math.abs(r.clv)));
+    const bars = g.map((r, i) => { const h = Math.abs(r.clv) / mx * (H / 2 - 4), y = r.clv > 0 ? H / 2 - h : H / 2;
+      return `<rect x="${(i * bw + bw * 0.15).toFixed(2)}" y="${y.toFixed(2)}" width="${(bw * 0.7).toFixed(2)}" height="${Math.max(h, 1).toFixed(2)}" rx="1" fill="${r.clv > 0 ? "var(--win)" : r.clv < 0 ? "var(--loss)" : "var(--ink2)"}"><title>${esc(r.pick)} ${f(r.clv)}</title></rect>` }).join("");
+    const last = c.slice(-12).reverse();
+    return `<div class="panel clvp" style="display:grid;gap:12px"><div class="lab-head"><h2>Beating the <em>close</em></h2><span class="note">the number we got vs where the line ended · over a season this says more about the edge than wins and losses do</span></div>
+      <div class="kpis"><div><small>Avg vs close</small><b class="${sgn(cv.avg)}">${f(cv.avg)}${sp.clvUnit || ""}</b><span>${esc(sp.clv.label)} · ${cv.n} picks with a close</span></div>
+        <div><small>Beat the close</small><b>${cv.beat} of ${cv.n}</b><span>${cv.tied} tied · ${cv.worse} worse</span></div>
+        <div><small>When we beat it</small><b>${beat.length ? recTxt(sb) : "–"}</b><span class="${sgn(sb.u)}">${beat.length ? fmtU(sb.u) : "no picks yet"}</span></div>
+        <div><small>When we didn't</small><b>${not.length ? recTxt(sn) : "–"}</b><span class="${sgn(sn.u)}">${not.length ? fmtU(sn.u) : "no picks yet"}</span></div></div>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:84px" role="img" aria-label="Closing line value for the last ${g.length} picks"><line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" stroke="var(--line)" stroke-width=".5"/>${bars}</svg>
+      <div class="tbl"><table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th>We got</th><th>Closed</th><th>Vs close</th><th>Result</th></tr></thead><tbody>${last.map(r => `<tr><td class="mono">${esc(r.d || "")}</td><td class="l"><b>${esc(r.pick)}</b></td><td class="mono">${esc((r.cl || {}).got || "")}</td><td class="mono">${esc((r.cl || {}).closed || "")}</td><td class="${sgn(r.clv)}"><b>${f(r.clv)}</b></td><td><span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span></td></tr>`).join("")}</tbody></table></div>
+      <p class="note">Each bar is one pick, oldest to newest: green got a better number than the close, red a worse one. A model that keeps getting better numbers than the market settles on is finding real value, even through a losing week.</p></div>`;
+  }
+  NCSUN.clvPanel = clvPanel;
   // count-up for KPI numbers (first render only; respects reduced motion)
   function countUp(el) {
     if (reduced()) return;
@@ -285,6 +312,7 @@
     const sub = [showEv ? esc(r.ev) : "", r.detail, opt.home ? `<b>${esc(sp.short)}</b>` : "", opt.home || opt.when !== false ? esc(when) : ""].filter(Boolean).join(" · ");
     let line = "";
     if (r.r) line += resTag(r);
+    if (r.r && r.cl) line += `<span class="clv ${sgn(r.clv)}">${r.clv > 0 ? "Beat the close" : r.clv < 0 ? "Missed the close" : "Matched the close"} · got ${esc(r.cl.got)}, closed ${esc(r.cl.closed)}${r.cl.diff ? ` · <b>${esc(r.cl.diff)}</b>` : ""}</span>`;
     else if (st === "live") line += `<span class="floor live">In progress</span>`;
     else if (st === "finished") line += `<span class="floor">${esc(sp.finishedText || "Finished · grading soon")}</span>`;
     else if (r.limit) line += `<span class="floor${r.limitGone ? " warn" : ""}">${esc(r.limit)}</span>`;
@@ -340,7 +368,7 @@
   function healthHTML(h) {
     if (!h) return "";
     const color = h.ok === false ? "var(--loss)" : "var(--win)";
-    return `<div class="status"><span><span class="dot" style="background:${color}"></span>${esc(h.what || "Updated")} <b>${h.at ? esc(stampTxt(h.at)) + (/ET$/.test(String(h.at)) ? "" : " ET") : "not yet"}</b></span>${(h.problems || []).map(p => `<span><b>Last run had a problem:</b> ${esc(p)}</span>`).join("")}${h.stale ? `<span><b>Stale:</b> ${esc(h.stale)}</span>` : ""}${h.note ? `<span>${esc(h.note)}</span>` : ""}</div>`;
+    return `<div class="status"><span><span class="dot" style="background:${color}"></span>${esc(h.what || "Updated")} <b>${h.at ? esc(stampTxt(h.at)) + (/ET$/.test(String(h.at)) ? "" : " ET") : "not yet"}</b></span>${NCSUN.owner ? (h.problems || []).map(p => `<span><b>Last run had a problem:</b> ${esc(p)}</span>`).join("") : (h.problems || []).length ? "<span><b>Heads up:</b> the last model run reported a problem, so picks or grades may be late.</span>" : ""}${h.stale ? `<span><b>Stale:</b> ${esc(h.stale)}</span>` : ""}${h.note ? `<span>${esc(h.note)}</span>` : ""}</div>`;
   }
   // generic health from a <sport>_status.json ({step:{ok,at,msg|note}}) and an "updated" stamp
   function health(status, updated, maxHours, note) {
@@ -412,6 +440,7 @@
       let html = "";
       if (graded.length) {
         const open = d.today.filter(r => !r.r && !r.paper).length;
+        if (sp.clvPanel) html += clvPanel(graded, sp);
         if (sp.liveGroup) html += `<div class="panel" data-lg></div>`;
         html += `<div data-lab class="stack"></div>`;
         body.innerHTML = html;
@@ -448,7 +477,8 @@
     const prev = curSport; curSport = sportId;
     document.querySelectorAll(".seg button, .tabbar button").forEach(b => { const on = b.dataset.model === sportId; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && push) b.scrollIntoView({ block: "nearest", inline: "nearest" }) });
     document.querySelectorAll("main > [data-sport]").forEach(x => x.hidden = x.dataset.sport !== sportId);
-    mascot(sportId);
+    mascot(sportId === "get" ? "home" : sportId);
+    if (sportId === "get") { if (push) history.replaceState(null, "", "#get"); drawGet(); if (!push) scrollTo({ top: 0 }); return }
     if (sportId === "home") { if (push) history.replaceState(null, "", location.pathname + location.search); drawHome(); return }
     const sp = NCSUN.byId[sportId], root = document.getElementById(sportId), stops = [...root.querySelectorAll("nav.stops button")].map(b => b.dataset.view);
     view = stops.includes(view) ? view : stops[0]; curView[sportId] = view;
@@ -460,7 +490,7 @@
   }
   NCSUN.show = show;
   const TAG_HOME = "All rides";
-  const ICON = { home: '<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg>', dot: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/></svg>' };
+  const ICON = { home: '<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg>', dot: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/></svg>', mail: '<svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6.5L20.5 7"/></svg>' };
   function mascot(id) {
     const h = $("header.top"); const sp = NCSUN.byId[id];
     const m = id === "home" ? (NCSUN.homeMascot || NCSUN.sports[0].id) : id;
@@ -471,6 +501,7 @@
   function route() {
     const h = (location.hash || "").slice(1);
     if (!h || h === "home") return show("home", null, false);
+    if (h === "get") return show("get", null, false);
     const [sid, ...rest] = h.split("-"); const view = rest.join("-");
     if (NCSUN.byId[sid]) return show(sid, view, false);
     if (["today", "live", "backtest", "how", "hood"].includes(h)) return show("ncaab", h === "today" ? "card" : h === "backtest" ? "record" : h, false);   // links from the first version
@@ -496,7 +527,7 @@
       if (live.length) bits.push(`<b>${live.length}</b> live now`); if (fin.length) bits.push(`<b>${fin.length}</b> awaiting a grade`);
       bits.push(`<b>${posted.length}</b> posted and waiting`);
       if (todayG.length) bits.push(`today <b>${recTxt(sT)}, ${fmtU(sT.u)}</b>`); else if (ydayG.length) bits.push(`yesterday <b>${recTxt(sY)}, ${fmtU(sY.u)}</b>`);
-      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>Every ride's open bets and latest results. Flat stakes (each pick shows its own); posted picks stand at the price they locked.`;
+      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>Every ride's open bets and latest results. Flat stakes (each pick shows its own); posted picks stand at the price they locked. <a href="#get" data-go="get">New here, or want picks by email?</a>`;
       $("#home-kicker").textContent = `${dateTxt(today)} · ${sports.length} models`;
       // model strip
       const tiles = sports.map((s, i) => { const d = s.data, m = d.meta || {}, g = d.live.filter(r => r.status === "graded").sort(byTime), st = stats(g), open = d.today.filter(r => !r.r && !r.paper), lv = open.filter(r => r.status === "live").length;
@@ -504,6 +535,7 @@
         return `<a class="tile" href="#${s.id}" style="--i:${i}"><span class="tile-top"><b>${esc(s.name)}</b><span class="dot" title="${ok ? "Last run OK" : "Last run had a problem"}" style="background:var(${ok ? "--win" : "--loss"})"></span></span>
           <span class="tile-rec">${g.length ? `<b>${recTxt(st)}</b><em class="${sgn(st.u)}">${fmtU(st.u)}</em>` : `<b>–</b><em>no graded picks yet</em>`}</span>
           ${g.length > 1 ? spark(g.slice(-40), 150, 34) : ""}
+          ${(() => { const cv = s.clvFront ? clvStats(g) : null; return cv && cv.n ? `<span class="tile-clv">vs close <b class="${sgn(cv.avg)}">${s.clv.fmt(cv.avg)}${s.clvUnit || ""}</b> · beat it ${cv.beat}/${cv.n}</span>` : "" })()}
           <span class="tile-sub">${lv ? `<b>${lv} live</b> · ` : ""}${open.length ? `${open.length} open` : "nothing open"}${m.next ? ` · ${esc(m.next)}` : ""}</span>
           <span class="tile-foot">${h.at ? "Run " + esc(stampTxt(h.at)) : esc(m.cadence || "")}</span></a>` }).join("");
       const sec = (id, title, note, recs, opt) => recs.length ? `<section class="hsec" id="h-${id}"><div class="lab-head"><h2>${title}</h2><span class="note">${note}</span></div><div class="slip">${recs.map((r, i) => betCard(r, Object.assign({ home: true, i }, opt))).join("")}</div></section>` : "";
@@ -513,28 +545,56 @@
       const postedHTML = posted.length ? `<section class="hsec" id="h-posted"><div class="lab-head"><h2>Posted and <em>waiting</em></h2><span class="note">${posted.length} ${plural(posted.length, "bet")} · soonest first</span></div>${[...pdays.entries()].map(([d, rs]) => `<div class="dayblk"><div class="dayhead"><b>${esc(dayName(d === "~" ? null : d))}</b><span>${rs.length} ${plural(rs.length, "bet")} · ${[...new Set(rs.map(r => NCSUN.byId[r.sport].short))].join(", ")}</span></div><div class="slip">${rs.map((r, i) => betCard(r, { home: true, i })).join("")}</div></div>`).join("")}</section>` : "";
       // graded, grouped by day
       const days = new Map(); recent.forEach(r => { if (!days.has(r.d)) days.set(r.d, []); days.get(r.d).push(r) });
-      const gradedHTML = days.size ? `<section class="hsec" id="h-graded"><div class="lab-head"><h2>Just <em>graded</em></h2><span class="note">last 7 days, every model</span></div>${[...days.entries()].map(([d, rs]) => { const s = stats(rs); return `<div class="dayblk"><div class="dayhead"><b>${esc(dateTxt(d))}</b><span>${recTxt(s)} · <em class="${sgn(s.u)}">${fmtU(s.u)}</em></span></div><div class="slip">${rs.map((r, i) => betCard(r, { home: true, compact: true, when: false, i })).join("")}</div></div>` }).join("")}</section>` : "";
+      const dayBlk = ([d, rs]) => { const s = stats(rs), cv = clvStats(rs.filter(r => r.cl)); return `<div class="dayblk"><div class="dayhead"><b>${esc(dateTxt(d))}</b><span>${recTxt(s)} · <em class="${sgn(s.u)}">${fmtU(s.u)}</em>${cv.n ? ` · beat the close ${cv.beat} of ${cv.n}` : ""}</span></div><div class="slip">${rs.map((r, i) => betCard(r, { home: true, compact: true, when: false, i })).join("")}</div></div>` };
+      const dayList = [...days.entries()], recentDays = dayList.slice(0, 2), olderDays = dayList.slice(2);
+      const gradedHTML = days.size ? `<section class="hsec" id="h-graded"><div class="lab-head"><h2>Just <em>graded</em></h2><span class="note">last 7 days, every model · what we got and where it closed</span></div>${recentDays.map(dayBlk).join("")}${olderDays.length ? `<details class="more"><summary>Earlier this week<span>${olderDays.length} more ${plural(olderDays.length, "day")} · ${olderDays.reduce((a, x) => a + x[1].length, 0)} picks</span></summary><div class="inner">${olderDays.map(dayBlk).join("")}</div></details>` : ""}</section>` : "";
       // combined ride across every model
-      const combined = sports.flatMap(s => s.data.live.filter(r => r.status === "graded")).sort(byTime), cs = stats(combined);
-      const rideHTML = combined.length ? `<section class="hsec" id="h-ride"><div class="lab-head"><h2>All rides, <em>one track</em></h2><span class="note">every model's live picks this season, in date order</span></div><div class="kpis" id="h-k"></div><div class="panel"><div id="h-chart"></div><div class="legend" style="margin-top:10px">${sports.map(s => { const g = s.data.live.filter(r => r.status === "graded"), st = stats(g); return g.length ? `<span><b>${esc(s.short)}</b> ${recTxt(st)} · <em class="${sgn(st.u)}">${fmtU(st.u)}</em></span>` : "" }).join("")}</div></div></section>` : "";
+      const models = sports.filter(s => !s.hand), hands = sports.filter(s => s.hand);   // hand picks are not model output: kept off the models' track
+      const combined = models.flatMap(s => s.data.live.filter(r => r.status === "graded" && (!s.headline || s.headline(r)))).sort(byTime), cs = stats(combined);
+      const rideHTML = combined.length ? `<section class="hsec" id="h-ride"><div class="lab-head"><h2>The models, <em>one track</em></h2><span class="note">every model's live picks this season, in date order${hands.length ? ` · ${hands.map(s => esc(s.name)).join(", ")} ${hands.length === 1 ? "is" : "are"} hand picks, shown apart` : ""}</span></div><div class="kpis" id="h-k"></div><div class="panel"><div id="h-chart"></div><div class="legend" style="margin-top:10px">${sports.map(s => { const g = s.data.live.filter(r => r.status === "graded" && (!s.headline || s.headline(r))), st = stats(g); return g.length ? `<span><b>${esc(s.short)}${s.hand ? " (hand picks, not on the track)" : ""}</b> ${recTxt(st)} · <em class="${sgn(st.u)}">${fmtU(st.u)}</em></span>` : "" }).join("")}</div></div></section>` : "";
       el.innerHTML = `<div class="tiles">${tiles}</div>${sec("live", "Live <em>now</em>", "events in progress", live)}${sec("fin", "Just <em>finished</em>", "waiting on the grader", fin)}${postedHTML}${gradedHTML}${rideHTML}<div id="h-activity"></div>`;
-      if (combined.length) { kpis($("#h-k"), cs, "all models", null); coaster($("#h-chart"), combined, null) }
-      activity();
+      if (combined.length) { kpis($("#h-k"), cs, "models only", null); coaster($("#h-chart"), combined, null) }
+      if (NCSUN.owner) activity();
       if (!live.length && !fin.length && !posted.length && !days.size) el.insertAdjacentHTML("afterbegin", `<div class="banner" style="margin-bottom:18px"><b>Quiet</b><span>Nothing open across the models right now. Each ride below shows when its next card is due.</span></div>`);
     });
+  }
+  // ------------------------------------------------------------------ Get picks: what this is, how to read a pick, picks by email
+  const GET = { ncaab: ["College hoops", "Spreads and totals from the luck-fade model.", "Early morning on game days (about 5:15 AM ET), Nov to April. Usually 3 to 10 picks."],
+    ufc: ["UFC", "Moneylines from the fight model.", "A week or two before each card, as lines open; checked at 9 AM and 5 PM ET."],
+    nfl: ["NFL props", "Receiving props (receptions and yards).", "About 80 minutes before each kickoff, just after inactives. Time-sensitive: prop lines move fast."],
+    cfb: ["College football", "Our hand-picked sides and totals. Not a model.", "During the week, when we've settled the card."],
+    mlb: ["MLB", "Moneylines and totals.", "Daily in season, from 2027."] };
+  let getDrawn = false;
+  function drawGet() {
+    if (getDrawn) return; getDrawn = true;
+    const sports = NCSUN.sports.filter(s => !s.hidden);
+    $("#get-body").innerHTML = `<div class="ridemap">
+        <div class="panel stop"><h3>What this is</h3><p>A few betting models (and one hand-picked card) that post their picks here, then grade every one of them in public at the price they posted. Free. Nothing is sold, and nothing is taken down after the fact.</p></div>
+        <div class="panel stop"><h3>How to read a pick</h3><p><b>Maryland +3.5 · DK -110 (good to +3)</b> means: bet Maryland +3.5 at DraftKings at -110. If the line has moved, it is still a bet down to +3. Past that, skip it. A pick is only a pick at the listed number or better.</p></div>
+        <div class="panel stop"><h3>Units</h3><p>Every pick is 1 unit unless it says ½u. A unit is whatever you would normally put on one game; keep it the same size every time. The records here count units, not dollars.</p></div>
+        <div class="panel stop"><h3>The closing line</h3><p>After a game starts we record where the line <em>closed</em>. If we got +3.5 and it closed +2.5, we beat the close by a point. Over a season that is the best sign a model is finding real value, so every result shows what we got and where it ended.</p></div>
+      </div>
+      <div class="panel" style="display:grid;gap:14px"><div class="lab-head"><h2>Picks by <em>email</em></h2><span class="note">free · choose your sports · stop any time</span></div>
+        <div class="getgrid">${sports.map(s => { const g = GET[s.id] || [s.name, "", ""]; return `<div class="getc"><b>${esc(g[0])}</b><span>${esc(g[1])}</span><small>${esc(g[2])}</small><button class="ghost" data-go="${s.id}">See the ride</button></div>` }).join("")}</div>
+        <div class="grid2"><div class="panel flat prose"><h3>Every pick</h3><p>An email the moment a pick posts, with the book, the price and how far it is still a bet. Another if a line changes, and the results once they are graded, with where each line closed. Plus a short recap each morning.</p></div>
+          <div class="panel flat prose"><h3>Morning digest</h3><p>One email a day, around 7 AM ET: the open picks in your sports and how yesterday went. Fine for hoops and UFC; too slow for NFL props, which lock about 80 minutes before kickoff.</p></div></div>
+        <div class="banner"><b>How to join</b><span>This is a friends list, not a sign-up form. Ask Mark and tell him two things: which sports you want, and whether you want every pick or just the morning digest. To change sports or stop, reply to any pick email.</span></div>
+      </div>
+      <div class="panel flat prose"><h3>Words you'll see</h3><p><b>Tier</b>: which rule produced the pick; each ride's "How it works" stop explains its tiers. <b>Paper</b>: logged and graded for the record but not bet; paper picks are never emailed. <b>Edge</b>: how far the model's chance is above the price's break-even. <b>Backtest</b>: how the rules would have done in past seasons, simulated, kept apart from the live record. <b>Live</b>: real picks posted here before the games, nothing added later.</p>
+        <p class="note">Picks are for information and entertainment, not betting advice, and past results don't guarantee future ones. Sports betting is legal only in some states and only for adults (21+ in most): know your own state's rules. If gambling stops being fun, call 1-800-GAMBLER.</p></div>`;
   }
   // activity log written by the hub (ncsun_hub.py): what was posted, locked and graded, with timestamps
   function activity() {
     load("activity.json").then(a => { const ev = (a && a.events || []).slice().reverse().slice(0, 60); if (!ev.length) return;
-      const K = { posted: "Posted", live: "Started", graded: "Graded", void: "Voided", alert: "Alert", digest: "Digest" };
-      $("#h-activity").innerHTML = `<section class="hsec"><div class="lab-head"><h2>Activity <em>log</em></h2><span class="note">what the hub saw, newest first${a.updated ? " · checked " + esc(stampTxt(a.updated)) + " ET" : ""}</span></div><div class="panel flat"><ul class="act">${ev.map(e => `<li class="k-${esc(e.kind)}"><span class="mono">${esc(stampTxt(e.ts))}</span><b>${esc((NCSUN.byId[e.sport] || {}).short || e.sport || "")}</b><em>${esc(K[e.kind] || e.kind)}</em><span>${esc(e.text)}</span></li>`).join("")}</ul></div></section>` });
+      const K = { posted: "Posted", live: "Started", graded: "Graded", void: "Voided", updated: "Updated", alert: "Alert", digest: "Digest" };
+      $("#h-activity").innerHTML = `<section class="hsec"><div class="lab-head"><h2>Activity <em>log</em></h2><span class="note">owner view · what the hub saw, newest first${a.updated ? " · checked " + esc(stampTxt(a.updated)) + " ET" : ""}</span></div><div class="panel flat"><ul class="act">${ev.map(e => `<li class="k-${esc(e.kind)}"><span class="mono">${esc(stampTxt(e.ts))}</span><b>${esc((NCSUN.byId[e.sport] || {}).short || e.sport || "")}</b><em>${esc(K[e.kind] || e.kind)}</em><span>${esc(e.text)}</span></li>`).join("")}</ul></div></section>` });
   }
 
   // ------------------------------------------------------------------ boot
   function boot() {
     const seg = $(".seg"), order = NCSUN.sports.filter(s => !s.hidden);
-    seg.innerHTML = `<button role="tab" data-model="home" aria-selected="true">Home</button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`).join("");
-    const bar = $(".tabbar"); if (bar) bar.innerHTML = `<button role="tab" data-model="home" aria-selected="true">${ICON.home}<span>Home</span></button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${s.icon || ICON.dot}<span>${esc(s.short)}</span></button>`).join("");
+    seg.innerHTML = `<button role="tab" data-model="home" aria-selected="true">Home</button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`).join("") + `<button role="tab" data-model="get" aria-selected="false" tabindex="-1" class="getb">Get picks</button>`;
+    const bar = $(".tabbar"); if (bar) bar.innerHTML = `<button role="tab" data-model="home" aria-selected="true">${ICON.home}<span>Home</span></button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${s.icon || ICON.dot}<span>${esc(s.short)}</span></button>`).join("") + `<button role="tab" data-model="get" aria-selected="false" tabindex="-1">${ICON.mail}<span>Get picks</span></button>`;
     document.querySelectorAll(".seg button, .tabbar button").forEach(b => b.addEventListener("click", () => { show(b.dataset.model, curView[b.dataset.model], true); scrollTo({ top: 0 }) }));
     document.querySelectorAll('[role="tablist"]').forEach(tl => tl.addEventListener("keydown", e => { const t = [...tl.querySelectorAll('[role="tab"]')], i = t.indexOf(document.activeElement); if (i < 0) return;
       const j = e.key === "ArrowRight" ? (i + 1) % t.length : e.key === "ArrowLeft" ? (i - 1 + t.length) % t.length : e.key === "Home" ? 0 : e.key === "End" ? t.length - 1 : -1; if (j < 0) return; e.preventDefault(); t[j].focus(); t[j].click() }));

@@ -23,12 +23,16 @@
     return { d: r.d, t: r.tip || null, season: r.s, ev: evTxt(r), pick: pickTxt(r), detail: (isT(r) ? "Total" : r.ha === "A" ? "Away" : r.ha === "N" ? "Neutral" : "Home") + (r.tot != null && !isT(r) ? ` · total ${r.tot}` : ""),
       mk: isT(r) ? "Total" : "Spread", tier: r.t, o: r.o, bk: BOOK[r.bk] || r.bk, stake: r.u || 1, r: r.r || null, pl: r.r ? r.p : null, act: r.sc || null, clv: r.clv ?? null,
       limit, worst: r.min != null ? (isT(r) ? String(r.min) : lnTxt(r.min)) : null, extra: r.r || paper ? "" : esc(simTxt(r)), raw: r,
-      paper: !!paper, id: paper ? ["ncaab", "paper", r.d, r.tm, r.op, r.mk].join("|") : undefined };
+      cl: closeOf(r), paper: !!paper, id: paper ? ["ncaab", "paper", r.d, r.tm, r.op, r.mk].join("|") : undefined };
   }
+  // what we got vs where the line closed (clv is in points, positive = we got the better number)
+  function closeOf(r) { if (r.clv == null || r.ln == null || !r.r) return null;
+    const c = isT(r) && r.side === "Over" ? r.ln + r.clv : r.ln - r.clv, f = v => isT(r) ? String(v) : lnTxt(v);
+    return { got: f(r.ln), closed: f(c), diff: r.clv ? (r.clv > 0 ? "+" : "") + r.clv + (Math.abs(r.clv) === 1 ? " pt" : " pts") : "" } }
   const to24 = s => { if (!s) return null; const m = String(s).match(/(\d+):(\d+)\s*(am|pm)/i); if (!m) return null; let h = +m[1] % 12; if (/pm/i.test(m[3])) h += 12; return `${String(h).padStart(2, "0")}:${m[2]}` };
 
   NCSUN.register({
-    id: "ncaab", icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M6 5.5c3 3.5 3 9.5 0 13M18 5.5c-3 3.5-3 9.5 0 13"/></svg>', name: "College hoops", short: "Hoops", tag: "Hoops", navName: "College hoops",
+    id: "ncaab", clvPanel: true, clvFront: true, clvUnit: " pts", icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M6 5.5c3 3.5 3 9.5 0 13M18 5.5c-3 3.5-3 9.5 0 13"/></svg>', name: "College hoops", short: "Hoops", tag: "Hoops", navName: "College hoops",
     kicker: "College basketball · spreads and totals", h1: "Today's <em>card</em>",
     lede: "Flat 1-unit picks on spreads and totals from the luck-fade model. Take the listed number or better; skip a pick if the line has moved past its worst line.",
     defaultTime: "19:00", durationH: 2.5, seasonLabel: "2026-27",

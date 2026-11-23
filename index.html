@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nothing Can Stop Us Now Betting</title>
-<meta name="description" content="Model picks for college basketball, UFC and NFL props, plus our hand-picked college football card, all in one place: what's live, what's posted, what just graded, and every model's record and backtest.">
+<meta name="description" content="Model picks for college basketball, UFC and NFL props, plus our hand-picked college football card, all in one place: what's live, what's posted, what just graded, where every line closed, and every model's record and backtest.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Nothing Can Stop Us Now Betting">
 <meta property="og:title" content="Nothing Can Stop Us Now Betting">
@@ -474,6 +474,25 @@ table.pool tr.det td{background:var(--panel2);white-space:normal;text-align:left
 #home-body{display:grid;gap:26px;padding-top:14px}
 #home .lede .summary{display:flex;margin:0 0 6px}
 
+/* ---------- owner-only bits (dollar stakes, own slips, activity log): hidden unless the site was opened with #owner ---------- */
+.own{display:none!important} html.owner .own{display:revert!important}
+/* ---------- closing line ---------- */
+.bet .clv{font:700 12px/1.25 var(--body);padding:5px 10px;border-radius:999px;border:1.5px solid var(--line);color:var(--ink2);background:var(--panel)}
+.bet .clv.pos{border-color:var(--win);color:var(--win)} .bet .clv.neg{border-color:var(--loss);color:var(--loss)}
+.bet .clv b{font-weight:800}
+.tile-clv{font-size:11.5px;color:var(--ink2)} .tile-clv b.pos{color:var(--win)} .tile-clv b.neg{color:var(--loss)}
+.trend .tr-rec b.pos{color:var(--win)} .trend .tr-rec b.neg{color:var(--loss)}
+.clvp .kpis span.pos{color:var(--sun)} .clvp .kpis span.neg{color:#FF9DAA}
+/* ---------- Get picks ---------- */
+.seg button.getb{color:var(--coral-ink)} .seg button.getb[aria-selected="true"]{color:var(--sky)}
+#get-body{display:grid;gap:22px;padding-top:14px}
+#get-body .panel.stop{padding-top:30px}
+.getgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:12px}
+.getc{display:grid;gap:5px;align-content:start;border:2px solid var(--ink);border-radius:12px;padding:12px 14px;background:var(--panel)}
+.getc b{font:400 18px/1.1 var(--display);text-transform:uppercase} .getc span{font-size:13.5px} .getc small{font-size:12px;color:var(--ink2);line-height:1.4}
+.getc .ghost{justify-self:start;margin-top:4px}
+#home .lede a{color:var(--cobalt);font-weight:700}
+
 /* ---------- trend strip (record · units · sparkline · last 10) ---------- */
 .trend{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;background:var(--panel);border:2px solid var(--ink);border-radius:var(--r);padding:12px 16px;box-shadow:4px 4px 0 var(--ink)}
 .trend .tr-rec{display:grid;gap:2px}
@@ -675,6 +694,12 @@ svg.spark circle.e{opacity:0;animation:popin .4s cubic-bezier(.2,1.4,.4,1) 1s fo
     <div id="home-body"></div>
   </section>
 </div>
+<div id="get" data-sport="get" hidden>
+  <section class="view">
+    <div><div class="kicker">New here · picks by email</div><h1>Get <em>picks</em></h1><p class="lede">What this site is, how to read a pick, and how to get the ones you care about sent to you.</p></div>
+    <div id="get-body"></div>
+  </section>
+</div>
 <div id="ncaab" data-sport="ncaab" hidden></div>
 <div id="ufc" data-sport="ufc" hidden></div>
 <div id="cfb" data-sport="cfb" hidden></div>
@@ -685,12 +710,12 @@ svg.spark circle.e{opacity:0;animation:popin .4s cubic-bezier(.2,1.4,.4,1) 1s fo
 <footer>College football picks are our own calls, not model output. Picks are posted for information and entertainment, not betting advice. Backtested and past results don't guarantee future results. 21+. If gambling stops being fun, call 1-800-GAMBLER.</footer>
 </main>
 
-<script src="app.js?v=6"></script>
-<script src="sports/ncaab.js?v=9"></script>
-<script src="sports/ufc.js?v=5"></script>
-<script src="sports/cfb.js?v=6"></script>
-<script src="sports/nfl.js?v=5"></script>
-<script src="sports/mlb.js?v=5"></script>
+<script src="app.js?v=12"></script>
+<script src="sports/ncaab.js?v=12"></script>
+<script src="sports/ufc.js?v=12"></script>
+<script src="sports/cfb.js?v=12"></script>
+<script src="sports/nfl.js?v=12"></script>
+<script src="sports/mlb.js?v=12"></script>
 <script>NCSUN.boot()</script>
 <noscript><p style="padding:16px">This site needs JavaScript to show picks and results.</p></noscript>
 </body>

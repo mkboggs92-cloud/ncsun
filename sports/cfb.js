@@ -36,28 +36,28 @@
     const stTxt = b => b.status === "Cashed" ? "Cashed" : b.status === "Dead" ? "Dead" : b.status === "Push" ? "Push" : b.status ? `${b.status} risk` : "Open";
     const wtRow = b => { const w = b.wins, rem = b.rem, need = b.ln, span = need != null && w != null ? Math.max(need + 1, w + (rem || 0)) : 0;
       const bar = span ? `<span class="wbarx" aria-hidden="true"><i style="width:${w / span * 100}%"></i><em style="left:${need / span * 100}%"></em></span>` : "";
-      return `<tr><td><b>${esc(b.tm)}</b><div class="note">$${(b.bet || 0).toFixed(0)} to pay $${(b.pay || 0).toFixed(2)}</div></td><td class="mono">${b.dir ? esc(b.dir) + " " : ""}${b.ln ?? ""}</td>
-        <td>${w != null ? `<div>${w} W${rem != null ? ` · ${rem} left` : ""}</div>${bar}` : "–"}</td><td><span class="st ${stCls(b.status)}">${esc(stTxt(b))}</span>${settled(b) && pl(b) ? `<div class="note mono ${sgn(pl(b))}">${money(pl(b))}</div>` : ""}</td></tr>` };
-    const futRow = b => `<tr><td><b>${esc(b.tm)}</b>${b.what ? ` <span class="note">${esc(b.what)}</span>` : ""}</td><td class="l note">${esc(b.conf || "")}</td><td><span class="st ${stCls(b.status)}">${esc(stTxt(b))}</span></td><td class="mono">$${(b.bet || 0).toFixed(2)} → $${(b.pay || 0).toFixed(2)}</td><td class="mono ${sgn(pl(b))}">${settled(b) ? money(pl(b)) : ""}</td></tr>`;
+      return `<tr><td><b>${esc(b.tm)}</b><div class="note own">$${(b.bet || 0).toFixed(0)} to pay $${(b.pay || 0).toFixed(2)}</div></td><td class="mono">${b.dir ? esc(b.dir) + " " : ""}${b.ln ?? ""}</td>
+        <td>${w != null ? `<div>${w} W${rem != null ? ` · ${rem} left` : ""}</div>${bar}` : "–"}</td><td><span class="st ${stCls(b.status)}">${esc(stTxt(b))}</span>${settled(b) && pl(b) ? `<div class="note mono own ${sgn(pl(b))}">${money(pl(b))}</div>` : ""}</td></tr>` };
+    const futRow = b => `<tr><td><b>${esc(b.tm)}</b>${b.what ? ` <span class="note">${esc(b.what)}</span>` : ""}</td><td class="l note">${esc(b.conf || "")}</td><td><span class="st ${stCls(b.status)}">${esc(stTxt(b))}</span></td><td class="mono own">$${(b.bet || 0).toFixed(2)} → $${(b.pay || 0).toFixed(2)}</td><td class="mono own ${sgn(pl(b))}">${settled(b) ? money(pl(b)) : ""}</td></tr>`;
     const draw = () => { const all = S[sel] || [], wt = all.filter(b => b.kind === "wt"), fut = all.filter(b => b.kind === "fut"), oth = all.filter(b => b.kind === "other");
       const byC = new Map(); wt.forEach(b => { const c = b.conf || "Other"; if (!byC.has(c)) byC.set(c, []); byC.get(c).push(b) });
       const live = wt.filter(b => !settled(b)), cfb = wt.concat(fut), ov = wt.filter(b => b.dir === "Over"), un = wt.filter(b => b.dir === "Under");
       el.innerHTML = `<div class="seasons">${ys.map(y => { const w = (S[y] || []).filter(b => b.kind === "wt"), n = (S[y] || []).filter(b => b.kind !== "other");
-          return `<button class="season" data-y="${y}" aria-pressed="${y === sel}"><small>${y}${w.some(b => !settled(b)) ? " · live" : ""}</small><b>${rec(w)}</b><span>win totals · ${money(sum(n, pl))} CFB</span></button>` }).join("")}</div>
+          return `<button class="season" data-y="${y}" aria-pressed="${y === sel}"><small>${y}${w.some(b => !settled(b)) ? " · live" : ""}</small><b>${rec(w)}</b><span>win totals<i class="own" style="font-style:normal"> · ${money(sum(n, pl))} CFB</i></span></button>` }).join("")}</div>
         <div class="kpis"><div><small>Win totals</small><b>${rec(wt)}</b><span>${live.length ? `${live.length} still live` : "cashed-dead-push"}</span></div>
           <div><small>Overs / unders</small><b>${rec(ov)} · ${rec(un)}</b><span>over record · under record</span></div>
-          <div><small>CFB profit</small><b class="${sum(cfb, pl) >= 0 ? "pos" : "neg"}">${money(sum(cfb, pl))}</b><span>settled win totals + futures</span></div>
-          <div><small>Staked</small><b>$${sum(cfb, b => b.bet || 0).toFixed(0)}</b><span>${cfb.length} college bets</span></div>
-          <div><small>Still riding</small><b>$${sum(cfb.filter(b => !settled(b)), b => b.pay || 0).toFixed(0)}</b><span>payout if every live bet cashes</span></div></div>
+          <div class="own"><small>CFB profit</small><b class="${sum(cfb, pl) >= 0 ? "pos" : "neg"}">${money(sum(cfb, pl))}</b><span>settled win totals + futures</span></div>
+          <div class="own"><small>Staked</small><b>$${sum(cfb, b => b.bet || 0).toFixed(0)}</b><span>${cfb.length} college bets</span></div>
+          <div class="own"><small>Still riding</small><b>$${sum(cfb.filter(b => !settled(b)), b => b.pay || 0).toFixed(0)}</b><span>payout if every live bet cashes</span></div></div>
         <div class="wt-grid">${[...byC.entries()].map(([c, bb]) => `<div class="panel"><div class="lab-head"><h2>${esc(c)}</h2><span class="note">${rec(bb)}</span></div><div class="tbl"><table><thead><tr><th>Team</th><th>Bet</th><th>Wins</th><th>Status</th></tr></thead><tbody>${bb.map(wtRow).join("")}</tbody></table></div></div>`).join("")}</div>
-        ${fut.length ? `<div class="panel"><div class="lab-head"><h2>College futures</h2><span class="note">${rec(fut)} · ${money(sum(fut, pl))}</span></div><div class="tbl"><table><thead><tr><th>Bet</th><th class="l">Market</th><th>Status</th><th>Stake → payout</th><th>P/L</th></tr></thead><tbody>${fut.map(futRow).join("")}</tbody></table></div></div>` : ""}
-        ${oth.length ? `<details class="filters panel flat"><summary><h3>Other sports on the same tab</h3><span class="note">${oth.length} bets · ${money(sum(oth, pl))} · not counted in the college numbers</span></summary><div class="tbl" style="margin-top:10px"><table><thead><tr><th>Bet</th><th class="l">Group</th><th>Status</th><th>Stake → payout</th><th>P/L</th></tr></thead><tbody>${oth.map(futRow).join("")}</tbody></table></div></details>` : ""}
-        <p class="note">Straight from our sheet: green line = over, red = under. Payout includes the stake. "Live" bets show the risk level we've marked; the bar is wins so far against the line (orange tick).</p>` };
+        ${fut.length ? `<div class="panel"><div class="lab-head"><h2>College futures</h2><span class="note">${rec(fut)}<i class="own" style="font-style:normal"> · ${money(sum(fut, pl))}</i></span></div><div class="tbl"><table><thead><tr><th>Bet</th><th class="l">Market</th><th>Status</th><th class="own">Stake → payout</th><th class="own">P/L</th></tr></thead><tbody>${fut.map(futRow).join("")}</tbody></table></div></div>` : ""}
+        ${oth.length ? `<details class="filters panel flat"><summary><h3>Other sports on the same tab</h3><span class="note">${oth.length} bets<i class="own" style="font-style:normal"> · ${money(sum(oth, pl))}</i> · not counted in the college numbers</span></summary><div class="tbl" style="margin-top:10px"><table><thead><tr><th>Bet</th><th class="l">Group</th><th>Status</th><th class="own">Stake → payout</th><th class="own">P/L</th></tr></thead><tbody>${oth.map(futRow).join("")}</tbody></table></div></details>` : ""}
+        <p class="note">Straight from our sheet: green line = over, red = under. <span class="own">Payout includes the stake. </span>"Live" bets show the risk level we've marked; the bar is wins so far against the line (orange tick).</p>` };
     el.addEventListener("click", e => { const b = e.target.closest(".season"); if (!b) return; sel = b.dataset.y; draw() });
     draw();
   }
   NCSUN.register({
-    id: "cfb", icon: '<svg viewBox="0 0 24 24"><path d="M4 16.5C4 10 10 4 20 4c0 10-6 16-16 16-.5 0-1 0-1.5-.2A12 12 0 0 1 4 16.5z"/><path d="M8.5 15.5l7-7M10 12l1.5 1.5M12.5 9.5 14 11"/></svg>', name: "College football", short: "CFB", tag: "Football", navName: "Football",
+    id: "cfb", hand: true, icon: '<svg viewBox="0 0 24 24"><path d="M4 16.5C4 10 10 4 20 4c0 10-6 16-16 16-.5 0-1 0-1.5-.2A12 12 0 0 1 4 16.5z"/><path d="M8.5 15.5l7-7M10 12l1.5 1.5M12.5 9.5 14 11"/></svg>', name: "College football", short: "CFB", tag: "Football", navName: "Football",
     kicker: "College football · sides and totals", h1: "This <em>week</em>",
     lede: "Hand picks, made together. No model, just film, numbers and arguments. 1 unit each.",
     seasonLabel: "2026",
@@ -112,7 +112,7 @@
       el.addEventListener("click", e => { const b = e.target.closest(".season"); if (!b) return; focus = b.dataset.s ? +b.dataset.s : null; draw() });
       draw();
     },
-    extras: { totals: { label: "Win totals", kicker: "Season win totals · $10 a team", h1: "Win <em>totals</em>", lede: "Our preseason over/under bets on team win totals, tracked as the season goes.", draw: el => NCSUN.data(NCSUN.byId.cfb).then(() => drawTotals(el)) } },
+    extras: { totals: { label: "Win totals", kicker: "Season win totals", h1: "Win <em>totals</em>", lede: "Our preseason over/under bets on team win totals, tracked as the season goes.", draw: el => NCSUN.data(NCSUN.byId.cfb).then(() => drawTotals(el)) } },
     how: el => { el.innerHTML = `<div><div class="kicker">The old-fashioned way</div><h1>No model. <em>Just us.</em></h1>
       <p class="lede">Unlike the model tabs, nothing here comes out of a model. These are picks we argue our way into each week, and log as one card.</p></div>
     <div class="ridemap">

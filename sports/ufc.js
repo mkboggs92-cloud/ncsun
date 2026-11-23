@@ -36,8 +36,12 @@
     let extra = ""; if (bn && bn.best && bn.best.k !== r.bk && toDec(bn.best.o) > toDec(r.o) + 1e-9) extra = `Best now <b>${esc(BOOK[bn.best.k])} ${am(bn.best.o)}</b>`;
     return { d: r.d, ev: r.ev || "UFC", pick: r.lab || r.pk, detail: `${isProp(r) ? esc(r.op) : "vs " + esc(r.op)}${r.div ? " · " + esc(cap(r.div)) : ""}`, mk: MK[r.mk || "ML"] || r.mk, tier: TIER[t] || t,
       o: r.o, bk: BOOK[r.bk] || r.bk, stake: r.su || 1, p: r.p, m: r.m, e: r.e, r: r.r || null, pl: r.r ? (r.u || 0) : null, act: r.mth ? `${r.mth}${r.rnd ? " R" + r.rnd : ""}` : null, clv: isProp(r) ? null : r.clv ?? null,   // CLV on moneylines only (prop CLV starts ~-10% from the vig)
-      posted: r.posted || null, paper: !!paper, id: paper ? ["ufc", "paper", r.d, r.lab || r.pk, r.mk, r.bk].join("|") : undefined, limit: gone ? `Price moved past ${am(bn.worst)} everywhere · pick stands at ${am(r.o)}` : worst != null ? `Take ${am(worst)} or better` : null, limitGone: gone, worst, extra, raw: r };
+      posted: r.posted || null, paper: !!paper, id: paper ? ["ufc", "paper", r.d, r.lab || r.pk, r.mk, r.bk].join("|") : undefined, limit: gone ? `Price moved past ${am(bn.worst)} everywhere · pick stands at ${am(r.o)}` : worst != null ? `Take ${am(worst)} or better` : null, limitGone: gone, worst, extra, raw: r, cl: closeOf(r) };
   }
+  // what we got vs the closing price (moneylines; clv = price taken x fair closing chance - 1)
+  function closeOf(r) { if (isProp(r) || !r.r || r.cd == null || r.clv == null) return null;
+    const d = +r.cd; if (!(d > 1)) return null; const ca = d >= 2 ? Math.round((d - 1) * 100) : Math.round(-100 / (d - 1));
+    return { got: am(r.o), closed: am(ca), diff: "CLV " + (r.clv > 0 ? "+" : "") + (r.clv * 100).toFixed(1) + "%" } }
   const SHORT = { Moneyline: "moneyline", "Decision · KO fade": "KO fade", Decision: "decision", "Goes the distance": "distance" };
 
   // ---------------------------------------------------------------- fight rows (full card)
@@ -352,7 +356,7 @@
 
   const M = x => `<div class="mbox"><math display="block">${x}</math></div>`;
   NCSUN.register({
-    id: "ufc", icon: '<svg viewBox="0 0 24 24"><path d="M8.5 3h7l5 5v8l-5 5h-7l-5-5V8z"/><path d="M9 14.5c0-2 1.3-3 3-3s3 1 3 3v2H9z"/><path d="M12 8.5v3"/></svg>', name: "UFC", short: "UFC", tag: "Fights",
+    id: "ufc", clvFront: true, icon: '<svg viewBox="0 0 24 24"><path d="M8.5 3h7l5 5v8l-5 5h-7l-5-5V8z"/><path d="M9 14.5c0-2 1.3-3 3-3s3 1 3 3v2H9z"/><path d="M12 8.5v3"/></svg>', name: "UFC", short: "UFC", tag: "Fights",
     kicker: "UFC · moneylines and props", h1: "Fight <em>night</em>",
     lede: "Moneylines only, 1 unit each; props are tracked on paper (not bet) since Nov 9. Take the listed price or better, the same half-day it posts. Posted picks stand and are graded at the price they locked.",
     defaultTime: "18:00", durationH: 7, seasonLabel: "2026",
