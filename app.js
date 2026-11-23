@@ -549,7 +549,7 @@
       if (live.length) bits.push(`<b>${live.length}</b> live now`); if (fin.length) bits.push(`<b>${fin.length}</b> awaiting a grade`);
       bits.push(`<b>${posted.length}</b> posted and waiting`);
       if (todayG.length) bits.push(`today <b>${recTxt(sT)}, ${fmtU(sT.u)}</b>`); else if (ydayG.length) bits.push(`yesterday <b>${recTxt(sY)}, ${fmtU(sY.u)}</b>`);
-      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span><a href="#get" data-go="get">New here? How to read a pick, and picks by email</a>`;
+      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>`;
       $("#home-kicker").textContent = `${dateTxt(today)} · a free hobby project · every pick graded in public`;
       // model strip
       const tiles = sports.map((s, i) => { const d = s.data, m = d.meta || {}, g = d.live.filter(r => r.status === "graded").sort(byTime), st = stats(g), open = d.today.filter(r => !r.r && !r.paper), lv = open.filter(r => r.status === "live").length;
@@ -606,10 +606,8 @@
         <div class="getgrid">${sports.map(s => { const g = GET[s.id] || [s.name, "", ""]; return `<div class="getc"><b>${esc(g[0])}</b><span>${esc(g[1])}</span><small>${esc(g[2])}</small><button class="ghost" data-go="${s.id}">See the ride</button></div>` }).join("")}</div>
         <div class="grid2"><div class="panel flat prose"><h3>Every pick</h3><p>An email the moment a pick posts, with the book, the price and how far it is still a bet. Another if a line changes, and the results once they are graded, with where each line closed. Plus a short recap each morning.</p></div>
           <div class="panel flat prose"><h3>Morning digest</h3><p>One email a day, around 7 AM ET: the open picks in your sports and how yesterday went. Fine for hoops and UFC; too slow for NFL props, which lock about 80 minutes before kickoff.</p></div></div>
-        <div class="banner"><b>How to join</b><span>This is a friends list, not a sign-up form. Ask Mark and tell him two things: which sports you want, and whether you want every pick or just the morning digest. To change sports or stop, reply to any pick email.</span></div>
       </div>
-      <div class="panel flat prose"><h3>Words you'll see</h3><p><b>Tier</b>: which rule produced the pick; each ride's "How it works" stop explains its tiers. <b>Paper</b>: logged and graded for the record but not bet; paper picks are never emailed. <b>Edge</b>: how far the model's chance is above the price's break-even. <b>Backtest</b>: how the rules would have done in past seasons, simulated, kept apart from the live record. <b>Live</b>: real picks posted here before the games, nothing added later.</p>
-        <p class="note">Picks are for information and entertainment, not betting advice, and past results don't guarantee future ones. Sports betting is legal only in some states and only for adults (21+ in most): know your own state's rules. If gambling stops being fun, call 1-800-GAMBLER.</p></div>`;
+      <div class="panel flat prose"><h3>Words you'll see</h3><p><b>Tier</b>: which rule produced the pick; each ride's "How it works" stop explains its tiers. <b>Paper</b>: logged and graded for the record but not bet; paper picks are never emailed. <b>Edge</b>: how far the model's chance is above the price's break-even. <b>Backtest</b>: how the rules would have done in past seasons, simulated, kept apart from the live record. <b>Live</b>: real picks posted here before the games, nothing added later.</p></div>`;
   }
   // activity log written by the hub (ncsun_hub.py): what was posted, locked and graded, with timestamps
   function activity() {
@@ -621,8 +619,8 @@
   // ------------------------------------------------------------------ boot
   function boot() {
     const seg = $(".seg"), order = NCSUN.sports.filter(s => !s.hidden);
-    seg.innerHTML = `<button role="tab" data-model="home" aria-selected="true">Home</button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`).join("") + `<button role="tab" data-model="get" aria-selected="false" tabindex="-1" class="getb">Get picks</button>`;
-    const bar = $(".tabbar"); if (bar) bar.innerHTML = `<button role="tab" data-model="home" aria-selected="true">${ICON.home}<span>Home</span></button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${s.icon || ICON.dot}<span>${esc(s.short)}</span></button>`).join("") + `<button role="tab" data-model="get" aria-selected="false" tabindex="-1">${ICON.mail}<span>Get picks</span></button>`;
+    seg.innerHTML = `<button role="tab" data-model="home" aria-selected="true">Home</button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`).join("");
+    const bar = $(".tabbar"); if (bar) bar.innerHTML = `<button role="tab" data-model="home" aria-selected="true">${ICON.home}<span>Home</span></button>` + order.map(s => `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${s.icon || ICON.dot}<span>${esc(s.short)}</span></button>`).join("");
     document.querySelectorAll(".seg button, .tabbar button").forEach(b => b.addEventListener("click", () => { show(b.dataset.model, curView[b.dataset.model], true); scrollTo({ top: 0 }) }));
     document.querySelectorAll('[role="tablist"]').forEach(tl => tl.addEventListener("keydown", e => { const t = [...tl.querySelectorAll('[role="tab"]')], i = t.indexOf(document.activeElement); if (i < 0) return;
       const j = e.key === "ArrowRight" ? (i + 1) % t.length : e.key === "ArrowLeft" ? (i - 1 + t.length) % t.length : e.key === "Home" ? 0 : e.key === "End" ? t.length - 1 : -1; if (j < 0) return; e.preventDefault(); t[j].focus(); t[j].click() }));
