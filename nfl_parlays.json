@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-22 18:53",
+ "updated": "2026-11-22 20:31",
  "season": 2026,
  "week": 11,
  "this_week": [
@@ -644,7 +644,8 @@
      "dec": 1.9,
      "ph": 0.5609,
      "gm": "NYJ @ LAC",
-     "card": true
+     "card": true,
+     "act": 30.0
     },
     {
      "pid": "00-0038120",
@@ -657,7 +658,8 @@
      "bk": "draftkings",
      "dec": 1.92,
      "ph": 0.5438,
-     "gm": "NYJ @ LAC"
+     "gm": "NYJ @ LAC",
+     "act": 14.0
     },
     {
      "pid": "00-0037740",
@@ -670,7 +672,8 @@
      "bk": "draftkings",
      "dec": 2.07,
      "ph": 0.5063,
-     "gm": "NYJ @ LAC"
+     "gm": "NYJ @ LAC",
+     "act": 3.0
     }
    ],
    "price": null,
@@ -687,7 +690,10 @@
    "qualifies": true,
    "posted": "2026-11-22 14:38",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 NYJ @ LAC: Kenyon Sadiq U25.5 yds (card pick) + Breece Hall U21.5 yds + Garrett Wilson U5.5 rec \u00b7 Needs +467 before a 33% boost, +414 before 50%. DK est. +596."
   },
   {
@@ -713,7 +719,8 @@
      "bk": "williamhill_us",
      "dec": 2.3,
      "ph": 0.4127,
-     "gm": "NYJ @ LAC"
+     "gm": "NYJ @ LAC",
+     "act": 1.0
     },
     {
      "pid": "00-0038544",
@@ -726,7 +733,8 @@
      "bk": "williamhill_us",
      "dec": 1.89,
      "ph": 0.5294,
-     "gm": "NYJ @ LAC"
+     "gm": "NYJ @ LAC",
+     "act": 9.0
     },
     {
      "pid": "00-0040736",
@@ -739,7 +747,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.509,
-     "gm": "NYJ @ LAC"
+     "gm": "NYJ @ LAC",
+     "act": 2.0
     },
     {
      "pid": "00-0040736",
@@ -752,7 +761,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.5053,
-     "gm": "NYJ @ LAC"
+     "gm": "NYJ @ LAC",
+     "act": 25.0
     }
    ],
    "price": null,
@@ -768,7 +778,10 @@
    "ev50": 0.4654,
    "posted": "2026-11-22 14:38",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 NYJ @ LAC: Quentin Johnston O2.5 rec + O24.5 yds; Mason Taylor O2.5 rec + O20.5 yds \u00b7 Needs +454 before a 33% boost, +403 before 50%. Caesars est. +588."
   },
   {
@@ -793,7 +806,8 @@
      "bk": "draftkings",
      "dec": 1.9,
      "ph": 0.544,
-     "gm": "LV @ DEN"
+     "gm": "LV @ DEN",
+     "act": 61.0
     },
     {
      "pid": "00-0040122",
@@ -806,7 +820,8 @@
      "bk": "draftkings",
      "dec": 1.88,
      "ph": 0.5454,
-     "gm": "LV @ DEN"
+     "gm": "LV @ DEN",
+     "act": 90.0
     },
     {
      "pid": "00-0039066",
@@ -819,7 +834,8 @@
      "bk": "draftkings",
      "dec": 1.89,
      "ph": 0.5273,
-     "gm": "LV @ DEN"
+     "gm": "LV @ DEN",
+     "act": 4.0
     }
    ],
    "price": null,
@@ -836,7 +852,10 @@
    "qualifies": true,
    "posted": "2026-11-22 15:08",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 LV @ DEN: Jaylen Waddle U44.5 yds + Ashton Jeanty U29.5 yds + Michael Mayer U34.5 yds \u00b7 Needs +419 before a 33% boost, +372 before 50%. DK est. +522."
   },
   {
@@ -862,7 +881,8 @@
      "bk": "williamhill_us",
      "dec": 1.95,
      "ph": 0.4954,
-     "gm": "LV @ DEN"
+     "gm": "LV @ DEN",
+     "act": 3.0
     },
     {
      "pid": "00-0040134",
@@ -875,7 +895,8 @@
      "bk": "williamhill_us",
      "dec": 1.92,
      "ph": 0.5075,
-     "gm": "LV @ DEN"
+     "gm": "LV @ DEN",
+     "act": 32.0
     },
     {
      "pid": "00-0034348",
@@ -888,7 +909,8 @@
      "bk": "williamhill_us",
      "dec": 2.24,
      "ph": 0.424,
-     "gm": "LV @ DEN"
+     "gm": "LV @ DEN",
+     "act": 0.0
     },
     {
      "pid": "00-0034348",
@@ -901,7 +923,8 @@
      "bk": "williamhill_us",
      "dec": 1.92,
      "ph": 0.514,
-     "gm": "LV @ DEN"
+     "gm": "LV @ DEN",
+     "act": 0.0
     }
    ],
    "price": null,
@@ -917,7 +940,10 @@
    "ev50": 0.5272,
    "posted": "2026-11-22 15:08",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 LV @ DEN: Pat Bryant O2.5 rec + O27.5 yds; Courtland Sutton O3.5 rec + O32.5 yds \u00b7 Needs +458 before a 33% boost, +406 before 50%. Caesars est. +621."
   },
   {
@@ -3212,6 +3238,331 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 MIA @ BUF: Khalil Shakir O3.5 rec + O37.5 yds; Dawson Knox O2.5 rec + O21.5 yds \u00b7 Needs +419 before a 33% boost, +372 before 50%. Caesars est. +700."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T2105Z",
+   "kind": "sgp",
+   "game_id": "2026_11_NYJ_LAC",
+   "book": "draftkings",
+   "fill": 0,
+   "day": true,
+   "gm": "NYJ @ LAC",
+   "legs": [
+    {
+     "pid": "00-0041032",
+     "pk": "Kenyon Sadiq",
+     "team": "NYJ",
+     "game_id": "2026_11_NYJ_LAC",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 25.5,
+     "bk": "draftkings",
+     "dec": 1.9,
+     "ph": 0.5609,
+     "gm": "NYJ @ LAC",
+     "card": true,
+     "act": 30.0
+    },
+    {
+     "pid": "00-0038120",
+     "pk": "Breece Hall",
+     "team": "NYJ",
+     "game_id": "2026_11_NYJ_LAC",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 21.5,
+     "bk": "draftkings",
+     "dec": 1.92,
+     "ph": 0.5438,
+     "gm": "NYJ @ LAC",
+     "act": 14.0
+    },
+    {
+     "pid": "00-0037740",
+     "pk": "Garrett Wilson",
+     "team": "NYJ",
+     "game_id": "2026_11_NYJ_LAC",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 5.5,
+     "bk": "draftkings",
+     "dec": 2.07,
+     "ph": 0.5063,
+     "gm": "NYJ @ LAC",
+     "act": 3.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.96,
+   "p_joint": 0.1455,
+   "p_indep": 0.1544,
+   "fair": 6.872,
+   "min0": 7.216,
+   "min33": 5.674,
+   "min50": 5.144,
+   "ev0": 0.0128,
+   "ev33": 0.2989,
+   "ev50": 0.4464,
+   "qualifies": true,
+   "posted": "2026-11-22 14:38",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 NYJ @ LAC: Kenyon Sadiq U25.5 yds (card pick) + Breece Hall U21.5 yds + Garrett Wilson U5.5 rec \u00b7 Needs +467 before a 33% boost, +414 before 50%. DK est. +596."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T2105Z",
+   "kind": "czr",
+   "game_id": "2026_11_NYJ_LAC",
+   "book": "williamhill_us",
+   "day": true,
+   "gm": "NYJ @ LAC",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0038544",
+     "pk": "Quentin Johnston",
+     "team": "LAC",
+     "game_id": "2026_11_NYJ_LAC",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.3,
+     "ph": 0.4127,
+     "gm": "NYJ @ LAC",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0038544",
+     "pk": "Quentin Johnston",
+     "team": "LAC",
+     "game_id": "2026_11_NYJ_LAC",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 24.5,
+     "bk": "williamhill_us",
+     "dec": 1.89,
+     "ph": 0.5294,
+     "gm": "NYJ @ LAC",
+     "act": 9.0
+    },
+    {
+     "pid": "00-0040736",
+     "pk": "Mason Taylor",
+     "team": "NYJ",
+     "game_id": "2026_11_NYJ_LAC",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.509,
+     "gm": "NYJ @ LAC",
+     "act": 2.0
+    },
+    {
+     "pid": "00-0040736",
+     "pk": "Mason Taylor",
+     "team": "NYJ",
+     "game_id": "2026_11_NYJ_LAC",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 20.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.5053,
+     "gm": "NYJ @ LAC",
+     "act": 25.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.883,
+   "p_joint": 0.1492,
+   "p_indep": 0.0562,
+   "fair": 6.704,
+   "min0": 7.039,
+   "min33": 5.541,
+   "min50": 5.026,
+   "ev0": 0.0267,
+   "ev33": 0.3163,
+   "ev50": 0.4654,
+   "posted": "2026-11-22 14:38",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 NYJ @ LAC: Quentin Johnston O2.5 rec + O24.5 yds; Mason Taylor O2.5 rec + O20.5 yds \u00b7 Needs +454 before a 33% boost, +403 before 50%. Caesars est. +588."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T2125Z",
+   "kind": "sgp",
+   "game_id": "2026_11_LV_DEN",
+   "book": "draftkings",
+   "fill": 2,
+   "day": true,
+   "gm": "LV @ DEN",
+   "legs": [
+    {
+     "pid": "00-0036613",
+     "pk": "Jaylen Waddle",
+     "team": "DEN",
+     "game_id": "2026_11_LV_DEN",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 44.5,
+     "bk": "draftkings",
+     "dec": 1.9,
+     "ph": 0.544,
+     "gm": "LV @ DEN",
+     "act": 61.0
+    },
+    {
+     "pid": "00-0040122",
+     "pk": "Ashton Jeanty",
+     "team": "LV",
+     "game_id": "2026_11_LV_DEN",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 29.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5454,
+     "gm": "LV @ DEN",
+     "act": 90.0
+    },
+    {
+     "pid": "00-0039066",
+     "pk": "Michael Mayer",
+     "team": "LV",
+     "game_id": "2026_11_LV_DEN",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 34.5,
+     "bk": "draftkings",
+     "dec": 1.89,
+     "ph": 0.5273,
+     "gm": "LV @ DEN",
+     "act": 4.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.222,
+   "p_joint": 0.1597,
+   "p_indep": 0.1565,
+   "fair": 6.261,
+   "min0": 6.574,
+   "min33": 5.191,
+   "min50": 4.716,
+   "ev0": -0.0062,
+   "ev33": 0.2691,
+   "ev50": 0.4109,
+   "qualifies": true,
+   "posted": "2026-11-22 15:08",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 LV @ DEN: Jaylen Waddle U44.5 yds + Ashton Jeanty U29.5 yds + Michael Mayer U34.5 yds \u00b7 Needs +419 before a 33% boost, +372 before 50%. DK est. +522."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261122T2125Z",
+   "kind": "czr",
+   "game_id": "2026_11_LV_DEN",
+   "book": "williamhill_us",
+   "day": true,
+   "gm": "LV @ DEN",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0040134",
+     "pk": "Pat Bryant",
+     "team": "DEN",
+     "game_id": "2026_11_LV_DEN",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 1.95,
+     "ph": 0.4954,
+     "gm": "LV @ DEN",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0040134",
+     "pk": "Pat Bryant",
+     "team": "DEN",
+     "game_id": "2026_11_LV_DEN",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 27.5,
+     "bk": "williamhill_us",
+     "dec": 1.92,
+     "ph": 0.5075,
+     "gm": "LV @ DEN",
+     "act": 32.0
+    },
+    {
+     "pid": "00-0034348",
+     "pk": "Courtland Sutton",
+     "team": "DEN",
+     "game_id": "2026_11_LV_DEN",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 2.24,
+     "ph": 0.424,
+     "gm": "LV @ DEN",
+     "act": 0.0
+    },
+    {
+     "pid": "00-0034348",
+     "pk": "Courtland Sutton",
+     "team": "DEN",
+     "game_id": "2026_11_LV_DEN",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 32.5,
+     "bk": "williamhill_us",
+     "dec": 1.92,
+     "ph": 0.514,
+     "gm": "LV @ DEN",
+     "act": 0.0
+    }
+   ],
+   "price": null,
+   "est_price": 7.214,
+   "p_joint": 0.148,
+   "p_indep": 0.0548,
+   "fair": 6.758,
+   "min0": 7.096,
+   "min33": 5.583,
+   "min50": 5.064,
+   "ev0": 0.0674,
+   "ev33": 0.3709,
+   "ev50": 0.5272,
+   "posted": "2026-11-22 15:08",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 LV @ DEN: Pat Bryant O2.5 rec + O27.5 yds; Courtland Sutton O3.5 rec + O32.5 yds \u00b7 Needs +458 before a 33% boost, +406 before 50%. Caesars est. +621."
   }
  ],
  "record": {
@@ -3224,20 +3575,20 @@
    "u50": -1.0
   },
   "sgp": {
-   "n": 13,
+   "n": 15,
    "w": 3,
-   "l": 10,
-   "u1": 4.61,
-   "u33": 9.43,
-   "u50": 11.91
+   "l": 12,
+   "u1": 2.61,
+   "u33": 7.43,
+   "u50": 9.91
   },
   "czr": {
-   "n": 12,
+   "n": 14,
    "w": 0,
-   "l": 12,
-   "u1": -12.0,
-   "u33": -12.0,
-   "u50": -12.0
+   "l": 14,
+   "u1": -14.0,
+   "u33": -14.0,
+   "u50": -14.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
