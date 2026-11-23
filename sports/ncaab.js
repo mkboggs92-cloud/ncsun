@@ -8,6 +8,8 @@
   const isT = r => r.mk === "Total";
   const fixT = rows => { (rows || []).forEach(r => { if (r && r.t === "Totals altitude") r.t = "Totals model play" }); return rows };
   const TIERS = ["Totals model play", "Spread tri-agree", "Spread luck + ensemble", "Totals model score", "Totals tri-agree"];
+  // plain names for the rules that produce a pick (the data files keep the model's own labels)
+  const TN = { "Totals model play": "Total · model pick", "Spread tri-agree": "Spread · 3 signals agree", "Spread luck + ensemble": "Spread · luck + model", "Totals model score": "Total · model score", "Totals tri-agree": "Total · 3 signals agree" }, tn = t => TN[t] || t;
   const pickTxt = r => isT(r) ? `${r.side} ${r.ln}` : `${r.tm} ${lnTxt(r.ln)}`;
   const evTxt = r => isT(r) ? `${r.op} at ${r.tm}` : r.ha === "A" ? `${r.tm} at ${r.op}` : r.ha === "N" ? `${r.tm} vs ${r.op}` : `${r.op} at ${r.tm}`;
   const topG = w => { if (!w || !w.g) return null; let k = null; for (const g in w.g) if (k == null || w.g[g] > w.g[k]) k = g; return k };
@@ -21,7 +23,7 @@
     const sp = isT(r) ? false : true;
     const limit = r.min != null ? (isT(r) ? `${r.side === "Over" ? "Max" : "Min"} line ${r.min}` : `Worst line ${lnTxt(r.min)}`) : null;
     return { d: r.d, t: r.tip || null, season: r.s, ev: evTxt(r), pick: pickTxt(r), detail: (isT(r) ? "Total" : r.ha === "A" ? "Away" : r.ha === "N" ? "Neutral" : "Home") + (r.tot != null && !isT(r) ? ` · total ${r.tot}` : ""),
-      mk: isT(r) ? "Total" : "Spread", tier: r.t, o: r.o, bk: BOOK[r.bk] || r.bk, stake: r.u || 1, r: r.r || null, pl: r.r ? r.p : null, act: r.sc || null, clv: r.clv ?? null,
+      mk: isT(r) ? "Total" : "Spread", tier: tn(r.t), o: r.o, bk: BOOK[r.bk] || r.bk, stake: r.u || 1, r: r.r || null, pl: r.r ? r.p : null, act: r.sc || null, clv: r.clv ?? null,
       limit, worst: r.min != null ? (isT(r) ? String(r.min) : lnTxt(r.min)) : null, extra: r.r || paper ? "" : esc(simTxt(r)), raw: r,
       cl: closeOf(r), paper: !!paper, id: paper ? ["ncaab", "paper", r.d, r.tm, r.op, r.mk].join("|") : undefined };
   }
@@ -34,9 +36,9 @@
   NCSUN.register({
     id: "ncaab", clvPanel: true, clvFront: true, clvUnit: " pts", icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M6 5.5c3 3.5 3 9.5 0 13M18 5.5c-3 3.5-3 9.5 0 13"/></svg>', name: "College hoops", short: "Hoops", tag: "Hoops", navName: "College hoops",
     kicker: "College basketball · spreads and totals", h1: "Today's <em>card</em>",
-    lede: "Flat 1-unit picks on spreads and totals from the luck-fade model. Take the listed number or better; skip a pick if the line has moved past its worst line.",
+    lede: "Spreads and totals, 1 unit each. The model bets against teams whose results have run ahead of how well they've actually played. Take the listed number or better; if the line has moved past the worst line shown, skip it.",
     defaultTime: "19:00", durationH: 2.5, seasonLabel: "2026-27",
-    groupings: ["book", "tier", "event"], defaultGroup: "book", groupName: "By game", evInSub: true, tierOrder: TIERS,
+    groupings: ["book", "tier", "event"], defaultGroup: "book", groupName: "By game", evInSub: true, tierOrder: TIERS.map(tn),
     minN: 75, defaultDim: "tier", searchHint: "Search a team",
     clv: { fmt: c => c == null ? "–" : (c > 0 ? "+" : "") + c.toFixed(2), label: "avg points", title: "Average points vs the closing line" },
     car: '<circle cx="-12" cy="-19" r="5.5" fill="var(--ball)" stroke="var(--ink)" stroke-width="1.6"/>',
@@ -47,7 +49,7 @@
       lede: "Each season was predicted by models trained only on earlier seasons, using what was known at 5am on game day. Spreads and totals share one card: at most 6 picks a weekday and 12 on Saturday, one bet per game, graded at the best 5am price at DraftKings, Caesars or FanDuel. Simulated results, not a live record." },
     dims: {
       mkt: { n: "Market", f: r => isT(r) ? "Totals" : "Spreads", order: ["Spreads", "Totals"] },
-      tier: { n: "Tier", f: r => r.t, order: TIERS },
+      tier: { n: "Pick type", f: r => tn(r.t), order: TIERS.map(tn) },
       season: { n: "Season", f: r => r.s },
       fav: { n: "Spread side", f: r => isT(r) ? "Total" : (r.ln < 0 ? "Favorite" : r.ln > 0 ? "Underdog" : "Pick'em"), order: ["Favorite", "Pick'em", "Underdog", "Total"] },
       ou: { n: "Over / under", f: r => isT(r) ? r.side : "Spread", order: ["Over", "Under", "Spread"] },

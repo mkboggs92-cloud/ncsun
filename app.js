@@ -103,18 +103,18 @@
     const nar = innerWidth < 600, W = nar ? 360 : 760, H = nar ? 280 : 310, L = nar ? 40 : 50, R = nar ? 16 : 22, T = nar ? 70 : 76, B = nar ? 30 : 34, fs = nar ? 12 : 11, n = rows.length;
     let c = 0; const ys = rows.map(r => (c += r.pl || 0));
     const ymin = Math.min(0, ...ys), ymax = Math.max(1, ...ys), span = ymax - ymin || 1, lines = nar ? 4 : 7, step = [1, 2, 5, 10, 20, 25, 50, 100, 200].find(x => span / x <= lines) || 500;
-    const x = i => L + i / (n - 1) * (W - L - R), y = v => T + (ymax - v) / span * (H - T - B);
+    const Y = [0].concat(ys), N = n + 1, x = i => L + i / (N - 1) * (W - L - R), y = v => T + (ymax - v) / span * (H - T - B);
     let g = ""; for (let v = Math.ceil(ymin / step) * step; v <= ymax; v += step) g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" ${v === 0 ? 'stroke-width="2"' : 'stroke-dasharray="2 5"'}/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="${fs}" fill="var(--ink2)">${v > 0 ? "+" : ""}${v}u</text>`;
-    let s = "", prev = null; rows.forEach((r, i) => { const yr = String(r.season || ""); if (yr !== prev) { s += `<line x1="${x(i)}" x2="${x(i)}" y1="${T - 10}" y2="${H - B}" stroke="var(--line)"/><text x="${x(i) + 4}" y="${H - B + 19}" font-size="${fs}" font-weight="700" fill="var(--ink2)">${esc(nar ? yr.slice(2) : yr)}</text>`; prev = yr } });
-    let pk = 0, pi = 0, dd = 0, di0 = 0, di1 = 0; ys.forEach((v, i) => { if (v > pk) { pk = v; pi = i } if (pk - v > dd) { dd = pk - v; di0 = pi; di1 = i } });
-    const k = Math.max(1, Math.floor(n / (nar ? 90 : 140))), pts = []; for (let i = 0; i < n; i += k) pts.push([x(i), y(ys[i])]); if (pts[pts.length - 1][0] !== x(n - 1)) pts.push([x(n - 1), y(ys[n - 1])]);
+    let s = "", prev = null; if (sp) rows.forEach((r, i) => { const yr = String(r.season || ""); if (yr !== prev) { s += `<line x1="${x(i)}" x2="${x(i)}" y1="${T - 10}" y2="${H - B}" stroke="var(--line)"/><text x="${x(i) + 4}" y="${H - B + 19}" font-size="${fs}" font-weight="700" fill="var(--ink2)">${esc(nar ? yr.slice(2) : yr)}</text>`; prev = yr } });
+    let pk = 0, pi = 0, dd = 0, di0 = 0, di1 = 0; Y.forEach((v, i) => { if (v > pk) { pk = v; pi = i } if (pk - v > dd) { dd = pk - v; di0 = pi; di1 = i } });
+    const k = Math.max(1, Math.floor(n / (nar ? 90 : 140))), pts = []; for (let i = 0; i < N; i += k) pts.push([x(i), y(Y[i])]); if (pts[pts.length - 1][0] !== x(N - 1)) pts.push([x(N - 1), y(Y[N - 1])]);
     const path = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join("");
     let ties = ""; if (!nar) for (let i = 1; i < pts.length; i += 2) { const a = pts[i - 1], b = pts[i]; const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1, nx = -dy / len * 6, ny = dx / len * 6; ties += `<line x1="${(b[0] + nx).toFixed(1)}" y1="${(b[1] + ny).toFixed(1)}" x2="${(b[0] - nx).toFixed(1)}" y2="${(b[1] - ny).toFixed(1)}" stroke="var(--track)" stroke-width="1.6" opacity=".5"/>` }
-    let ddm = ""; if (dd >= 3) { const x0 = x(di0), x1 = x(di1), y0 = y(ys[di0]), y1 = y(ys[di1]), lx = Math.min(Math.max((x0 + x1) / 2, L + 60), W - R - 60);
+    let ddm = ""; if (dd >= 3) { const x0 = x(di0), x1 = x(di1), y0 = y(Y[di0]), y1 = y(Y[di1]), lx = Math.min(Math.max((x0 + x1) / 2, L + 60), W - R - 60);
       ddm = `<g aria-hidden="true"><line x1="${x0}" x2="${x1}" y1="${y0}" y2="${y0}" stroke="var(--loss)" stroke-dasharray="3 3"/><line x1="${x1}" x2="${x1}" y1="${y0}" y2="${y1}" stroke="var(--loss)" stroke-width="2"/><circle cx="${x1}" cy="${y1}" r="3.5" fill="var(--loss)"/><text x="${lx}" y="${Math.min(H - B - 6, y1 + 18)}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="var(--loss)">Worst drawdown −${dd.toFixed(1)}u</text></g>` }
     const end = pts[pts.length - 1], last = ys[n - 1], base = y(Math.max(ymin, 0)), cid = "clip" + Math.random().toString(36).slice(2, 8);
     const sc = nar ? 0.68 : 0.78, mid = sp ? sp.id : (NCSUN.homeMascot || "ncaab");
-    const bets = n <= 120 ? rows.map((r, i) => `<circle class="bt ${r.r === "W" ? "w" : r.r === "L" ? "l" : "p"}" cx="${x(i).toFixed(1)}" cy="${y(ys[i]).toFixed(1)}" r="${nar ? 3.2 : 4}"><title>${esc(r.pick)} · ${r.r} ${fmtU(r.pl || 0)}</title></circle>`).join("") : "";
+    const bets = n <= 120 ? rows.map((r, i) => `<circle class="bt ${r.r === "W" ? "w" : r.r === "L" ? "l" : "p"}" cx="${x(i + 1).toFixed(1)}" cy="${y(Y[i + 1]).toFixed(1)}" r="${nar ? 3.2 : 4}"><title>${esc(r.pick)} · ${r.r} ${fmtU(r.pl || 0)}</title></circle>`).join("") : "";
     el.innerHTML = `<div class="ridewrap"><svg class="ride" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative units, ${fmtU(last)}; worst drawdown ${dd.toFixed(1)} units">${g}${s}
      <defs><clipPath id="${cid}"><rect class="reveal" x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
      <g clip-path="url(#${cid})"><path class="area" d="${path} L${end[0]} ${base} L${pts[0][0]} ${base} Z" fill="var(--cobalt)" opacity=".10"/>
@@ -125,7 +125,7 @@
      <g class="fx"></g>
      <text class="endlbl" x="${(end[0] - 8).toFixed(1)}" y="${Math.max(16, end[1] - (nar ? 40 : 46)).toFixed(1)}" text-anchor="end" font-size="${nar ? 15 : 17}" font-weight="800" fill="var(--ink)">${fmtU(last)}</text></svg>
      <button class="ghost replay" type="button" aria-label="Ride again">Ride again</button></div>`;
-    rideAnim(el, { W, H, L, R, n, ys, x, y, sc, last, trough: dd >= 3 ? x(di1) : null, end });
+    rideAnim(el, { W, H, L, R, n: N, ys: Y, x, y, sc, last, trough: dd >= 3 ? x(di1) : null, end });
   }
   // the ride mascot: the header's rubber-hose character for this ride, cloned into the chart
   function mascotSVG(id) {
@@ -134,6 +134,7 @@
   }
   // drive the car along the track: the track is laid down just ahead of it, the counter rides above it,
   // bets pop as it passes them, the drawdown marker appears at the trough, and the finish gets a burst
+  const ridden = new Set();   // charts that already played this visit: redraws (filters, resize) settle straight to the end
   function rideAnim(el, o) {
     const svg = el.querySelector("svg.ride"), track = svg.querySelector("path.track"), reveal = svg.querySelector(".reveal"), car = svg.querySelector(".car"), lbl = svg.querySelector(".lbl"), run = lbl.querySelector("text"), box = lbl.querySelector("rect"), fx = svg.querySelector(".fx"), ddm = svg.querySelector(".ddm"), bts = [...svg.querySelectorAll(".bt")], btn = el.querySelector(".replay");
     const Ltot = track.getTotalLength ? track.getTotalLength() : 0, span = o.W - o.L - o.R;
@@ -151,7 +152,7 @@
       if (!ddShown && o.trough != null && p.x >= o.trough - 0.5) { ddShown = true; ddm.classList.add("on") }
       return { p, ang };
     };
-    const finish = () => { cancelAnimationFrame(raf); sPos = Ltot; const { p } = place(Ltot); bts.forEach(c => c.classList.add("on")); ddm.classList.add("on"); svg.classList.add("done"); lbl.style.opacity = 0; burst(p) };
+    const finish = quiet => { cancelAnimationFrame(raf); sPos = Ltot; const { p } = place(Ltot); bts.forEach(c => c.classList.add("on")); ddm.classList.add("on"); svg.classList.add("done"); if (quiet === true) svg.classList.add("still"); lbl.style.opacity = 0; if (quiet !== true) burst(p) };
     const burst = p => {
       if (reduced()) return; fx.innerHTML = "";
       if (o.last > 0) { const cols = ["var(--coral)", "var(--sun)", "var(--cobalt)", "var(--win)", "#fff"];
@@ -159,8 +160,8 @@
       else for (let i = 0; i < 7; i++) { const d = 14 + Math.random() * 26; fx.insertAdjacentHTML("beforeend", `<circle cx="${(p.x - 10).toFixed(1)}" cy="${(p.y - 4).toFixed(1)}" r="${2 + Math.random() * 3 | 0}" fill="var(--ink2)" opacity=".5" style="--dx:${(-d - 10).toFixed(0)}px;--dy:${(-Math.random() * 16).toFixed(0)}px"/>`) }
       setTimeout(() => fx.innerHTML = "", 1600);
     };
-    const reset = () => { cancelAnimationFrame(raf); sPos = 0; tPrev = 0; ddShown = false; btI = 0; bts.forEach(c => c.classList.remove("on")); ddm.classList.remove("on"); svg.classList.remove("done"); lbl.style.opacity = 1; fx.innerHTML = ""; place(0) };
-    const dur = Math.min(5200, 2600 + o.n * 6);   // longer records get a slightly longer ride
+    const reset = () => { cancelAnimationFrame(raf); sPos = 0; tPrev = 0; ddShown = false; btI = 0; bts.forEach(c => c.classList.remove("on")); ddm.classList.remove("on"); svg.classList.remove("done", "still"); lbl.style.opacity = 1; fx.innerHTML = ""; place(0) };
+    const dur = Math.min(2800, 1500 + o.n * 5);   // longer records get a slightly longer ride
     const step = t => {
       if (!tPrev) tPrev = t; const dt = Math.min(48, t - tPrev); tPrev = t;
       const a = track.getPointAtLength(Math.max(0, sPos - 2)), b = track.getPointAtLength(Math.min(Ltot, sPos + 2)), slope = (b.y - a.y) / (Math.hypot(b.x - a.x, b.y - a.y) || 1);
@@ -173,59 +174,68 @@
     btn.onclick = start;
     el.rideStart = start;
     reset(); lbl.style.opacity = 0;
+    const rk = el.id || ""; if (rk && ridden.has(rk)) { finish(true); return } if (rk) ridden.add(rk);
     if ("IntersectionObserver" in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); setTimeout(start, 120) } }, { threshold: 0.35 }); io.observe(svg) } else start();
   }
   // sparkline: cumulative units over a run of graded picks (home tiles, the trend strip)
   function spark(rows, w = 150, h = 40) {
     if (rows.length < 2) return "";
-    let c = 0; const ys = rows.map(r => (c += r.pl || 0)), ymin = Math.min(0, ...ys), ymax = Math.max(0.5, ...ys), span = ymax - ymin || 1, n = ys.length;
+    let c = 0; const ys = [0].concat(rows.map(r => (c += r.pl || 0))), ymin = Math.min(0, ...ys), ymax = Math.max(0.5, ...ys), span = ymax - ymin || 1, n = ys.length;
     const x = i => 3 + i / (n - 1) * (w - 10), y = v => 4 + (ymax - v) / span * (h - 8);
     const pts = ys.map((v, i) => [x(i), y(v)]), d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(""), e = pts[n - 1], z = y(0);
-    const svg = `<svg class="spark" viewBox="0 0 ${w} ${h}" role="img" aria-label="Units over the last ${n} picks, ${fmtU(ys[n - 1])}"><line class="z" x1="3" x2="${w - 7}" y1="${z.toFixed(1)}" y2="${z.toFixed(1)}"/><path class="sa" d="${d} L${e[0].toFixed(1)} ${z.toFixed(1)} L${pts[0][0].toFixed(1)} ${z.toFixed(1)} Z"/><path class="sl" d="${d}" style="--len:${(n * w / n * 1.6).toFixed(0)}"/><circle class="e" cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="3.5"/></svg>`;
+    const svg = `<svg class="spark" viewBox="0 0 ${w} ${h}" role="img" aria-label="Units over the last ${n - 1} picks, ${fmtU(ys[n - 1])}"><line class="z" x1="3" x2="${w - 7}" y1="${z.toFixed(1)}" y2="${z.toFixed(1)}"/><path class="sa" d="${d} L${e[0].toFixed(1)} ${z.toFixed(1)} L${pts[0][0].toFixed(1)} ${z.toFixed(1)} Z"/><path class="sl" d="${d}" style="--len:${(n * w / n * 1.6).toFixed(0)}"/><circle class="e" cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="3.5"/></svg>`;
     return svg;
   }
-  const dots = rows => rows.length ? `<span class="dots"><small>Last ${rows.length}</small>${rows.map((r, i) => `<i class="${r.r === "W" ? "w" : r.r === "L" ? "l" : "p"}" style="--i:${i}" title="${esc(r.pick)} · ${r.r}"></i>`).join("")}</span>` : "";
+  const dots = rows => rows.length ? `<span class="dots"><small>Last ${rows.length}</small>${rows.map((r, i) => `<i class="${r.r === "W" ? "w" : r.r === "L" ? "l" : "p"}" style="--i:${i}" title="${esc(r.pick)} · ${r.r}">${r.r === "W" || r.r === "L" ? r.r : "–"}</i>`).join("")}</span>` : "";
   // the trend strip on every ride's card page: this season at a glance before digging into history
   function trendHTML(sp, live) {
     const g = live.filter(r => r.status === "graded" && (!sp.headline || sp.headline(r))).sort(byTime); if (!g.length) return "";
     const s = stats(g), cv = clvStats(g);
-    return `<div class="trend"><div class="tr-rec"><small>${esc(sp.trendLabel || (sp.seasonLabel || "Season") + " so far")}</small><b>${recTxt(s)}</b><em class="${sgn(s.u)}">${fmtU(s.u)} · ${(s.roi * 100).toFixed(1)}% ROI</em></div>${sp.clvFront && cv.n ? `<div class="tr-rec"><small>Vs the closing line</small><b class="${sgn(cv.avg)}">${sp.clv.fmt(cv.avg)}${sp.clvUnit || ""}</b><em>beat it ${cv.beat} of ${cv.n}</em></div>` : ""}${spark(g.slice(-60))}${dots(g.slice(-10))}<button class="ghost" data-go="${sp.id}-live">Full record</button></div>`;
+    return `<div class="trend"><div class="tr-rec"><small>${esc(sp.trendLabel || (sp.seasonLabel || "Season") + " so far")}</small><b>${recTxt(s)}</b><em class="${sgn(s.u)}">${fmtU(s.u)}${s.n >= MINROI ? ` · ${roiTxt(s.roi)} ROI` : ""}</em></div>${sp.clvFront && cv.n ? `<div class="tr-rec"><small>Vs the closing line</small><b class="${sgn(cv.avg)}">${sp.clv.fmt(cv.avg)}${sp.clvUnit || ""}</b><em>beat it ${cv.beat} of ${cv.n}</em></div>` : ""}${spark(g.slice(-60))}${dots(g.slice(-10))}<button class="ghost" data-go="${sp.id}-live">Full record</button></div>`;
   }
   NCSUN.spark = spark;
   // closing line: how many graded picks got a better number than the market closed at, and by how much on average
   function clvStats(rows) { const c = rows.filter(r => r.clv != null); const beat = c.filter(r => r.clv > 0).length, tied = c.filter(r => r.clv === 0).length;
-    return { n: c.length, beat, tied, worse: c.length - beat - tied, avg: c.length ? c.reduce((a, r) => a + r.clv, 0) / c.length : null } }
+    const srt = c.map(r => r.clv).sort((x, y) => x - y), m = srt.length >> 1;
+    return { n: c.length, beat, tied, worse: c.length - beat - tied, avg: c.length ? c.reduce((a, r) => a + r.clv, 0) / c.length : null, med: !c.length ? null : srt.length % 2 ? srt[m] : (srt[m - 1] + srt[m]) / 2 } }
   NCSUN.clvStats = clvStats;
   // "Beating the close" panel (college hoops; UFC draws its own): the headline read on whether the edge is real
   function clvPanel(rows, sp) {
     const c = rows.filter(r => r.clv != null).sort(byTime); if (!c.length) return "";
-    const cv = clvStats(c), f = sp.clv.fmt, beat = c.filter(r => r.clv > 0), not = c.filter(r => r.clv <= 0), sb = stats(beat), sn = stats(not);
+    const cv = clvStats(c), f = sp.clv.fmt, u = sp.clvUnit || "";
     const g = c.slice(-40), W = 100, H = 56, bw = W / Math.max(g.length, 12), mx = Math.max(0.5, ...g.map(r => Math.abs(r.clv)));
     const bars = g.map((r, i) => { const h = Math.abs(r.clv) / mx * (H / 2 - 4), y = r.clv > 0 ? H / 2 - h : H / 2;
       return `<rect x="${(i * bw + bw * 0.15).toFixed(2)}" y="${y.toFixed(2)}" width="${(bw * 0.7).toFixed(2)}" height="${Math.max(h, 1).toFixed(2)}" rx="1" fill="${r.clv > 0 ? "var(--win)" : r.clv < 0 ? "var(--loss)" : "var(--ink2)"}"><title>${esc(r.pick)} ${f(r.clv)}</title></rect>` }).join("");
-    const last = c.slice(-12).reverse();
-    return `<div class="panel clvp" style="display:grid;gap:12px"><div class="lab-head"><h2>Beating the <em>close</em></h2><span class="note">the number we got vs where the line ended · over a season this says more about the edge than wins and losses do</span></div>
-      <div class="kpis"><div><small>Avg vs close</small><b class="${sgn(cv.avg)}">${f(cv.avg)}${sp.clvUnit || ""}</b><span>${esc(sp.clv.label)} · ${cv.n} picks with a close</span></div>
-        <div><small>Beat the close</small><b>${cv.beat} of ${cv.n}</b><span>${cv.tied} tied · ${cv.worse} worse</span></div>
-        <div><small>When we beat it</small><b>${beat.length ? recTxt(sb) : "–"}</b><span class="${sgn(sb.u)}">${beat.length ? fmtU(sb.u) : "no picks yet"}</span></div>
-        <div><small>When we didn't</small><b>${not.length ? recTxt(sn) : "–"}</b><span class="${sgn(sn.u)}">${not.length ? fmtU(sn.u) : "no picks yet"}</span></div></div>
-      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:84px" role="img" aria-label="Closing line value for the last ${g.length} picks"><line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" stroke="var(--line)" stroke-width=".5"/>${bars}</svg>
-      <div class="tbl"><table class="log"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th>We got</th><th>Closed</th><th>Vs close</th><th>Result</th></tr></thead><tbody>${last.map(r => `<tr><td class="mono">${esc(r.d || "")}</td><td class="l"><b>${esc(r.pick)}</b></td><td class="mono">${esc((r.cl || {}).got || "")}</td><td class="mono">${esc((r.cl || {}).closed || "")}</td><td class="${sgn(r.clv)}"><b>${f(r.clv)}</b></td><td><span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span></td></tr>`).join("")}</tbody></table></div>
-      <p class="note">Each bar is one pick, oldest to newest: green got a better number than the close, red a worse one. A model that keeps getting better numbers than the market settles on is finding real value, even through a losing week.</p></div>`;
+    const last = c.slice(-25).reverse();
+    // each pick on one number line: the hollow dot is where the line closed, the solid dot is the number we got
+    const dmx = Math.max(1, ...last.map(r => Math.abs(r.clv)));
+    const bell = r => { const w = Math.abs(r.clv) / dmx * 44, x0 = 50, x1 = 50 + (r.clv > 0 ? w : -w), col = r.clv > 0 ? "var(--win)" : r.clv < 0 ? "var(--loss)" : "var(--ink2)";
+      return `<svg class="bell" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true"><line x1="4" x2="96" y1="7" y2="7" stroke="var(--line)" stroke-width="1" vector-effect="non-scaling-stroke"/><line x1="${x0}" x2="${x1.toFixed(1)}" y1="7" y2="7" stroke="${col}" stroke-width="3" vector-effect="non-scaling-stroke"/></svg><i class="b0" style="left:50%"></i><i class="b1" style="left:${x1.toFixed(1)}%;background:${col}"></i>` };
+    return `<div class="panel clvp" style="display:grid;gap:12px"><div class="lab-head"><h2>Beating the <em>close</em></h2><span class="note">the number we got vs where the line ended up at tip-off</span></div>
+      <div class="kpis"><div><small>Beat the close</small><b>${cv.beat} of ${cv.n}</b><span>${cv.tied} matched · ${cv.worse} worse</span></div>
+        <div><small>Typical pick</small><b class="${sgn(cv.med)}">${f(cv.med)}<i class="un">${u}</i></b><span>the middle pick (median)</span></div>
+        <div><small>Average</small><b class="${sgn(cv.avg)}">${f(cv.avg)}<i class="un">${u}</i></b><span>a few big moves pull this up</span></div></div>
+      <p class="note" style="margin:0">We bet in the morning; the line keeps moving until the game starts. If we took +3.5 and it closed +2.5, the market moved our way by a point. Doing that more often than not is the best early sign a model is onto something real, well before the win-loss record means much.</p>
+      ${c.length > 25 ? `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:84px" role="img" aria-label="Closing line value for the last ${g.length} picks: ${cv.beat} of ${cv.n} beat the close"><line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" stroke="var(--line)" stroke-width=".5"/>${bars}</svg>
+      <p class="note" style="margin:0">One bar per pick, oldest to newest. Up and green: we got a better number than the close. Down and red: a worse one.</p>` : ""}
+      <div class="tbl"><table class="clvt"><thead><tr><th class="l">Date</th><th class="l">Pick</th><th>We got</th><th>Closed</th><th class="bellh"><span>worse</span><span>better</span></th><th>Vs close</th><th>Result</th></tr></thead><tbody>${last.map(r => `<tr><td class="mono">${esc(dateTxt(r.d || "").replace(/^\w+ /, ""))}</td><td class="l"><b>${esc(r.pick)}</b></td><td class="mono">${esc((r.cl || {}).got || "")}</td><td class="mono">${esc((r.cl || {}).closed || "")}</td><td class="bellc">${bell(r)}</td><td class="${sgn(r.clv)}"><b>${f(r.clv)}</b></td><td class="rz"><span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${esc(r.r)}</span></td></tr>`).join("")}</tbody></table></div>
+      ${c.length > last.length ? `<p class="note" style="margin:0">Showing the latest ${last.length} of ${c.length}. Every pick is in the bet log below.</p>` : ""}</div>`;
   }
   NCSUN.clvPanel = clvPanel;
   // count-up for KPI numbers (first render only; respects reduced motion)
   function countUp(el) {
     if (reduced()) return;
     el.querySelectorAll("b[data-n]").forEach(b => { const n = +b.dataset.n, fmt = b.dataset.f, t0 = performance.now(), dur = 900, fin = b.textContent;
-      const f = v => fmt === "u" ? fmtU(v) : fmt === "pct" ? (v >= 0 ? "+" : "") + v.toFixed(1) + "%" : Math.round(v).toLocaleString();
+      const f = v => fmt === "u" ? fmtU(v) : fmt === "pct" ? (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(1) + "%" : Math.round(v).toLocaleString();
       const step = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); b.textContent = k < 1 ? f(n * e) : fin; if (k < 1) requestAnimationFrame(step) }; requestAnimationFrame(step) });
   }
-  function kpis(el, s, label, sp) {
-    const clv = sp && sp.clv;
-    el.innerHTML = `<div><small>Bets</small><b data-n="${s.n}" data-f="int">${s.n.toLocaleString()}</b><span>${esc(label)}</span></div><div><small>Record</small><b>${recTxt(s)}</b><span>${pct(s.wp)} win rate${s.v ? ` · ${s.v} void` : ""}</span></div>
-     <div><small>Units</small><b class="${s.u >= 0 ? "pos" : "neg"}" data-n="${s.u}" data-f="u">${fmtU(s.u)}</b><span>${s.u >= 0 ? "+" : "−"}$${Math.abs(Math.round(s.u * 100)).toLocaleString()} at $100/unit</span></div>
-     <div><small>ROI</small><b class="${s.roi >= 0 ? "pos" : "neg"}" data-n="${s.roi * 100}" data-f="pct">${s.roi >= 0 ? "+" : ""}${(s.roi * 100).toFixed(1)}%</b><span>per unit risked</span></div>
+  const MINROI = 30;   // under this many graded bets a percentage is noise: show the count and the units, not a rate
+  const roiTxt = v => (v >= 0 ? "+" : "−") + Math.abs(v * 100).toFixed(1) + "%";
+  function kpis(el, s, label, sp, sim) {
+    const clv = sp && sp.clv, big = s.n >= MINROI;
+    el.innerHTML = `<div><small>Bets</small><b data-n="${s.n}" data-f="int">${s.n.toLocaleString()}</b><span>${sim ? '<i class="sim">Simulated</i> ' : ""}${esc(label)}</span></div><div><small>Record</small><b>${recTxt(s)}</b><span>${big ? pct(s.wp) + " win rate" : "small sample so far"}${s.v ? ` · ${s.v} void` : ""}</span></div>
+     <div><small>Units</small><b class="${s.u >= 0 ? "pos" : "neg"}" data-n="${s.u}" data-f="u">${fmtU(s.u)}</b><span>flat stakes, graded at the posted price</span></div>
+     <div><small>ROI</small>${big ? `<b class="${s.roi >= 0 ? "pos" : "neg"}" data-n="${s.roi * 100}" data-f="pct">${roiTxt(s.roi)}</b><span>per unit risked</span>` : `<b>–</b><span>shown after ${MINROI} graded bets</span>`}</div>
      ${clv ? `<div><small>Vs close</small><b>${clv.fmt(s.clv)}</b><span>${esc(clv.label)}</span></div>` : `<div><small>Break-even</small><b>52.4%</b><span>to beat -110</span></div>`}`;
     if (!el.dataset.counted) { el.dataset.counted = "1"; countUp(el) }
   }
@@ -255,7 +265,7 @@
     const clvCell = s => clv ? `<td>${clv.fmt(s.clv)}</td>` : "";
     function row(lbl, s, max, cls) {
       const w = Math.min(50, Math.abs(s.u) / max * 50);
-      return `<tr class="${cls || ""}"><td>${esc(lbl)}${s.n < minN && cls !== "tot" ? ' <span class="tag small">small</span>' : ""}</td><td>${s.n}</td><td class="mono">${recTxt(s)}</td><td>${pct(s.wp)}</td><td class="${sgn(s.u)}">${fmtU(s.u)}</td><td class="${sgn(s.roi)}">${(s.roi * 100).toFixed(1)}%</td>${clvCell(s)}<td><span class="ubar" aria-hidden="true"><i style="left:${s.u >= 0 ? 50 : 50 - w}%;width:${w}%;background:var(${s.u >= 0 ? "--win" : "--loss"})"></i></span></td></tr>`;
+      return `<tr class="${cls || ""}"><td>${esc(lbl)}${s.n < minN && cls !== "tot" ? ' <span class="tag small">small</span>' : ""}</td><td>${s.n}</td><td class="mono">${recTxt(s)}</td><td>${pct(s.wp)}</td><td class="${sgn(s.u)}">${fmtU(s.u)}</td><td class="${sgn(s.roi)}">${roiTxt(s.roi)}</td>${clvCell(s)}<td><span class="ubar" aria-hidden="true"><i style="left:${s.u >= 0 ? 50 : 50 - w}%;width:${w}%;background:var(${s.u >= 0 ? "--win" : "--loss"})"></i></span></td></tr>`;
     }
     function breakdown(rows) {
       const A = a.value, Bd = b.value && b.value !== a.value ? b.value : "";
@@ -278,7 +288,7 @@
       $(`#${idp}-pp`, root).onclick = () => { page--; log(rows) }; $(`#${idp}-pn`, root).onclick = () => { page++; log(rows) };
     }
     function draw() {
-      const rows = filtered(); kpis($(`#${idp}-k`, root), stats(rows), label, sp); coaster($(`#${idp}-chart`, root), rows, sp);
+      const rows = filtered(); kpis($(`#${idp}-k`, root), stats(rows), label, sp, /-bt$/.test(idp)); coaster($(`#${idp}-chart`, root), rows, sp);
       $(`#${idp}-sub`, root).textContent = rows.length === all.length ? "Every bet, in date order" : `${rows.length.toLocaleString()} of ${all.length.toLocaleString()} bets match your filters`;
       $(`#${idp}-out`, root).innerHTML = breakdown(rows);
       const act = FILTERS.flatMap(d => [...F[d]].map(v => `<button class="pill" data-d="${d}" data-v="${esc(v)}" title="Remove this filter">${esc(DIMS[d].n)}: ${esc(v)}</button>`));
@@ -305,10 +315,16 @@
   }
   const STATUS = { posted: ["Posted", "st-posted"], live: ["Live now", "st-live"], finished: ["Awaiting grade", "st-fin"], graded: ["Graded", "st-graded"], void: ["Void", "st-void"] };
   const resTag = r => !r.r ? "" : `<span class="tag ${r.r === "W" ? "w" : r.r === "L" ? "l" : "small"}">${r.r === "W" ? "Won" : r.r === "L" ? "Lost" : r.r === "P" ? "Push" : esc(r.r)}${r.act ? " · " + esc(r.act) : ""}</span>`;
+  function betRow(r, i) {
+    const sp = NCSUN.byId[r.sport], res = r.r === "W" ? "w" : r.r === "L" ? "l" : "p";
+    const px = sp.stub ? "" : `${am(r.o)}${r.bk ? " " + esc(r.bk) : ""}`;
+    const cl = r.cl ? `got ${esc(r.cl.got)}, closed ${esc(r.cl.closed)}` : "";
+    return `<div class="brow ${res}" style="--i:${Math.min(i, 12)}"><span class="res">${r.r === "W" ? "Won" : r.r === "L" ? "Lost" : r.r === "P" ? "Push" : esc(r.r)}</span><span class="bw"><b>${esc(r.pick)}</b><small>${[`<b>${esc(sp.short)}</b>`, px, r.act ? esc(r.act) : "", cl].filter(Boolean).join(" · ")}</small></span>${r.cl ? `<span class="bclv ${sgn(r.clv)}" title="vs the closing line">${r.clv > 0 ? "beat close" : r.clv < 0 ? "missed close" : "matched close"}${r.cl.diff ? ` <b>${esc(r.cl.diff)}</b>` : ""}</span>` : ""}<b class="bu ${sgn(r.pl || 0)}">${fmtU(r.pl || 0)}</b></div>`;
+  }
   function betCard(r, opt = {}) {
     const sp = NCSUN.byId[r.sport], st = r.status, badge = sp.badge ? sp.badge(r) : `<span class="tbadge">${esc(r.tier || r.mk)}</span>`;
     const when = r.d ? `${dateTxt(r.d)}${r.t ? " " + timeTxt(r.t) + " ET" : ""}` : (r.raw && r.raw.wk) || "";
-    const showEv = r.ev && (opt.home || sp.evInSub) && !(r.detail || "").includes(r.ev);
+    const showEv = r.ev && (opt.home || sp.evInSub) && !(r.detail || "").replace(/ @ /g, " at ").includes(String(r.ev).replace(/ @ /g, " at "));
     const sub = [showEv ? esc(r.ev) : "", r.detail, opt.home ? `<b>${esc(sp.short)}</b>` : "", opt.home || opt.when !== false ? esc(when) : ""].filter(Boolean).join(" · ");
     let line = "";
     if (r.r) line += resTag(r);
@@ -321,8 +337,8 @@
     const stub = sp.stub ? sp.stub(r) : `<span class="px2"><b>${am(r.o)}</b><span>${esc(r.bk)}</span></span>`;   // a model can show its own number (CFB shows the spread or total)
     const body = opt.compact ? "" : bodyHTML(r, sp);
     const iv = opt.i != null ? ` style="--i:${Math.min(opt.i, 12)}"` : "";
-    if (!body) return `<article class="bet ${st}${r.paper ? " paper" : ""}"${iv}><div class="sum"><span class="what">${badge}<b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}</span></div></article>`;
-    return `<details class="bet ${st}${r.paper ? " paper" : ""}"${iv}><summary><span class="what">${badge}<b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}<span class="tog"><span class="t1">Details</span><span class="t2">Hide</span></span></span></summary><div class="body">${body}</div></details>`;
+    if (!body) return `<article class="bet ${st}${r.paper ? " paper" : ""}"${iv}><div class="sum"><span class="what"><span class="bdg">${badge}</span><b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}</span></div></article>`;
+    return `<details class="bet ${st}${r.paper ? " paper" : ""}"${iv}><summary><span class="what"><span class="bdg">${badge}</span><b>${esc(r.pick)}</b><span class="sub">${sub}</span></span>${stub}<span class="line">${line}<span class="tog"><span class="t1">Details</span><span class="t2">Hide</span></span></span></summary><div class="body">${body}</div></details>`;
   }
   function bodyHTML(r, sp) {
     const cells = sp.cells ? sp.cells(r) : defaultCells(r);
@@ -340,7 +356,7 @@
     if (r.worst != null) c.push(["Worst price", typeof r.worst === "number" ? am(r.worst) : r.worst, "still a bet"]);
     return c;
   }
-  NCSUN.betCard = betCard; NCSUN.whyChart = whyChart;
+  NCSUN.betCard = betCard; NCSUN.betRow = betRow; NCSUN.whyChart = whyChart;
 
   // group a list of records: by event, by book, or by tier
   function groupCards(recs, by, sp) {
@@ -368,7 +384,7 @@
   function healthHTML(h) {
     if (!h) return "";
     const color = h.ok === false ? "var(--loss)" : "var(--win)";
-    return `<div class="status"><span><span class="dot" style="background:${color}"></span>${esc(h.what || "Updated")} <b>${h.at ? esc(stampTxt(h.at)) + (/ET$/.test(String(h.at)) ? "" : " ET") : "not yet"}</b></span>${NCSUN.owner ? (h.problems || []).map(p => `<span><b>Last run had a problem:</b> ${esc(p)}</span>`).join("") : (h.problems || []).length ? "<span><b>Heads up:</b> the last model run reported a problem, so picks or grades may be late.</span>" : ""}${h.stale ? `<span><b>Stale:</b> ${esc(h.stale)}</span>` : ""}${h.note ? `<span>${esc(h.note)}</span>` : ""}</div>`;
+    return `<div class="status"><span><span class="dot" style="background:${color}"></span>${esc(h.what || "Updated")} <b>${h.at ? esc(stampTxt(h.at)) + (/ET$/.test(String(h.at)) ? "" : " ET") : "not yet"}</b></span>${NCSUN.owner ? (h.problems || []).map(p => `<span><b>Last run had a problem:</b> ${esc(p)}</span>`).join("") : (h.problems || []).length ? "<span><b>Heads up:</b> updates are running late; picks and grades may lag.</span>" : ""}${h.stale ? `<span><b>Stale:</b> ${esc(h.stale)}</span>` : ""}${h.note ? `<span>${esc(h.note)}</span>` : ""}</div>`;
   }
   // generic health from a <sport>_status.json ({step:{ok,at,msg|note}}) and an "updated" stamp
   function health(status, updated, maxHours, note) {
@@ -412,7 +428,10 @@
     NCSUN.data(sp).then(d => {
       const picks = d.today.filter(r => !r.paper), meta = d.meta || {};
       if (meta.kicker) $("[data-k]", el).textContent = meta.kicker;
-      if (meta.lede) $("[data-lede]", el).innerHTML = meta.lede;
+      if (meta.lede) { const parts = String(meta.lede).split("<br>"), isNote = p => /^<span class="note">/.test(p);
+        let lead = parts.filter(p => !isNote(p)), rest = parts.filter(isNote);
+        if (!lead.length && rest.length) lead = [rest.pop()];
+        $("[data-lede]", el).innerHTML = lead.join("<br>") + (rest.length ? `<details class="notes"><summary>Model status and notes</summary><div>${rest.map(p => `<p>${p}</p>`).join("")}</div></details>` : "") }
       $("[data-health]", el).innerHTML = healthHTML(meta.health) + trendHTML(sp, d.live);
       const ctl = $("[data-ctl]", el), tog = $(".viewtog", ctl), opts = sp.groupings || ["event", "book", "tier"]; let by = sp.defaultGroup || opts[0];
       const NAMES = { event: sp.groupName || "By game", book: "By book", tier: "By tier" };
@@ -430,6 +449,7 @@
       tog.onclick = e => { const b = e.target.closest("button"); if (!b) return; by = b.dataset.by; draw() };
       $("[data-copy]", el).onclick = e => copyText(copyLines(picks.filter(r => !r.r), sp, `${sp.name} · ${meta.copyTitle || "picks"} · ${meta.stake && meta.stake !== "1u each" ? meta.stake : "1 unit each"} · take the listed price or better`), e.target, "Copy card");
       draw(); sp.redrawCard = draw;
+      if (d.error) $("[data-picks]", el).insertAdjacentHTML("afterbegin", `<div class="banner err" style="margin-bottom:14px"><b>Couldn't load</b><span>This ride's picks didn't load. Check your connection and refresh; nothing here should be read as "no picks".</span></div>`);
       if (sp.afterCard) sp.afterCard($("[data-after]", el), d);
     });
   }
@@ -474,19 +494,21 @@
   // ------------------------------------------------------------------ routing: #home | #<sport> | #<sport>-<view>; old college hashes (#live, #backtest) still work
   let curSport = "home", curView = {};
   function show(sportId, view, push) {
-    const prev = curSport; curSport = sportId;
+    const prev = curSport, sp0 = NCSUN.byId[sportId]; curSport = sportId; document.documentElement.classList.remove("deep");
     document.querySelectorAll(".seg button, .tabbar button").forEach(b => { const on = b.dataset.model === sportId; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && push) b.scrollIntoView({ block: "nearest", inline: "nearest" }) });
     document.querySelectorAll("main > [data-sport]").forEach(x => x.hidden = x.dataset.sport !== sportId);
     mascot(sportId === "get" ? "home" : sportId);
-    if (sportId === "get") { if (push) history.replaceState(null, "", "#get"); drawGet(); if (!push) scrollTo({ top: 0 }); return }
-    if (sportId === "home") { if (push) history.replaceState(null, "", location.pathname + location.search); drawHome(); return }
+    const nav = (u) => { if (push) history[prev !== sportId ? "pushState" : "replaceState"](null, "", u) };
+    if (sp0 && sp0.onShow) sp0.onShow();
+    if (sportId === "get") { nav("#get"); drawGet(); if (!push) scrollTo({ top: 0 }); return }
+    if (sportId === "home") { nav(location.pathname + location.search); drawHome(); return }
     const sp = NCSUN.byId[sportId], root = document.getElementById(sportId), stops = [...root.querySelectorAll("nav.stops button")].map(b => b.dataset.view);
     view = stops.includes(view) ? view : stops[0]; curView[sportId] = view;
     root.querySelectorAll("nav.stops button").forEach(b => { const on = b.dataset.view === view; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && push) b.scrollIntoView({ block: "nearest", inline: "nearest" }) });
     root.querySelectorAll("section.view").forEach(s => { const on = s.dataset.view === view; if (on && s.hidden) { s.classList.remove("in"); void s.offsetWidth; s.classList.add("in") } s.hidden = !on });
-    if (push) history.replaceState(null, "", "#" + sportId + (view === stops[0] ? "" : "-" + view));
+    nav("#" + sportId + (view === stops[0] ? "" : "-" + view));
     sp.show(view);
-    if (prev !== sportId && !push) scrollTo({ top: 0 });
+    if (prev !== sportId && !push) { scrollTo(0, 0); requestAnimationFrame(() => scrollTo(0, 0)) }
   }
   NCSUN.show = show;
   const TAG_HOME = "All rides";
@@ -527,17 +549,17 @@
       if (live.length) bits.push(`<b>${live.length}</b> live now`); if (fin.length) bits.push(`<b>${fin.length}</b> awaiting a grade`);
       bits.push(`<b>${posted.length}</b> posted and waiting`);
       if (todayG.length) bits.push(`today <b>${recTxt(sT)}, ${fmtU(sT.u)}</b>`); else if (ydayG.length) bits.push(`yesterday <b>${recTxt(sY)}, ${fmtU(sY.u)}</b>`);
-      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span>Every ride's open bets and latest results. Flat stakes (each pick shows its own); posted picks stand at the price they locked. <a href="#get" data-go="get">New here, or want picks by email?</a>`;
-      $("#home-kicker").textContent = `${dateTxt(today)} · ${sports.length} models`;
+      $("#home-lede").innerHTML = `<span class="summary">${bits.map(b => `<span>${b}</span>`).join("")}</span><a href="#get" data-go="get">New here? How to read a pick, and picks by email</a>`;
+      $("#home-kicker").textContent = `${dateTxt(today)} · a free hobby project · every pick graded in public`;
       // model strip
       const tiles = sports.map((s, i) => { const d = s.data, m = d.meta || {}, g = d.live.filter(r => r.status === "graded").sort(byTime), st = stats(g), open = d.today.filter(r => !r.r && !r.paper), lv = open.filter(r => r.status === "live").length;
-        const h = m.health || {}, ok = h.ok !== false;
-        return `<a class="tile" href="#${s.id}" style="--i:${i}"><span class="tile-top"><b>${esc(s.name)}</b><span class="dot" title="${ok ? "Last run OK" : "Last run had a problem"}" style="background:var(${ok ? "--win" : "--loss"})"></span></span>
-          <span class="tile-rec">${g.length ? `<b>${recTxt(st)}</b><em class="${sgn(st.u)}">${fmtU(st.u)}</em>` : `<b>–</b><em>no graded picks yet</em>`}</span>
+        const h = m.health || {}, ok = h.ok !== false, bad = !!d.error;
+        return `<a class="tile" href="#${s.id}" data-go="${s.id}" style="--i:${i}"><span class="tile-top"><b>${esc(s.name)}</b><span class="dot" title="${bad ? "Did not load" : ok ? "Updating normally" : "Updates running late"}" style="background:var(${bad ? "--ink2" : ok ? "--win" : "--loss"})"></span></span>
+          <span class="tile-rec">${bad ? `<b>–</b><em>didn't load</em>` : g.length ? `<b>${recTxt(st)}</b><em class="${sgn(st.u)}">${fmtU(st.u)}</em>` : `<b>–</b><em>no graded picks yet</em>`}</span>
           ${g.length > 1 ? spark(g.slice(-40), 150, 34) : ""}
           ${(() => { const cv = s.clvFront ? clvStats(g) : null; return cv && cv.n ? `<span class="tile-clv">vs close <b class="${sgn(cv.avg)}">${s.clv.fmt(cv.avg)}${s.clvUnit || ""}</b> · beat it ${cv.beat}/${cv.n}</span>` : "" })()}
-          <span class="tile-sub">${lv ? `<b>${lv} live</b> · ` : ""}${open.length ? `${open.length} open` : "nothing open"}${m.next ? ` · ${esc(m.next)}` : ""}</span>
-          <span class="tile-foot">${h.at ? "Run " + esc(stampTxt(h.at)) : esc(m.cadence || "")}</span></a>` }).join("");
+          <span class="tile-sub">${lv ? `<b>${lv} live</b> · ` : ""}${open.length ? `<b>${open.length} open</b>` : "nothing open"}${m.next ? ` · ${esc(m.next)}` : ""}</span>
+          <span class="tile-foot own">${h.at ? "Run " + esc(stampTxt(h.at)) : esc(m.cadence || "")}</span></a>` }).join("");
       const sec = (id, title, note, recs, opt) => recs.length ? `<section class="hsec" id="h-${id}"><div class="lab-head"><h2>${title}</h2><span class="note">${note}</span></div><div class="slip">${recs.map((r, i) => betCard(r, Object.assign({ home: true, i }, opt))).join("")}</div></section>` : "";
       // posted, grouped by day (CFB has no game date: "this week")
       const dayName = d => !d ? "This week" : d === today ? "Today" : d === addDays(today, 1) ? "Tomorrow" : dateTxt(d);
@@ -545,17 +567,23 @@
       const postedHTML = posted.length ? `<section class="hsec" id="h-posted"><div class="lab-head"><h2>Posted and <em>waiting</em></h2><span class="note">${posted.length} ${plural(posted.length, "bet")} · soonest first</span></div>${[...pdays.entries()].map(([d, rs]) => `<div class="dayblk"><div class="dayhead"><b>${esc(dayName(d === "~" ? null : d))}</b><span>${rs.length} ${plural(rs.length, "bet")} · ${[...new Set(rs.map(r => NCSUN.byId[r.sport].short))].join(", ")}</span></div><div class="slip">${rs.map((r, i) => betCard(r, { home: true, i })).join("")}</div></div>`).join("")}</section>` : "";
       // graded, grouped by day
       const days = new Map(); recent.forEach(r => { if (!days.has(r.d)) days.set(r.d, []); days.get(r.d).push(r) });
-      const dayBlk = ([d, rs]) => { const s = stats(rs), cv = clvStats(rs.filter(r => r.cl)); return `<div class="dayblk"><div class="dayhead"><b>${esc(dateTxt(d))}</b><span>${recTxt(s)} · <em class="${sgn(s.u)}">${fmtU(s.u)}</em>${cv.n ? ` · beat the close ${cv.beat} of ${cv.n}` : ""}</span></div><div class="slip">${rs.map((r, i) => betCard(r, { home: true, compact: true, when: false, i })).join("")}</div></div>` };
+      const dayBlk = ([d, rs]) => { const s = stats(rs), cv = clvStats(rs.filter(r => r.cl)); return `<div class="dayblk"><div class="dayhead"><b>${esc(dateTxt(d))}</b><span>${recTxt(s)} · <em class="${sgn(s.u)}">${fmtU(s.u)}</em>${cv.n ? ` · beat the close ${cv.beat} of ${cv.n}` : ""}</span></div><div class="brows">${rs.map(betRow).join("")}</div></div>` };
       const dayList = [...days.entries()], recentDays = dayList.slice(0, 2), olderDays = dayList.slice(2);
-      const gradedHTML = days.size ? `<section class="hsec" id="h-graded"><div class="lab-head"><h2>Just <em>graded</em></h2><span class="note">last 7 days, every model · what we got and where it closed</span></div>${recentDays.map(dayBlk).join("")}${olderDays.length ? `<details class="more"><summary>Earlier this week<span>${olderDays.length} more ${plural(olderDays.length, "day")} · ${olderDays.reduce((a, x) => a + x[1].length, 0)} picks</span></summary><div class="inner">${olderDays.map(dayBlk).join("")}</div></details>` : ""}</section>` : "";
+      const gradedHTML = days.size ? `<section class="hsec" id="h-graded"><div class="lab-head"><h2>Just <em>graded</em></h2><span class="note">last 7 days · what we got and where it closed</span></div>${recentDays.map(dayBlk).join("")}${olderDays.length ? `<details class="more"><summary>Earlier this week<span>${olderDays.length} more ${plural(olderDays.length, "day")} · ${olderDays.reduce((a, x) => a + x[1].length, 0)} picks</span></summary><div class="inner">${olderDays.map(dayBlk).join("")}</div></details>` : ""}</section>` : "";
       // combined ride across every model
       const models = sports.filter(s => !s.hand), hands = sports.filter(s => s.hand);   // hand picks are not model output: kept off the models' track
       const combined = models.flatMap(s => s.data.live.filter(r => r.status === "graded" && (!s.headline || s.headline(r)))).sort(byTime), cs = stats(combined);
       const rideHTML = combined.length ? `<section class="hsec" id="h-ride"><div class="lab-head"><h2>The models, <em>one track</em></h2><span class="note">every model's live picks this season, in date order${hands.length ? ` · ${hands.map(s => esc(s.name)).join(", ")} ${hands.length === 1 ? "is" : "are"} hand picks, shown apart` : ""}</span></div><div class="kpis" id="h-k"></div><div class="panel"><div id="h-chart"></div><div class="legend" style="margin-top:10px">${sports.map(s => { const g = s.data.live.filter(r => r.status === "graded" && (!s.headline || s.headline(r))), st = stats(g); return g.length ? `<span><b>${esc(s.short)}${s.hand ? " (hand picks, not on the track)" : ""}</b> ${recTxt(st)} · <em class="${sgn(st.u)}">${fmtU(st.u)}</em></span>` : "" }).join("")}</div></div></section>` : "";
-      el.innerHTML = `<div class="tiles">${tiles}</div>${sec("live", "Live <em>now</em>", "events in progress", live)}${sec("fin", "Just <em>finished</em>", "waiting on the grader", fin)}${postedHTML}${gradedHTML}${rideHTML}<div id="h-activity"></div>`;
+      const failed = sports.filter(s => s.data.error);
+      const errHTML = failed.length ? `<div class="banner err"><b>Couldn't load</b><span>${failed.map(s => esc(s.name)).join(", ")} didn't load, so ${failed.length === sports.length ? "nothing below is current" : "those picks are missing below"}. Check your connection and refresh.</span></div>` : "";
+      const nothing = !live.length && !fin.length && !posted.length;
+      const quiet = nothing && !failed.length ? `<div class="banner"><b>Quiet</b><span>Nothing open across the models right now. Each ride shows when its next card is due.</span></div>` : "";
+      const finHTML = fin.length ? `<details class="more"><summary>Finished, waiting on a grade<span>${fin.length} ${plural(fin.length, "pick")} · results usually land within a few hours</span></summary><div class="inner"><div class="brows">${fin.map((r, i) => `<div class="brow p" style="--i:${Math.min(i, 12)}"><span class="res">Final</span><span class="bw"><b>${esc(r.pick)}</b><small><b>${esc(NCSUN.byId[r.sport].short)}</b>${r.ev ? " · " + esc(r.ev) : ""}</small></span></div>`).join("")}</div></div></details>` : "";
+      el.innerHTML = `<div class="homegrid"><div class="hg-open">${errHTML}${quiet}${sec("live", "Live <em>now</em>", "events in progress", live)}${postedHTML}</div>
+        <aside class="hg-tiles"><div class="lab-head"><h2>The <em>rides</em></h2><span class="note">this season, live picks only</span></div><div class="tiles">${tiles}</div></aside>
+        <div class="hg-done">${finHTML}${gradedHTML}</div><div class="hg-ride">${rideHTML}<div id="h-activity"></div></div></div>`;
       if (combined.length) { kpis($("#h-k"), cs, "models only", null); coaster($("#h-chart"), combined, null) }
       if (NCSUN.owner) activity();
-      if (!live.length && !fin.length && !posted.length && !days.size) el.insertAdjacentHTML("afterbegin", `<div class="banner" style="margin-bottom:18px"><b>Quiet</b><span>Nothing open across the models right now. Each ride below shows when its next card is due.</span></div>`);
     });
   }
   // ------------------------------------------------------------------ Get picks: what this is, how to read a pick, picks by email
@@ -599,8 +627,11 @@
     document.querySelectorAll('[role="tablist"]').forEach(tl => tl.addEventListener("keydown", e => { const t = [...tl.querySelectorAll('[role="tab"]')], i = t.indexOf(document.activeElement); if (i < 0) return;
       const j = e.key === "ArrowRight" ? (i + 1) % t.length : e.key === "ArrowLeft" ? (i - 1 + t.length) % t.length : e.key === "Home" ? 0 : e.key === "End" ? t.length - 1 : -1; if (j < 0) return; e.preventDefault(); t[j].focus(); t[j].click() }));
     document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (!g) return; e.preventDefault(); const [s, v] = g.dataset.go.split("-"); show(s, v, true); scrollTo({ top: 0 }) });
+    const hh = () => document.documentElement.style.setProperty("--toph", ($("header.top").offsetHeight - 1) + "px"); hh(); addEventListener("resize", hh);
     order.forEach(mount);
-    addEventListener("hashchange", route); route();
+    try { history.scrollRestoration = "manual" } catch (e) { }
+    addEventListener("hashchange", route); addEventListener("popstate", () => { if (!location.hash) route() }); route(); scrollTo(0, 0);
+    if (location.hash) { const top = () => scrollTo(0, 0); addEventListener("load", () => { top(); setTimeout(top, 60); setTimeout(top, 400) }); if (document.readyState === "complete") { setTimeout(top, 60); setTimeout(top, 400) } }   // the hash names an element, so the browser tries to jump to it: a deep link should open at the top
     // hidden sports (a model that hasn't published yet) show up as soon as their files exist
     NCSUN.sports.filter(s => s.hidden && s.probe).forEach(s => load(s.probe).then(x => { if (!x) return; s.hidden = false; seg.insertAdjacentHTML("beforeend", `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${esc(s.navName || s.name)}</button>`); seg.lastElementChild.addEventListener("click", () => show(s.id, null, true));
       const bar = $(".tabbar"); if (bar) { bar.insertAdjacentHTML("beforeend", `<button role="tab" data-model="${s.id}" aria-selected="false" tabindex="-1">${s.icon || ICON.dot}<span>${esc(s.short)}</span></button>`); bar.lastElementChild.addEventListener("click", () => { show(s.id, null, true); scrollTo({ top: 0 }) }) } mount(s); homeDrawn = false; if (curSport === "home") drawHome() }));
