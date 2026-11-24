@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-23 18:47",
+ "updated": "2026-11-24 06:36",
  "season": 2026,
  "week": 11,
  "this_week": [
@@ -1151,7 +1151,8 @@
      "dec": 1.88,
      "ph": 0.5512,
      "gm": "CIN @ WAS",
-     "card": true
+     "card": true,
+     "act": 31.0
     },
     {
      "pid": "00-0035631",
@@ -1164,7 +1165,8 @@
      "bk": "draftkings",
      "dec": 1.95,
      "ph": 0.5361,
-     "gm": "CIN @ WAS"
+     "gm": "CIN @ WAS",
+     "act": 9.0
     },
     {
      "pid": "00-0036410",
@@ -1177,7 +1179,8 @@
      "bk": "draftkings",
      "dec": 1.91,
      "ph": 0.5399,
-     "gm": "CIN @ WAS"
+     "gm": "CIN @ WAS",
+     "act": 43.0
     }
    ],
    "price": null,
@@ -1194,7 +1197,10 @@
    "qualifies": true,
    "posted": "2026-11-23 18:47",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 CIN @ WAS: Ja'Marr Chase U103.5 yds (card pick) + Drew Sample U6.5 yds + Tee Higgins U76.5 yds \u00b7 Needs +450 before a 33% boost, +399 before 50%. DK est. +545."
   },
   {
@@ -1220,7 +1226,8 @@
      "bk": "williamhill_us",
      "dec": 2.01,
      "ph": 0.4619,
-     "gm": "CIN @ WAS"
+     "gm": "CIN @ WAS",
+     "act": 9.0
     },
     {
      "pid": "00-0041040",
@@ -1233,7 +1240,8 @@
      "bk": "williamhill_us",
      "dec": 1.87,
      "ph": 0.506,
-     "gm": "CIN @ WAS"
+     "gm": "CIN @ WAS",
+     "act": 122.0
     },
     {
      "pid": "00-0037742",
@@ -1246,7 +1254,8 @@
      "bk": "williamhill_us",
      "dec": 2.3,
      "ph": 0.3936,
-     "gm": "CIN @ WAS"
+     "gm": "CIN @ WAS",
+     "act": 2.0
     },
     {
      "pid": "00-0037742",
@@ -1259,7 +1268,8 @@
      "bk": "williamhill_us",
      "dec": 1.87,
      "ph": 0.5014,
-     "gm": "CIN @ WAS"
+     "gm": "CIN @ WAS",
+     "act": 30.0
     }
    ],
    "price": null,
@@ -1275,7 +1285,10 @@
    "ev50": 0.3672,
    "posted": "2026-11-23 18:47",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 CIN @ WAS: Antonio Williams O3.5 rec + O38.5 yds; Treylon Burks O2.5 rec + O29.5 yds \u00b7 Needs +523 before a 33% boost, +464 before 50%. Caesars est. +624."
   }
  ],
@@ -4143,6 +4156,169 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 MIN @ SF: George Kittle O4.5 rec + O48.5 yds; Keenan Allen O2.5 rec + O26.5 yds \u00b7 Needs +436 before a 33% boost, +386 before 50%. Caesars est. +537."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261124T0115Z",
+   "kind": "sgp",
+   "game_id": "2026_11_CIN_WAS",
+   "book": "draftkings",
+   "fill": 0,
+   "day": false,
+   "gm": "CIN @ WAS",
+   "legs": [
+    {
+     "pid": "00-0036900",
+     "pk": "Ja'Marr Chase",
+     "team": "CIN",
+     "game_id": "2026_11_CIN_WAS",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 103.5,
+     "bk": "draftkings",
+     "dec": 1.88,
+     "ph": 0.5512,
+     "gm": "CIN @ WAS",
+     "card": true,
+     "act": 31.0
+    },
+    {
+     "pid": "00-0035631",
+     "pk": "Drew Sample",
+     "team": "CIN",
+     "game_id": "2026_11_CIN_WAS",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 6.5,
+     "bk": "draftkings",
+     "dec": 1.95,
+     "ph": 0.5361,
+     "gm": "CIN @ WAS",
+     "act": 9.0
+    },
+    {
+     "pid": "00-0036410",
+     "pk": "Tee Higgins",
+     "team": "CIN",
+     "game_id": "2026_11_CIN_WAS",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 76.5,
+     "bk": "draftkings",
+     "dec": 1.91,
+     "ph": 0.5399,
+     "gm": "CIN @ WAS",
+     "act": 43.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.454,
+   "p_joint": 0.1503,
+   "p_indep": 0.1596,
+   "fair": 6.651,
+   "min0": 6.984,
+   "min33": 5.499,
+   "min50": 4.989,
+   "ev0": -0.0297,
+   "ev33": 0.2409,
+   "ev50": 0.3803,
+   "qualifies": true,
+   "posted": "2026-11-23 18:47",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 CIN @ WAS: Ja'Marr Chase U103.5 yds (card pick) + Drew Sample U6.5 yds + Tee Higgins U76.5 yds \u00b7 Needs +450 before a 33% boost, +399 before 50%. DK est. +545."
+  },
+  {
+   "season": 2026,
+   "week": 11,
+   "window": "2026_w11_20261124T0115Z",
+   "kind": "czr",
+   "game_id": "2026_11_CIN_WAS",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "CIN @ WAS",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0041040",
+     "pk": "Antonio Williams",
+     "team": "WAS",
+     "game_id": "2026_11_CIN_WAS",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 2.01,
+     "ph": 0.4619,
+     "gm": "CIN @ WAS",
+     "act": 9.0
+    },
+    {
+     "pid": "00-0041040",
+     "pk": "Antonio Williams",
+     "team": "WAS",
+     "game_id": "2026_11_CIN_WAS",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 38.5,
+     "bk": "williamhill_us",
+     "dec": 1.87,
+     "ph": 0.506,
+     "gm": "CIN @ WAS",
+     "act": 122.0
+    },
+    {
+     "pid": "00-0037742",
+     "pk": "Treylon Burks",
+     "team": "WAS",
+     "game_id": "2026_11_CIN_WAS",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.3,
+     "ph": 0.3936,
+     "gm": "CIN @ WAS",
+     "act": 2.0
+    },
+    {
+     "pid": "00-0037742",
+     "pk": "Treylon Burks",
+     "team": "WAS",
+     "game_id": "2026_11_CIN_WAS",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 29.5,
+     "bk": "williamhill_us",
+     "dec": 1.87,
+     "ph": 0.5014,
+     "gm": "CIN @ WAS",
+     "act": 30.0
+    }
+   ],
+   "price": null,
+   "est_price": 7.242,
+   "p_joint": 0.1319,
+   "p_indep": 0.0461,
+   "fair": 7.58,
+   "min0": 7.959,
+   "min33": 6.233,
+   "min50": 5.64,
+   "ev0": -0.0446,
+   "ev33": 0.2272,
+   "ev50": 0.3672,
+   "posted": "2026-11-23 18:47",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 CIN @ WAS: Antonio Williams O3.5 rec + O38.5 yds; Treylon Burks O2.5 rec + O29.5 yds \u00b7 Needs +523 before a 33% boost, +464 before 50%. Caesars est. +624."
   }
  ],
  "record": {
@@ -4155,20 +4331,20 @@
    "u50": 9.42
   },
   "sgp": {
-   "n": 17,
+   "n": 18,
    "w": 4,
-   "l": 13,
-   "u1": 6.47,
-   "u33": 12.9,
-   "u50": 16.21
+   "l": 14,
+   "u1": 5.47,
+   "u33": 11.9,
+   "u50": 15.21
   },
   "czr": {
-   "n": 16,
+   "n": 17,
    "w": 0,
-   "l": 16,
-   "u1": -16.0,
-   "u33": -16.0,
-   "u50": -16.0
+   "l": 17,
+   "u1": -17.0,
+   "u33": -17.0,
+   "u50": -17.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
