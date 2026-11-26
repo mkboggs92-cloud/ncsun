@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-25 18:43",
+ "updated": "2026-11-26 06:36",
  "season": 2026,
  "week": 12,
  "this_week": [
@@ -26,7 +26,8 @@
      "dec": 2.39,
      "ph": 0.4454,
      "gm": "GB @ LA",
-     "card": true
+     "card": true,
+     "act": 1.0
     },
     {
      "pid": "00-0038124",
@@ -39,7 +40,8 @@
      "bk": "draftkings",
      "dec": 1.9,
      "ph": 0.5494,
-     "gm": "GB @ LA"
+     "gm": "GB @ LA",
+     "act": 65.0
     },
     {
      "pid": "00-0040667",
@@ -52,7 +54,8 @@
      "bk": "draftkings",
      "dec": 1.86,
      "ph": 0.54,
-     "gm": "GB @ LA"
+     "gm": "GB @ LA",
+     "act": 1.0
     }
    ],
    "price": null,
@@ -69,7 +72,11 @@
    "qualifies": true,
    "posted": "2026-11-25 18:43",
    "stake": 0.0,
-   "result": null,
+   "result": "W",
+   "u1": 6.785,
+   "price_graded": 7.785,
+   "u33": 9.024,
+   "u50": 10.178,
    "txt": "DK same-game \u00b7 GB @ LA: Savion Williams U1.5 rec (card pick) + Christian Watson U72.5 yds + Matthew Golden U5.5 rec \u00b7 Needs +559 before a 33% boost, +495 before 50%. DK est. +678."
   },
   {
@@ -95,7 +102,8 @@
      "bk": "williamhill_us",
      "dec": 1.82,
      "ph": 0.5416,
-     "gm": "GB @ LA"
+     "gm": "GB @ LA",
+     "act": 2.0
     },
     {
      "pid": "00-0036244",
@@ -108,7 +116,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.541,
-     "gm": "GB @ LA"
+     "gm": "GB @ LA",
+     "act": -1.0
     },
     {
      "pid": "00-0033110",
@@ -121,7 +130,8 @@
      "bk": "williamhill_us",
      "dec": 2.1,
      "ph": 0.4596,
-     "gm": "GB @ LA"
+     "gm": "GB @ LA",
+     "act": 1.0
     },
     {
      "pid": "00-0033110",
@@ -134,7 +144,8 @@
      "bk": "williamhill_us",
      "dec": 1.9,
      "ph": 0.518,
-     "gm": "GB @ LA"
+     "gm": "GB @ LA",
+     "act": 14.0
     }
    ],
    "price": null,
@@ -150,7 +161,10 @@
    "ev50": 0.5017,
    "posted": "2026-11-25 18:43",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 GB @ LA: Colby Parkinson O2.5 rec + O17.5 yds; Tyler Higbee O3.5 rec + O29.5 yds \u00b7 Needs +381 before a 33% boost, +338 before 50%. Caesars est. +512."
   }
  ],
@@ -3181,6 +3195,170 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 CIN @ WAS: Antonio Williams O3.5 rec + O38.5 yds; Treylon Burks O2.5 rec + O29.5 yds \u00b7 Needs +523 before a 33% boost, +464 before 50%. Caesars est. +624."
+  },
+  {
+   "season": 2026,
+   "week": 12,
+   "window": "2026_w12_20261126T0100Z",
+   "kind": "sgp",
+   "game_id": "2026_12_GB_LA",
+   "book": "draftkings",
+   "fill": 0,
+   "day": false,
+   "gm": "GB @ LA",
+   "legs": [
+    {
+     "pid": "00-0040009",
+     "pk": "Savion Williams",
+     "team": "GB",
+     "game_id": "2026_12_GB_LA",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 1.5,
+     "bk": "draftkings",
+     "dec": 2.39,
+     "ph": 0.4454,
+     "gm": "GB @ LA",
+     "card": true,
+     "act": 1.0
+    },
+    {
+     "pid": "00-0038124",
+     "pk": "Christian Watson",
+     "team": "GB",
+     "game_id": "2026_12_GB_LA",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 72.5,
+     "bk": "draftkings",
+     "dec": 1.9,
+     "ph": 0.5494,
+     "gm": "GB @ LA",
+     "act": 65.0
+    },
+    {
+     "pid": "00-0040667",
+     "pk": "Matthew Golden",
+     "team": "GB",
+     "game_id": "2026_12_GB_LA",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 5.5,
+     "bk": "draftkings",
+     "dec": 1.86,
+     "ph": 0.54,
+     "gm": "GB @ LA",
+     "act": 1.0
+    }
+   ],
+   "price": null,
+   "est_price": 7.785,
+   "p_joint": 0.1245,
+   "p_indep": 0.1322,
+   "fair": 8.03,
+   "min0": 8.431,
+   "min33": 6.587,
+   "min50": 5.954,
+   "ev0": -0.0305,
+   "ev33": 0.2483,
+   "ev50": 0.392,
+   "qualifies": true,
+   "posted": "2026-11-25 18:43",
+   "stake": 0.0,
+   "result": "W",
+   "u1": 6.785,
+   "price_graded": 7.785,
+   "u33": 9.024,
+   "u50": 10.178,
+   "txt": "DK same-game \u00b7 GB @ LA: Savion Williams U1.5 rec (card pick) + Christian Watson U72.5 yds + Matthew Golden U5.5 rec \u00b7 Needs +559 before a 33% boost, +495 before 50%. DK est. +678."
+  },
+  {
+   "season": 2026,
+   "week": 12,
+   "window": "2026_w12_20261126T0100Z",
+   "kind": "czr",
+   "game_id": "2026_12_GB_LA",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "GB @ LA",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0036244",
+     "pk": "Colby Parkinson",
+     "team": "LA",
+     "game_id": "2026_12_GB_LA",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 1.82,
+     "ph": 0.5416,
+     "gm": "GB @ LA",
+     "act": 2.0
+    },
+    {
+     "pid": "00-0036244",
+     "pk": "Colby Parkinson",
+     "team": "LA",
+     "game_id": "2026_12_GB_LA",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 17.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.541,
+     "gm": "GB @ LA",
+     "act": -1.0
+    },
+    {
+     "pid": "00-0033110",
+     "pk": "Tyler Higbee",
+     "team": "LA",
+     "game_id": "2026_12_GB_LA",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 2.1,
+     "ph": 0.4596,
+     "gm": "GB @ LA",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0033110",
+     "pk": "Tyler Higbee",
+     "team": "LA",
+     "game_id": "2026_12_GB_LA",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 29.5,
+     "bk": "williamhill_us",
+     "dec": 1.9,
+     "ph": 0.518,
+     "gm": "GB @ LA",
+     "act": 14.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.116,
+   "p_joint": 0.1731,
+   "p_indep": 0.0698,
+   "fair": 5.776,
+   "min0": 6.065,
+   "min33": 4.808,
+   "min50": 4.377,
+   "ev0": 0.0589,
+   "ev33": 0.3512,
+   "ev50": 0.5017,
+   "posted": "2026-11-25 18:43",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 GB @ LA: Colby Parkinson O2.5 rec + O17.5 yds; Tyler Higbee O3.5 rec + O29.5 yds \u00b7 Needs +381 before a 33% boost, +338 before 50%. Caesars est. +512."
   }
  ],
  "record": {
@@ -3193,20 +3371,20 @@
    "u50": 9.42
   },
   "sgp": {
-   "n": 18,
-   "w": 4,
+   "n": 19,
+   "w": 5,
    "l": 14,
-   "u1": 5.47,
-   "u33": 11.9,
-   "u50": 15.21
+   "u1": 12.26,
+   "u33": 20.92,
+   "u50": 25.39
   },
   "czr": {
-   "n": 17,
+   "n": 18,
    "w": 0,
-   "l": 17,
-   "u1": -17.0,
-   "u33": -17.0,
-   "u50": -17.0
+   "l": 18,
+   "u1": -18.0,
+   "u33": -18.0,
+   "u50": -18.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
