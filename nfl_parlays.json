@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-26 19:00",
+ "updated": "2026-11-27 06:36",
  "season": 2026,
  "week": 12,
  "this_week": [
@@ -353,7 +353,8 @@
      "dec": 1.83,
      "ph": 0.5843,
      "gm": "PHI @ DAL",
-     "card": true
+     "card": true,
+     "act": 1.0
     },
     {
      "pid": "00-0036912",
@@ -366,7 +367,8 @@
      "bk": "draftkings",
      "dec": 1.91,
      "ph": 0.5632,
-     "gm": "PHI @ DAL"
+     "gm": "PHI @ DAL",
+     "act": 200.0
     },
     {
      "pid": "00-0039746",
@@ -379,7 +381,8 @@
      "bk": "draftkings",
      "dec": 1.85,
      "ph": 0.5552,
-     "gm": "PHI @ DAL"
+     "gm": "PHI @ DAL",
+     "act": 0.0
     }
    ],
    "price": null,
@@ -396,7 +399,10 @@
    "qualifies": true,
    "posted": "2026-11-26 15:13",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 PHI @ DAL: Darius Cooper U2.5 rec (card pick) + DeVonta Smith U68.5 yds + Will Shipley U6.5 yds \u00b7 Needs +383 before a 33% boost, +340 before 50%. DK est. +496."
   },
   {
@@ -422,7 +428,8 @@
      "bk": "williamhill_us",
      "dec": 2.16,
      "ph": 0.4524,
-     "gm": "PHI @ DAL"
+     "gm": "PHI @ DAL",
+     "act": 5.0
     },
     {
      "pid": "00-0037247",
@@ -435,7 +442,8 @@
      "bk": "williamhill_us",
      "dec": 1.91,
      "ph": 0.5235,
-     "gm": "PHI @ DAL"
+     "gm": "PHI @ DAL",
+     "act": 67.0
     },
     {
      "pid": "00-0039410",
@@ -502,7 +510,8 @@
      "bk": "draftkings",
      "dec": 1.86,
      "ph": 0.5625,
-     "gm": "KC @ BUF"
+     "gm": "KC @ BUF",
+     "act": 19.0
     },
     {
      "pid": "00-0038997",
@@ -515,7 +524,8 @@
      "bk": "draftkings",
      "dec": 1.62,
      "ph": 0.6353,
-     "gm": "KC @ BUF"
+     "gm": "KC @ BUF",
+     "act": 1.0
     },
     {
      "pid": "00-0030506",
@@ -528,7 +538,8 @@
      "bk": "draftkings",
      "dec": 1.67,
      "ph": 0.6194,
-     "gm": "KC @ BUF"
+     "gm": "KC @ BUF",
+     "act": 4.0
     }
    ],
    "price": null,
@@ -545,7 +556,10 @@
    "qualifies": true,
    "posted": "2026-11-26 19:00",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 KC @ BUF: Cyrus Allen U12.5 yds + Josh Downs U3.5 rec + Travis Kelce U4.5 rec \u00b7 Needs +303 before a 33% boost, +300 before 50%. DK est. +364."
   },
   {
@@ -571,7 +585,8 @@
      "bk": "williamhill_us",
      "dec": 1.83,
      "ph": 0.5181,
-     "gm": "KC @ BUF"
+     "gm": "KC @ BUF",
+     "act": 3.0
     },
     {
      "pid": "00-0037261",
@@ -584,7 +599,8 @@
      "bk": "williamhill_us",
      "dec": 1.9,
      "ph": 0.5262,
-     "gm": "KC @ BUF"
+     "gm": "KC @ BUF",
+     "act": 33.0
     },
     {
      "pid": "00-0039894",
@@ -597,7 +613,8 @@
      "bk": "williamhill_us",
      "dec": 2.2,
      "ph": 0.4315,
-     "gm": "KC @ BUF"
+     "gm": "KC @ BUF",
+     "act": 0.0
     },
     {
      "pid": "00-0039894",
@@ -610,7 +627,8 @@
      "bk": "williamhill_us",
      "dec": 1.92,
      "ph": 0.5021,
-     "gm": "KC @ BUF"
+     "gm": "KC @ BUF",
+     "act": 0.0
     }
    ],
    "price": null,
@@ -626,7 +644,10 @@
    "ev50": 0.4592,
    "posted": "2026-11-26 19:00",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 KC @ BUF: Khalil Shakir O3.5 rec + O37.5 yds; Xavier Worthy O2.5 rec + O21.5 yds \u00b7 Needs +432 before a 33% boost, +383 before 50%. Caesars est. +558."
   }
  ],
@@ -3984,6 +4005,243 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 CHI @ DET: Jameson Williams O3.5 rec + O57.5 yds; Sam LaPorta O4.5 rec + O47.5 yds \u00b7 Needs +374 before a 33% boost, +332 before 50%. Caesars est. +466."
+  },
+  {
+   "season": 2026,
+   "week": 12,
+   "window": "2026_w12_20261126T2130Z",
+   "kind": "sgp",
+   "game_id": "2026_12_PHI_DAL",
+   "book": "draftkings",
+   "fill": 1,
+   "day": false,
+   "gm": "PHI @ DAL",
+   "legs": [
+    {
+     "pid": "00-0040024",
+     "pk": "Darius Cooper",
+     "team": "PHI",
+     "game_id": "2026_12_PHI_DAL",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 2.5,
+     "bk": "draftkings",
+     "dec": 1.83,
+     "ph": 0.5843,
+     "gm": "PHI @ DAL",
+     "card": true,
+     "act": 1.0
+    },
+    {
+     "pid": "00-0036912",
+     "pk": "DeVonta Smith",
+     "team": "PHI",
+     "game_id": "2026_12_PHI_DAL",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 68.5,
+     "bk": "draftkings",
+     "dec": 1.91,
+     "ph": 0.5632,
+     "gm": "PHI @ DAL",
+     "act": 200.0
+    },
+    {
+     "pid": "00-0039746",
+     "pk": "Will Shipley",
+     "team": "PHI",
+     "game_id": "2026_12_PHI_DAL",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 6.5,
+     "bk": "draftkings",
+     "dec": 1.85,
+     "ph": 0.5552,
+     "gm": "PHI @ DAL",
+     "act": 0.0
+    }
+   ],
+   "price": null,
+   "est_price": 5.96,
+   "p_joint": 0.1721,
+   "p_indep": 0.1827,
+   "fair": 5.809,
+   "min0": 6.1,
+   "min33": 4.834,
+   "min50": 4.4,
+   "ev0": 0.0259,
+   "ev33": 0.3076,
+   "ev50": 0.4528,
+   "qualifies": true,
+   "posted": "2026-11-26 15:13",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 PHI @ DAL: Darius Cooper U2.5 rec (card pick) + DeVonta Smith U68.5 yds + Will Shipley U6.5 yds \u00b7 Needs +383 before a 33% boost, +340 before 50%. DK est. +496."
+  },
+  {
+   "season": 2026,
+   "week": 12,
+   "window": "2026_w12_20261127T0120Z",
+   "kind": "sgp",
+   "game_id": "2026_12_KC_BUF",
+   "book": "draftkings",
+   "fill": 1,
+   "day": false,
+   "gm": "KC @ BUF",
+   "legs": [
+    {
+     "pid": "00-0040890",
+     "pk": "Cyrus Allen",
+     "team": "KC",
+     "game_id": "2026_12_KC_BUF",
+     "mk": "yds",
+     "sd": "under",
+     "ln": 12.5,
+     "bk": "draftkings",
+     "dec": 1.86,
+     "ph": 0.5625,
+     "gm": "KC @ BUF",
+     "act": 19.0
+    },
+    {
+     "pid": "00-0038997",
+     "pk": "Josh Downs",
+     "team": "KC",
+     "game_id": "2026_12_KC_BUF",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 1.62,
+     "ph": 0.6353,
+     "gm": "KC @ BUF",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0030506",
+     "pk": "Travis Kelce",
+     "team": "KC",
+     "game_id": "2026_12_KC_BUF",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 4.5,
+     "bk": "draftkings",
+     "dec": 1.67,
+     "ph": 0.6194,
+     "gm": "KC @ BUF",
+     "act": 4.0
+    }
+   ],
+   "price": null,
+   "est_price": 4.638,
+   "p_joint": 0.2086,
+   "p_indep": 0.2214,
+   "fair": 4.794,
+   "min0": 5.033,
+   "min33": 4.033,
+   "min50": 3.689,
+   "ev0": -0.0325,
+   "ev33": 0.2179,
+   "ev50": 0.3469,
+   "qualifies": true,
+   "posted": "2026-11-26 19:00",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 KC @ BUF: Cyrus Allen U12.5 yds + Josh Downs U3.5 rec + Travis Kelce U4.5 rec \u00b7 Needs +303 before a 33% boost, +300 before 50%. DK est. +364."
+  },
+  {
+   "season": 2026,
+   "week": 12,
+   "window": "2026_w12_20261127T0120Z",
+   "kind": "czr",
+   "game_id": "2026_12_KC_BUF",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "KC @ BUF",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0037261",
+     "pk": "Khalil Shakir",
+     "team": "BUF",
+     "game_id": "2026_12_KC_BUF",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 3.5,
+     "bk": "williamhill_us",
+     "dec": 1.83,
+     "ph": 0.5181,
+     "gm": "KC @ BUF",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0037261",
+     "pk": "Khalil Shakir",
+     "team": "BUF",
+     "game_id": "2026_12_KC_BUF",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 37.5,
+     "bk": "williamhill_us",
+     "dec": 1.9,
+     "ph": 0.5262,
+     "gm": "KC @ BUF",
+     "act": 33.0
+    },
+    {
+     "pid": "00-0039894",
+     "pk": "Xavier Worthy",
+     "team": "KC",
+     "game_id": "2026_12_KC_BUF",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 2.2,
+     "ph": 0.4315,
+     "gm": "KC @ BUF",
+     "act": 0.0
+    },
+    {
+     "pid": "00-0039894",
+     "pk": "Xavier Worthy",
+     "team": "KC",
+     "game_id": "2026_12_KC_BUF",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 21.5,
+     "bk": "williamhill_us",
+     "dec": 1.92,
+     "ph": 0.5021,
+     "gm": "KC @ BUF",
+     "act": 0.0
+    }
+   ],
+   "price": null,
+   "est_price": 6.58,
+   "p_joint": 0.1557,
+   "p_indep": 0.0591,
+   "fair": 6.421,
+   "min0": 6.742,
+   "min33": 5.317,
+   "min50": 4.828,
+   "ev0": 0.0247,
+   "ev33": 0.3114,
+   "ev50": 0.4592,
+   "posted": "2026-11-26 19:00",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 KC @ BUF: Khalil Shakir O3.5 rec + O37.5 yds; Xavier Worthy O2.5 rec + O21.5 yds \u00b7 Needs +432 before a 33% boost, +383 before 50%. Caesars est. +558."
   }
  ],
  "record": {
@@ -3996,20 +4254,20 @@
    "u50": 9.42
   },
   "sgp": {
-   "n": 20,
+   "n": 22,
    "w": 5,
-   "l": 15,
-   "u1": 11.26,
-   "u33": 19.92,
-   "u50": 24.39
+   "l": 17,
+   "u1": 9.26,
+   "u33": 17.92,
+   "u50": 22.39
   },
   "czr": {
-   "n": 19,
+   "n": 20,
    "w": 0,
-   "l": 19,
-   "u1": -19.0,
-   "u33": -19.0,
-   "u50": -19.0
+   "l": 20,
+   "u1": -20.0,
+   "u33": -20.0,
+   "u50": -20.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
