@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27 17:01",
+ "updated": "2026-11-28 09:01",
  "scoring": "DraftKings MMA classic",
  "rules": [
   [
@@ -359,7 +359,7 @@
      "kd": 0.3,
      "pts_win": 88.1,
      "pts_loss": 20.2,
-     "ml": 235,
+     "ml": 260,
      "debut": true,
      "in": []
     },
@@ -372,7 +372,7 @@
      "event": "UFC Fight Night: Adesanya vs. Magomedov",
      "rounds": 3,
      "proj": 67.0,
-     "p10": 14.0,
+     "p10": 13.9,
      "p90": 106.6,
      "p_win": 0.683,
      "p_ko": 0.245,
@@ -386,7 +386,7 @@
      "kd": 0.19,
      "pts_win": 88.5,
      "pts_loss": 20.7,
-     "ml": -290,
+     "ml": -325,
      "debut": true,
      "in": []
     },
