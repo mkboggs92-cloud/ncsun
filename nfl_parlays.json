@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27 13:34",
+ "updated": "2026-11-27 21:01",
  "season": 2026,
  "week": 12,
  "this_week": [
@@ -456,7 +456,8 @@
      "bk": "williamhill_us",
      "dec": 1.67,
      "ph": 0.5835,
-     "gm": "PHI @ DAL"
+     "gm": "PHI @ DAL",
+     "act": 0.0
     },
     {
      "pid": "00-0039410",
@@ -469,7 +470,8 @@
      "bk": "williamhill_us",
      "dec": 1.87,
      "ph": 0.5184,
-     "gm": "PHI @ DAL"
+     "gm": "PHI @ DAL",
+     "act": 0.0
     }
    ],
    "price": null,
@@ -485,7 +487,10 @@
    "ev50": 0.4251,
    "posted": "2026-11-26 15:13",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 PHI @ DAL: George Pickens O5.5 rec + O71.5 yds; Ryan Flournoy O2.5 rec + O30.5 yds \u00b7 Needs +377 before a 33% boost, +334 before 50%. Caesars est. +477."
   },
   {
@@ -673,7 +678,8 @@
      "dec": 2.04,
      "ph": 0.5274,
      "gm": "DEN @ PIT",
-     "card": true
+     "card": true,
+     "act": 5.0
     },
     {
      "pid": "00-0034348",
@@ -686,7 +692,8 @@
      "bk": "draftkings",
      "dec": 2.08,
      "ph": 0.5054,
-     "gm": "DEN @ PIT"
+     "gm": "DEN @ PIT",
+     "act": 1.0
     },
     {
      "pid": "00-0036422",
@@ -699,7 +706,8 @@
      "bk": "draftkings",
      "dec": 2.45,
      "ph": 0.434,
-     "gm": "DEN @ PIT"
+     "gm": "DEN @ PIT",
+     "act": 2.0
     }
    ],
    "price": null,
@@ -716,7 +724,10 @@
    "qualifies": true,
    "posted": "2026-11-27 13:34",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "DK same-game \u00b7 DEN @ PIT: Jaylen Waddle U3.5 rec (card pick) + Courtland Sutton U2.5 rec + Adam Trautman U0.5 rec \u00b7 Needs +649 before a 33% boost, +576 before 50%. DK est. +858."
   },
   {
@@ -742,7 +753,8 @@
      "bk": "williamhill_us",
      "dec": 1.67,
      "ph": 0.607,
-     "gm": "DEN @ PIT"
+     "gm": "DEN @ PIT",
+     "act": 1.0
     },
     {
      "pid": "00-0041489",
@@ -755,7 +767,8 @@
      "bk": "williamhill_us",
      "dec": 1.88,
      "ph": 0.5433,
-     "gm": "DEN @ PIT"
+     "gm": "DEN @ PIT",
+     "act": 58.0
     },
     {
      "pid": "00-0035640",
@@ -768,7 +781,8 @@
      "bk": "williamhill_us",
      "dec": 1.82,
      "ph": 0.5313,
-     "gm": "DEN @ PIT"
+     "gm": "DEN @ PIT",
+     "act": 3.0
     },
     {
      "pid": "00-0035640",
@@ -781,7 +795,8 @@
      "bk": "williamhill_us",
      "dec": 1.9,
      "ph": 0.5272,
-     "gm": "DEN @ PIT"
+     "gm": "DEN @ PIT",
+     "act": 36.0
     }
    ],
    "price": null,
@@ -797,7 +812,10 @@
    "ev50": 0.4013,
    "posted": "2026-11-27 13:34",
    "stake": 0.0,
-   "result": null,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
    "txt": "Caesars same-game \u00b7 DEN @ PIT: Germie Bernard O2.5 rec + O22.5 yds; DK Metcalf O2.5 rec + O27.5 yds \u00b7 Needs +308 before a 33% boost, +300 before 50%. Caesars est. +386."
   }
  ],
@@ -4234,6 +4252,94 @@
   {
    "season": 2026,
    "week": 12,
+   "window": "2026_w12_20261126T2130Z",
+   "kind": "czr",
+   "game_id": "2026_12_PHI_DAL",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "PHI @ DAL",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0037247",
+     "pk": "George Pickens",
+     "team": "DAL",
+     "game_id": "2026_12_PHI_DAL",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 5.5,
+     "bk": "williamhill_us",
+     "dec": 2.16,
+     "ph": 0.4524,
+     "gm": "PHI @ DAL",
+     "act": 5.0
+    },
+    {
+     "pid": "00-0037247",
+     "pk": "George Pickens",
+     "team": "DAL",
+     "game_id": "2026_12_PHI_DAL",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 71.5,
+     "bk": "williamhill_us",
+     "dec": 1.91,
+     "ph": 0.5235,
+     "gm": "PHI @ DAL",
+     "act": 67.0
+    },
+    {
+     "pid": "00-0039410",
+     "pk": "Ryan Flournoy",
+     "team": "DAL",
+     "game_id": "2026_12_PHI_DAL",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 1.67,
+     "ph": 0.5835,
+     "gm": "PHI @ DAL",
+     "act": 0.0
+    },
+    {
+     "pid": "00-0039410",
+     "pk": "Ryan Flournoy",
+     "team": "DAL",
+     "game_id": "2026_12_PHI_DAL",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 30.5,
+     "bk": "williamhill_us",
+     "dec": 1.87,
+     "ph": 0.5184,
+     "gm": "PHI @ DAL",
+     "act": 0.0
+    }
+   ],
+   "price": null,
+   "est_price": 5.772,
+   "p_joint": 0.1747,
+   "p_indep": 0.0716,
+   "fair": 5.724,
+   "min0": 6.011,
+   "min33": 4.767,
+   "min50": 4.34,
+   "ev0": 0.0083,
+   "ev33": 0.2834,
+   "ev50": 0.4251,
+   "posted": "2026-11-26 15:13",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 PHI @ DAL: George Pickens O5.5 rec + O71.5 yds; Ryan Flournoy O2.5 rec + O30.5 yds \u00b7 Needs +377 before a 33% boost, +334 before 50%. Caesars est. +477."
+  },
+  {
+   "season": 2026,
+   "week": 12,
    "window": "2026_w12_20261127T0120Z",
    "kind": "sgp",
    "game_id": "2026_12_KC_BUF",
@@ -4392,6 +4498,169 @@
    "u33": -1.0,
    "u50": -1.0,
    "txt": "Caesars same-game \u00b7 KC @ BUF: Khalil Shakir O3.5 rec + O37.5 yds; Xavier Worthy O2.5 rec + O21.5 yds \u00b7 Needs +432 before a 33% boost, +383 before 50%. Caesars est. +558."
+  },
+  {
+   "season": 2026,
+   "week": 12,
+   "window": "2026_w12_20261127T2000Z",
+   "kind": "sgp",
+   "game_id": "2026_12_DEN_PIT",
+   "book": "draftkings",
+   "fill": 0,
+   "day": false,
+   "gm": "DEN @ PIT",
+   "legs": [
+    {
+     "pid": "00-0036613",
+     "pk": "Jaylen Waddle",
+     "team": "DEN",
+     "game_id": "2026_12_DEN_PIT",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 3.5,
+     "bk": "draftkings",
+     "dec": 2.04,
+     "ph": 0.5274,
+     "gm": "DEN @ PIT",
+     "card": true,
+     "act": 5.0
+    },
+    {
+     "pid": "00-0034348",
+     "pk": "Courtland Sutton",
+     "team": "DEN",
+     "game_id": "2026_12_DEN_PIT",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 2.5,
+     "bk": "draftkings",
+     "dec": 2.08,
+     "ph": 0.5054,
+     "gm": "DEN @ PIT",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0036422",
+     "pk": "Adam Trautman",
+     "team": "DEN",
+     "game_id": "2026_12_DEN_PIT",
+     "mk": "rec",
+     "sd": "under",
+     "ln": 0.5,
+     "bk": "draftkings",
+     "dec": 2.45,
+     "ph": 0.434,
+     "gm": "DEN @ PIT",
+     "act": 2.0
+    }
+   ],
+   "price": null,
+   "est_price": 9.582,
+   "p_joint": 0.109,
+   "p_indep": 0.1157,
+   "fair": 9.174,
+   "min0": 9.633,
+   "min33": 7.491,
+   "min50": 6.755,
+   "ev0": 0.0444,
+   "ev33": 0.3531,
+   "ev50": 0.5121,
+   "qualifies": true,
+   "posted": "2026-11-27 13:34",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "DK same-game \u00b7 DEN @ PIT: Jaylen Waddle U3.5 rec (card pick) + Courtland Sutton U2.5 rec + Adam Trautman U0.5 rec \u00b7 Needs +649 before a 33% boost, +576 before 50%. DK est. +858."
+  },
+  {
+   "season": 2026,
+   "week": 12,
+   "window": "2026_w12_20261127T2000Z",
+   "kind": "czr",
+   "game_id": "2026_12_DEN_PIT",
+   "book": "williamhill_us",
+   "day": false,
+   "gm": "DEN @ PIT",
+   "qualifies": true,
+   "line_src": "DK",
+   "legs": [
+    {
+     "pid": "00-0041489",
+     "pk": "Germie Bernard",
+     "team": "PIT",
+     "game_id": "2026_12_DEN_PIT",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 1.67,
+     "ph": 0.607,
+     "gm": "DEN @ PIT",
+     "act": 1.0
+    },
+    {
+     "pid": "00-0041489",
+     "pk": "Germie Bernard",
+     "team": "PIT",
+     "game_id": "2026_12_DEN_PIT",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 22.5,
+     "bk": "williamhill_us",
+     "dec": 1.88,
+     "ph": 0.5433,
+     "gm": "DEN @ PIT",
+     "act": 58.0
+    },
+    {
+     "pid": "00-0035640",
+     "pk": "DK Metcalf",
+     "team": "PIT",
+     "game_id": "2026_12_DEN_PIT",
+     "mk": "rec",
+     "sd": "over",
+     "ln": 2.5,
+     "bk": "williamhill_us",
+     "dec": 1.82,
+     "ph": 0.5313,
+     "gm": "DEN @ PIT",
+     "act": 3.0
+    },
+    {
+     "pid": "00-0035640",
+     "pk": "DK Metcalf",
+     "team": "PIT",
+     "game_id": "2026_12_DEN_PIT",
+     "mk": "yds",
+     "sd": "over",
+     "ln": 27.5,
+     "bk": "williamhill_us",
+     "dec": 1.9,
+     "ph": 0.5272,
+     "gm": "DEN @ PIT",
+     "act": 36.0
+    }
+   ],
+   "price": null,
+   "est_price": 4.864,
+   "p_joint": 0.2062,
+   "p_indep": 0.0924,
+   "fair": 4.85,
+   "min0": 5.092,
+   "min33": 4.077,
+   "min50": 3.728,
+   "ev0": 0.0029,
+   "ev33": 0.2659,
+   "ev50": 0.4013,
+   "posted": "2026-11-27 13:34",
+   "stake": 0.0,
+   "result": "L",
+   "u1": -1.0,
+   "u33": -1.0,
+   "u50": -1.0,
+   "txt": "Caesars same-game \u00b7 DEN @ PIT: Germie Bernard O2.5 rec + O22.5 yds; DK Metcalf O2.5 rec + O27.5 yds \u00b7 Needs +308 before a 33% boost, +300 before 50%. Caesars est. +386."
   }
  ],
  "record": {
@@ -4404,20 +4673,20 @@
    "u50": 9.42
   },
   "sgp": {
-   "n": 22,
+   "n": 23,
    "w": 5,
-   "l": 17,
-   "u1": 9.26,
-   "u33": 17.92,
-   "u50": 22.39
+   "l": 18,
+   "u1": 8.26,
+   "u33": 16.92,
+   "u50": 21.39
   },
   "czr": {
-   "n": 20,
+   "n": 22,
    "w": 0,
-   "l": 20,
-   "u1": -20.0,
-   "u33": -20.0,
-   "u50": -20.0
+   "l": 22,
+   "u1": -22.0,
+   "u33": -22.0,
+   "u50": -22.0
   }
  },
  "note": "Optional. Bet only with a 33% or 50% profit boost, at the stated price or better BEFORE the boost. DK same-game: three unders in one game. Caesars same-game: receptions over + yards over on two players, the one combination Caesars under-prices; the lines shown are DraftKings' (a higher Caesars line: skip). Different games: three unders at one book. At another book the same legs, lines and minimum apply. Not part of the card or its record. Results are 1u each at estimated prices unless the real price was recorded."
